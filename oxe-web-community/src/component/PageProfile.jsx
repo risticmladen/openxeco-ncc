@@ -6,7 +6,9 @@ import { NotificationManager as nm } from "react-notifications";
 import Info from "./box/Info.jsx";
 import FormLine from "./form/FormLine.jsx";
 import { getRequest, postRequest } from "../utils/request.jsx";
-import { validatePassword, validateTelephoneNumber, validateNotNull } from "../utils/re.jsx";
+import {
+	validatePassword, validateTelephoneNumber, validateNotNull, validateName,
+} from "../utils/re.jsx";
 import Loading from "./box/Loading.jsx";
 import Message from "./box/Message.jsx";
 import UpdateProfile from "./pageprofile/UpdateProfile.jsx";
@@ -272,6 +274,16 @@ export default class PageProfile extends React.Component {
 			nm.warning("Mobile number is not valid");
 		}
 
+		if (this.state.userProfile.first_name !== "" && !validateName(this.state.userProfile.first_name)) {
+			valid = false;
+			nm.warning("Name is not valid");
+		}
+
+		if (this.state.userProfile.last_name !== "" && !validateName(this.state.userProfile.last_name)) {
+			valid = false;
+			nm.warning("Surname is not valid");
+		}
+
 		if (malta === undefined
 			|| this.state.userProfile.first_name === ""
 			|| this.state.userProfile.last_name === ""
@@ -309,6 +321,7 @@ export default class PageProfile extends React.Component {
 	updateProfile() {
 		postRequest.call(this, "account/update_my_profile", { data: this.state.userProfile }, () => {
 			nm.info("The information has been updated");
+			this.refreshProfile();
 		}, (response) => {
 			nm.warning(response.statusText);
 		}, (error) => {

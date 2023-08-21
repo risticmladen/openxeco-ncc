@@ -65,3 +65,9 @@ export function validateOtp(otp) {
 	const re = /^[0-9]{6}$/;
 	return re.test(String(otp).toUpperCase()) || !otp;
 }
+
+export function validateName(name) {
+	if (name === null || typeof name === "undefined" || name.length === 0) return false;
+	const re = /^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$/;
+	return re.test(String(name)) || !name;
+}
