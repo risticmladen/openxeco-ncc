@@ -54,3 +54,9 @@ export function validateTelephoneNumber(number) {
 	const re = /^(\+)?([0-9]){10,16}$/;
 	return re.test(String(number)) || !number;
 }
+
+export function validateName(name) {
+	if (name === null || typeof name === "undefined" || name.length === 0) return false;
+	const re = /^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$/;
+	return re.test(String(name)) || !name;
+}

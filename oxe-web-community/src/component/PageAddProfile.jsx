@@ -4,7 +4,7 @@ import { NotificationManager as nm } from "react-notifications";
 import { getRequest, postRequest } from "../utils/request.jsx";
 import FormLine from "./form/FormLine.jsx";
 import Loading from "./box/Loading.jsx";
-import { validateNotNull, validateTelephoneNumber } from "../utils/re.jsx";
+import { validateNotNull, validateName, validateTelephoneNumber } from "../utils/re.jsx";
 
 export default class PageAddProfile extends React.Component {
 	constructor(props) {
@@ -107,6 +107,16 @@ export default class PageAddProfile extends React.Component {
 		if (this.state.mobile !== "" && !validateTelephoneNumber(this.state.mobile)) {
 			valid = false;
 			nm.warning("Mobile number is not valid");
+		}
+
+		if (this.state.first_name !== "" && !validateName(this.state.first_name)) {
+			valid = false;
+			nm.warning("Name is not valid");
+		}
+
+		if (this.state.last_name !== "" && !validateName(this.state.last_name)) {
+			valid = false;
+			nm.warning("Surname is not valid");
 		}
 
 		if (malta === undefined
@@ -248,6 +258,7 @@ export default class PageAddProfile extends React.Component {
 							onChange={(v) => this.changeState("first_name", v)}
 							autofocus={true}
 							onKeyDown={this.onKeyDown}
+							format={validateName}
 						/>
 						<FormLine
 							label="Surname *"
@@ -255,6 +266,7 @@ export default class PageAddProfile extends React.Component {
 							value={this.state.last_name}
 							onChange={(v) => this.changeState("last_name", v)}
 							onKeyDown={this.onKeyDown}
+							format={validateName}
 						/>
 						<FormLine
 							label="Gender *"
