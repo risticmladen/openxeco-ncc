@@ -35,11 +35,21 @@ class GetMyEntityContacts(MethodResource, Resource):
         except NoResultFound:
             return "", "422 Object not found or you don't have the required access to it"
 
-        contact = self.db.get(self.db.tables["EntityContact"], {"entity_id": int(id_)})[0]
-        user = self.db.get(self.db.tables["UserEntityAssignment"], {
+        contacts = self.db.get(self.db.tables["EntityContact"], {"entity_id": int(id_)})
+        if len(contacts) < 1:
+            raise NoResultFound
+
+        contact = contacts[0]
+
+        users = self.db.get(self.db.tables["UserEntityAssignment"], {
             "user_id": contact.user_id,
             "entity_id": int(id_),
-        })[0]
+        })
+
+        if len(users) < 1:
+            raise NoResultFound
+
+        user = users[0]
 
         is_primary = int(get_jwt_identity()) == contact.user_id
 
@@ -50,7 +60,7 @@ class GetMyEntityContacts(MethodResource, Resource):
             "seniority_level": user.seniority_level if is_primary else "",
             "department": user.department if is_primary else "",
             "acknowledged": "Yes" if is_primary else "",
-            "primary": int(get_jwt_identity()) == contact.user_id,
+            "primary": is_primary,
         }
 
         return data, "200 "
