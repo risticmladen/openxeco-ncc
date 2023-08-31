@@ -45,7 +45,6 @@ export default class PageProfile extends React.Component {
 			email: "",
 
 			entityToDelete: "",
-			myEntities: null,
 			passwordForDelete: "",
 
 			countries: [],
@@ -55,7 +54,6 @@ export default class PageProfile extends React.Component {
 
 	componentDidMount() {
 		this.refreshProfile();
-		this.getMyEntities();
 
 		getRequest.call(this, "public/get_public_countries", (data) => {
 			this.setState({
@@ -374,22 +372,6 @@ export default class PageProfile extends React.Component {
 		}
 	}
 
-	getMyEntities() {
-		getRequest.call(this, "private/get_my_entities", (data) => {
-			if (!this.state.myEntities
-				|| JSON.stringify(this.state.myEntities.map((e) => e.id))
-					!== JSON.stringify(data.map((e) => e.id))) {
-				this.setState({
-					myEntities: data,
-				});
-			}
-		}, (response) => {
-			nm.warning(response.statusText);
-		}, (error) => {
-			nm.error(error.message);
-		});
-	}
-
 	disassociateFromEntity(close) {
 		const params = {
 			entity_id: this.state.entityToDelete,
@@ -402,7 +384,7 @@ export default class PageProfile extends React.Component {
 				passwordForDelete: "",
 			});
 			nm.info("You have been disassociated from the entity");
-			this.getMyEntities();
+			this.props.getMyEntities();
 			if (close) {
 				close();
 			}
@@ -598,51 +580,53 @@ export default class PageProfile extends React.Component {
 													</button>
 												</div>
 											</div>
-											<div className="col-md-12">
-												{ this.state.myEntities !== null
-													? <FormLine
-														label="Select Entity"
-														type="select"
-														options={[{ value: "", label: "-" }].concat(
-															this.state.myEntities.map((e) => ({
-																label: (
-																	<>
-																		<div title={e.name}>{e.name}</div>
-																	</>
-																),
-																value: e.id,
-															})),
-														)}
-														fullWidth={true}
-														value={this.state.entityToDelete}
-														onChange={(v) => this.changeState("entityToDelete", v)}
-														onKeyDown={this.onKeyDown}
-														format={validateNotNull}
-													/>
-													: <span>You are not associated with any entities</span>
-												}
-												{ this.state.entityToDelete !== ""
-													&& <FormLine
-														label="Please enter your password to confirm"
-														fullWidth={true}
-														value={this.state.passwordForDelete}
-														onChange={(v) => this.changeState("passwordForDelete", v)}
-														onKeyDown={this.onKeyDown}
-														format={validateNotNull}
-														type="password"
-													/>
-												}
-											</div>
-											<div className="col-md-12">
-												<div className="right-buttons">
-													<button
-														onClick={() => this.disassociateFromEntity(close)}
-														disabled={!validateNotNull(this.state.entityToDelete)
-															|| this.state.passwordForDelete === ""}>
-														Disassociate
-													</button>
+											{ this.props.myEntities !== null && this.props.myEntities.length > 0
+												? <div className="col-md-12">
+													<div>
+														<FormLine
+															label="Select Entity"
+															type="select"
+															options={[{ value: "", label: "-" }].concat(
+																this.props.myEntities.map((e) => ({
+																	label: (
+																		<>
+																			<div title={e.name}>{e.name}</div>
+																		</>
+																	),
+																	value: e.id,
+																})),
+															)}
+															fullWidth={true}
+															value={this.state.entityToDelete}
+															onChange={(v) => this.changeState("entityToDelete", v)}
+															onKeyDown={this.onKeyDown}
+															format={validateNotNull}
+														/>
+														{ this.state.entityToDelete !== ""
+															&& <FormLine
+																label="Please enter your password to confirm"
+																fullWidth={true}
+																value={this.state.passwordForDelete}
+																onChange={(v) => this.changeState("passwordForDelete", v)}
+																onKeyDown={this.onKeyDown}
+																format={validateNotNull}
+																type="password"
+															/>
+														}
+													</div>
+													<div>
+														<div className="right-buttons">
+															<button
+																onClick={() => this.disassociateFromEntity(close)}
+																disabled={!validateNotNull(this.state.entityToDelete)
+																	|| this.state.passwordForDelete === ""}>
+																Disassociate
+															</button>
+														</div>
+													</div>
 												</div>
-											</div>
+												: <div className="col-md-12">You are not associated with any entities</div>
+											}
 										</div>}
 									</Popup>
 
