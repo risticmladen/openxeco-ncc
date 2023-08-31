@@ -37,7 +37,7 @@ class GetMyEntityContacts(MethodResource, Resource):
 
         contacts = self.db.get(self.db.tables["EntityContact"], {"entity_id": int(id_)})
         if len(contacts) < 1:
-            raise NoResultFound
+            return {}, "200"
 
         contact = contacts[0]
 
