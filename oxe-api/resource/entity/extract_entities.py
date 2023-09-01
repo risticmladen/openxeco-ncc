@@ -290,6 +290,19 @@ class ExtractEntities(MethodResource, Resource):
         df = df.drop('Email|user_id', axis=1)
 
 
+        df = df.drop('Phone|representative', axis=1)
+        df = df.drop('Phone|name', axis=1)
+        df = df.drop('Phone|value', axis=1)
+        df = df.drop('Phone|department', axis=1)
+        df = df.drop('Phone|user_id', axis=1)
+
+
+        df = df.drop('Workforce|workforce', axis=1)
+        df = df.drop('Workforce|date', axis=1)
+        df = df.drop('Workforce|is_estimated', axis=1)
+        df = df.drop('Workforce|source', axis=1)
+
+
         df = df.drop({'Global|trade_register_number'}, axis=1)
         df.columns = df.columns.str.split('|', expand=True)
 
