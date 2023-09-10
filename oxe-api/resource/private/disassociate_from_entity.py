@@ -36,11 +36,13 @@ class DisassociateFromEntity(MethodResource, Resource):
     @catch_exception
     def post(self, **kwargs):
         # Check if the password is correct
-        data = self.db.get(self.db.tables["User"], {"id": get_jwt_identity()})
-        user = data[0]
-        password = user.password if len(data) > 0 else "Imp0ssiblePassword~~"
+        users = self.db.get(self.db.tables["User"], {"id": get_jwt_identity()})
+        user = users[0]
+        password = user.password if len(users) > 0 else "Imp0ssiblePassword~~"
         if not check_password_hash(password, kwargs['password']):
             return "", "401 Incorrect password"
+
+        entity = self.db.get(self.db.tables["Entity"], {"id": kwargs["entity_id"]})[0]
 
         row = {
             "user_id": int(get_jwt_identity()),
@@ -55,14 +57,12 @@ class DisassociateFromEntity(MethodResource, Resource):
             return "", "422 No entity association found"
 
         # check if primary
-        contacts = self.db.get(self.db.tables["EntityContact"], row)
-        is_primary = len(contacts) > 0
+        contact = self.db.get(self.db.tables["EntityContact"], row)
+        is_primary = len(contact) > 0
 
         # If primary
         if is_primary:
             self.db.delete(self.db.tables["UserEntityAssignment"], row)
-            entity = self.db.get(self.db.tables["Entity"], {"id": kwargs["entity_id"]})[0]
-
             bcc_addresses = self.db.session \
                 .query(self.db.tables["User"]) \
                 .with_entities(self.db.tables["User"].email) \
@@ -87,18 +87,19 @@ class DisassociateFromEntity(MethodResource, Resource):
             )
         else:
             contacts = self.db.get(self.db.tables["EntityContact"], {"entity_id": kwargs["entity_id"]})
-            contact_user = data = self.db.get(self.db.tables["User"], {"id": contacts[0].user_id})
-            send_email(self.mail,
-                subject=f"User Disassociated from {entity.name}",
-                recipients=[contact_user[0].email],
-                html_body=render_template(
-                    'disassociated_from_entity_notify.html',
-                    email=entity.email,
-                    user_email=user.email,
-                    entity=entity.name,
-                    primary='no'
+            if contacts:
+                contact_user = data = self.db.get(self.db.tables["User"], {"id": contacts[0].user_id})
+                send_email(self.mail,
+                    subject=f"User Disassociated from {entity.name}",
+                    recipients=[contact_user[0].email],
+                    html_body=render_template(
+                        'disassociated_from_entity_notify.html',
+                        email=entity.email,
+                        user_email=user.email,
+                        entity=entity.name,
+                        primary='no'
+                    )
                 )
-            )
 
         send_email(self.mail,
             subject=f"User Disassociated from {entity.name}",
