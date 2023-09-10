@@ -2,6 +2,7 @@ from flask import render_template
 from flask_apispec import MethodResource
 from flask_apispec import use_kwargs, doc
 from flask_jwt_extended import jwt_required, get_jwt_identity
+from decorator.verify_admin_access import verify_admin_access
 from flask_restful import Resource
 from flask_bcrypt import check_password_hash
 from webargs import fields
@@ -11,7 +12,7 @@ from decorator.log_request import log_request
 from utils.mail import send_email
 
 
-class DisassociateFromEntity(MethodResource, Resource):
+class DisassociateUserEntity(MethodResource, Resource):
 
     db = None
     mail = None
@@ -21,7 +22,7 @@ class DisassociateFromEntity(MethodResource, Resource):
         self.mail = mail
 
     @log_request
-    @doc(tags=['private'],
+    @doc(tags=['user'],
          description='Disassociate a user from and Entity',
          responses={
              "200": {"description": "User unlinked from Entity"},
@@ -29,23 +30,21 @@ class DisassociateFromEntity(MethodResource, Resource):
              "422": {"description": "No entity association found"}
          })
     @use_kwargs({
-        'password': fields.Str(),
+        'user_id': fields.Int(),
         'entity_id': fields.Int(),
     })
     @jwt_required
+    @verify_admin_access
     @catch_exception
     def post(self, **kwargs):
         # Check if the password is correct
-        users = self.db.get(self.db.tables["User"], {"id": get_jwt_identity()})
+        users = self.db.get(self.db.tables["User"], {"id": kwargs["user_id"]})
         user = users[0]
-        password = user.password if len(users) > 0 else "Imp0ssiblePassword~~"
-        if not check_password_hash(password, kwargs['password']):
-            return "", "401 Incorrect password"
 
         entity = self.db.get(self.db.tables["Entity"], {"id": kwargs["entity_id"]})[0]
 
         row = {
-            "user_id": int(get_jwt_identity()),
+            "user_id": kwargs["user_id"],
             "entity_id": kwargs["entity_id"],
         }
 
