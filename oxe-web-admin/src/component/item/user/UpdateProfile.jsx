@@ -191,14 +191,14 @@ export default class UpdateProfile extends React.Component {
 					value={this.state.profile.telephone}
 					onBlur={(v) => this.changeProfileState("telephone", v)}
 					onKeyDown={this.onKeyDown}
-					format={validateTelephoneNumber}
+					format={(v) => v === "" || validateTelephoneNumber(v) }
 				/>
 				<FormLine
 					label="Mobile Number"
 					value={this.state.profile.mobile}
 					onBlur={(v) => this.changeProfileState("mobile", v)}
 					onKeyDown={this.onKeyDown}
-					format={validateTelephoneNumber}
+					format={(v) => v === "" || validateTelephoneNumber(v) }
 				/>
 				<FormLine
 					label="Role/Profession *"
