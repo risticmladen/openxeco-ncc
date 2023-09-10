@@ -32,7 +32,6 @@ export default class Contact extends React.Component {
 	}
 
 	save() {
-		console.log(this.props.info);
 		if (this.state.info.id !== undefined) {
 			const params = {
 				id: this.state.info.id,

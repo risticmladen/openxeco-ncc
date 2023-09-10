@@ -54,8 +54,6 @@ export default class EntityContact extends React.Component {
 		});
 
 		getRequest.call(this, "entity/get_entity_users/" + this.props.id, (data) => {
-			console.log("Entity Users");
-			console.log(data);
 			this.setState({
 				users: data,
 			});
