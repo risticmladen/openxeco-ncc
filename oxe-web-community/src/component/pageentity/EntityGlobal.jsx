@@ -60,7 +60,7 @@ export default class EntityGlobal extends React.Component {
 		});
 
 		getRequest.call(this, "private/get_my_entity_contacts/" + this.props.entity.id, (data) => {
-			if (data.length > 0) {
+			if (Object.keys(data).length > 0) {
 				this.setState({
 					contact: data,
 				});

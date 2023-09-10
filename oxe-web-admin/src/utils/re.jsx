@@ -51,7 +51,7 @@ export function validateOtp(otp) {
 
 export function validateTelephoneNumber(number) {
 	if (number === null || typeof number === "undefined" || number.length === 0) return false;
-	const re = /^(\+)?([0-9]){10,16}$/;
+	const re = /^(\+)?([0-9]\s*){8,16}$/;
 	return re.test(String(number)) || !number;
 }
 
