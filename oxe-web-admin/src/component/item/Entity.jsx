@@ -76,6 +76,12 @@ export default class Entity extends Item {
 		});
 	}
 
+	refresh() {
+		this.fetchEntity();
+		this.fetchEntityAddress();
+		this.fetchEntityContacts();
+	}
+
 	fetchEntity() {
 		if (this.props.node && this.props.node.api_endpoint) {
 			const url = this.props.node.api_endpoint + "/public/get_public_entity/" + this.props.id;
@@ -146,8 +152,11 @@ export default class Entity extends Item {
 				this.setState({
 					entityContacts: data,
 				});
-			}, (response) => {
-				nm.warning(response.statusText);
+			}, () => {
+				// nm.warning(response.statusText);
+				this.setState({
+					entityContacts: null,
+				});
 			}, (error) => {
 				nm.error(error.message);
 			});
@@ -347,7 +356,7 @@ export default class Entity extends Item {
 									entity={this.state.entity}
 									node={this.props.node}
 									editable={!this.props.node}
-									refresh={() => this.fetchEntity()}
+									refresh={() => this.refresh()}
 								/>,
 								<EntityAddress
 									key={this.props.id}

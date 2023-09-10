@@ -36,7 +36,8 @@ class GetEntityUsers(MethodResource, Resource):
                 .with_entities(self.db.tables["User"].id,
                                self.db.tables["User"].email,
                                self.db.tables["User"].first_name,
-                               self.db.tables["User"].last_name)
+                               self.db.tables["User"].last_name,
+                               self.db.tables["User"].work_email)
                 .filter(self.db.tables["User"].id.in_(subquery))
                 .all()]
 
