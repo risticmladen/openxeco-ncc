@@ -254,9 +254,56 @@ class ExtractEntities(MethodResource, Resource):
     def prepare_xlsx(self, df):
         # Clean DF
 
-        df = df.drop('Global|id', axis=1)
-        df = df.rename({'Global|trade_register_number': "trade_register_number"}, axis=1)
-        df = df.set_index("trade_register_number")
+
+        df = df.rename({'Global|id': "Entity_ID"}, axis=1,errors='ignore')
+        df = df.set_index("Entity_ID")
+        df = df.rename({'Global|image': "Global|image_id"}, axis=1, errors='ignore')
+        df = df.drop('Global|description', axis=1, errors='ignore')
+        df = df.drop('Global|creation_date', axis=1, errors='ignore')
+        df = df.drop('Global|is_startup', axis=1, errors='ignore')
+        df = df.drop('Global|is_cybersecurity_core_business', axis=1, errors='ignore')
+        df = df.drop('Global|linkedin_url', axis=1, errors='ignore')
+        df = df.drop('Global|twitter_url', axis=1, errors='ignore')
+        df = df.drop('Global|youtube_url', axis=1, errors='ignore')
+        df = df.drop('Global|discord_url', axis=1, errors='ignore')
+        df = df.drop('Global|sync_id', axis=1, errors='ignore')
+        df = df.drop('Global|sync_node', axis=1, errors='ignore')
+        df = df.drop('Global|sync_global', axis=1, errors='ignore')
+        df = df.drop('Global|sync_address', axis=1, errors='ignore')
+        df = df.drop('Global|sync_status', axis=1, errors='ignore')
+        df = df.drop('Global|legal_status', axis=1, errors='ignore')
+        df = df.drop('Global|headline', axis=1, errors='ignore')
+
+        df = df.drop('Address|number', axis=1, errors='ignore')
+        df = df.drop('Address|administrative_area', axis=1, errors='ignore')
+        df = df.drop('Address|latitude', axis=1, errors='ignore')
+        df = df.drop('Address|longitude', axis=1, errors='ignore')
+
+        df = df.drop('User|department', axis=1, errors='ignore')
+        df = df.drop('User|seniority_level', axis=1, errors='ignore')
+        df = df.drop('User|email', axis=1, errors='ignore')
+
+        df = df.drop('Email|representative', axis=1, errors='ignore')
+        df = df.drop('Email|name', axis=1, errors='ignore')
+        df = df.drop('Email|value', axis=1, errors='ignore')
+        df = df.drop('Email|department', axis=1, errors='ignore')
+        df = df.drop('Email|user_id', axis=1, errors='ignore')
+
+
+        df = df.drop('Phone|representative', axis=1, errors='ignore')
+        df = df.drop('Phone|name', axis=1, errors='ignore')
+        df = df.drop('Phone|value', axis=1, errors='ignore')
+        df = df.drop('Phone|department', axis=1, errors='ignore')
+        df = df.drop('Phone|user_id', axis=1, errors='ignore')
+
+
+        df = df.drop('Workforce|workforce', axis=1, errors='ignore')
+        df = df.drop('Workforce|date', axis=1, errors='ignore')
+        df = df.drop('Workforce|is_estimated', axis=1, errors='ignore')
+        df = df.drop('Workforce|source', axis=1, errors='ignore')
+
+
+        df = df.drop({'Global|trade_register_number'}, axis=1)
         df.columns = df.columns.str.split('|', expand=True)
 
         # Build the XLS file

@@ -3,7 +3,7 @@ import { NotificationManager as nm } from "react-notifications";
 import { getRequest } from "../../../utils/request.jsx";
 import FormLine from "../../button/FormLine.jsx";
 import Loading from "../../box/Loading.jsx";
-import { validateNotNull, validateTelephoneNumber } from "../../../utils/re.jsx";
+import { validateNotNull, validateTelephoneNumber, validateName } from "../../../utils/re.jsx";
 
 export default class UpdateProfile extends React.Component {
 	constructor(props) {
@@ -160,12 +160,14 @@ export default class UpdateProfile extends React.Component {
 					onBlur={(v) => this.changeProfileState("first_name", v)}
 					autofocus={true}
 					onKeyDown={this.onKeyDown}
+					format={validateName}
 				/>
 				<FormLine
 					label="Surname *"
 					value={this.state.profile.last_name}
 					onBlur={(v) => this.changeProfileState("last_name", v)}
 					onKeyDown={this.onKeyDown}
+					format={validateName}
 				/>
 				<FormLine
 					label="Gender *"
