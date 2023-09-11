@@ -61,7 +61,7 @@ class DisassociateUserEntity(MethodResource, Resource):
 
         # If primary
         if is_primary:
-            self.db.delete(self.db.tables["UserEntityAssignment"], row)
+            self.db.delete(self.db.tables["EntityContact"], row)
             bcc_addresses = self.db.session \
                 .query(self.db.tables["User"]) \
                 .with_entities(self.db.tables["User"].email) \
@@ -79,7 +79,7 @@ class DisassociateUserEntity(MethodResource, Resource):
                 html_body=render_template(
                     'disassociated_from_entity_notify.html',
                     email=entity.email,
-                    user_email=contacts[0].value,
+                    user_email=contact[0].value,
                     entity=entity.name,
                     primary='yes'
                 )
