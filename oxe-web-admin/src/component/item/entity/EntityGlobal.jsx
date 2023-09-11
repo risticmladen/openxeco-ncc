@@ -5,6 +5,7 @@ import { getForeignRequest, postRequest, getRequest } from "../../../utils/reque
 import FormLine from "../../button/FormLine.jsx";
 import Loading from "../../box/Loading.jsx";
 import DialogAddImage from "../../dialog/DialogAddImage.jsx";
+import Message from "../../box/Message.jsx";
 
 export default class EntityGlobal extends React.Component {
 	constructor(props) {
@@ -227,23 +228,48 @@ export default class EntityGlobal extends React.Component {
 					<h3>Contact</h3>
 				</div>
 				<div className={"col-md-12 row-spaced"}>
-					<FormLine
-						label={"Contact Name"}
-						value={this.props?.entityContacts?.name}
-						disabled={true}
-					/>
+					{this.props.entityContacts !== undefined && this.props.entityContacts !== null
+						? <div>
+							<FormLine
+								label={"Contact Name"}
+								value={this.props?.entityContacts?.name}
+								disabled={true}
+							/>
 
-					<FormLine
-						label={"Contact Email"}
-						value={this.props?.entityContacts?.work_email}
-						disabled={true}
-					/>
+							<FormLine
+								label={"Contact Email"}
+								value={this.props?.entityContacts?.work_email}
+								disabled={true}
+							/>
 
-					<FormLine
-						label={"Work Telephone Number"}
-						value={this.props?.entityContacts?.work_telephone}
-						disabled={true}
-					/>
+							<FormLine
+								label={"Work Telephone Number"}
+								value={this.props?.entityContacts?.work_telephone}
+								disabled={true}
+							/>
+
+							<FormLine
+								label={"Department"}
+								value={this.props?.entityContacts?.department}
+								disabled={true}
+							/>
+
+							<FormLine
+								label={"Seniority Level"}
+								value={this.props?.entityContacts?.seniority_level}
+								disabled={true}
+							/>
+
+							<FormLine
+								label={"Acknowledged"}
+								value={this.props?.entityContacts?.acknowledged}
+								disabled={true}
+							/>
+						</div>
+						: <Message
+							text={"This entity has no contact"}
+							height={50} />
+					}
 				</div>
 			</div>
 		);

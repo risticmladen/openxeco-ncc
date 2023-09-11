@@ -47,5 +47,8 @@ class GetEntityContacts(MethodResource, Resource):
         # Add UserEntityAssignment contact info to first item in EntityContact result
         data["work_email"] = user.work_email
         data["work_telephone"] = user.work_telephone
+        data["seniority_level"] = user.seniority_level
+        data["department"] = user.department
+        data["acknowledged"] = "Yes"
 
         return data, "200 "
