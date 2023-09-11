@@ -37,7 +37,8 @@ class GetEntityUsers(MethodResource, Resource):
                                self.db.tables["User"].email,
                                self.db.tables["User"].first_name,
                                self.db.tables["User"].last_name,
-                               self.db.tables["User"].work_email)
+                               self.db.tables["UserEntityAssignment"].work_email)
+                .filter(self.db.tables["UserEntityAssignment"].user_id == self.db.tables["User"].id)
                 .filter(self.db.tables["User"].id.in_(subquery))
                 .all()]
 
