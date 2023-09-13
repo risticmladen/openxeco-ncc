@@ -25,30 +25,40 @@ class GetEntityContacts(MethodResource, Resource):
     @verify_admin_access
     @catch_exception
     def get(self, id_):
-        contacts = self.db.get(self.db.tables["EntityContact"], {"entity_id": int(id_)})
+        entity_id = int(id_)
 
-        if len(contacts) < 1:
+        query = (
+            self.db.session.query(self.db.tables["EntityContact"])
+            .join(self.db.tables["User"], self.db.tables["User"].id == self.db.tables["EntityContact"].user_id)
+            .join(self.db.tables["UserEntityAssignment"], self.db.tables["UserEntityAssignment"].user_id == self.db.tables["EntityContact"].user_id)
+            .filter(
+                self.db.tables["EntityContact"].entity_id == entity_id,
+                self.db.tables["UserEntityAssignment"].entity_id == entity_id,
+            )
+        )
+
+        try:
+            user, contact, assignment = query.with_entities(
+                self.db.tables["User"],
+                self.db.tables["EntityContact"],
+                self.db.tables["UserEntityAssignment"],
+            ).first()
+        except TypeError as err:
             return "", "404 No Entity Contact"
 
-        contact = contacts[0]
+        contact = {
+            "id": contact.id,
+            "user_id": user.id,
+            "entity_id": contact.entity_id,
+            "type": contact.type,
+            "representative": contact.representative,
+            "name": f"{user.first_name} {user.last_name}",
+            "value": contact.value,
+            "work_email": assignment.work_email,
+            "work_telephone": assignment.work_telephone,
+            "seniority_level": assignment.seniority_level,
+            "department": assignment.department,
+            "acknowledged": "Yes",
+        }
 
-        data = Serializer.serialize(contact, self.db.tables["EntityContact"])
-
-        users = self.db.get(self.db.tables["UserEntityAssignment"], {
-            "user_id": contact.user_id,
-            "entity_id": int(id_),
-        })
-
-        if len(users) < 1:
-            return data, "200 "
-
-        user = users[0]
-
-        # Add UserEntityAssignment contact info to first item in EntityContact result
-        data["work_email"] = user.work_email
-        data["work_telephone"] = user.work_telephone
-        data["seniority_level"] = user.seniority_level
-        data["department"] = user.department
-        data["acknowledged"] = "Yes"
-
-        return data, "200 "
+        return contact, "200 "
