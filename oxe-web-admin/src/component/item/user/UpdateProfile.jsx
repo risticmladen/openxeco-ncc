@@ -8,7 +8,6 @@ import { validateNotNull, validateTelephoneNumber, validateName } from "../../..
 export default class UpdateProfile extends React.Component {
 	constructor(props) {
 		super(props);
-		console.log(props.userProfile.domains_of_interest);
 
 		this.state = {
 			profile: {
@@ -43,17 +42,12 @@ export default class UpdateProfile extends React.Component {
 	componentDidMount() {
 		let selectedDomains = [];
 
-		if (this.props.userProfile.domains_of_interest !== undefined) {
+		if (this.props.userProfile.domains_of_interest !== null) {
 			selectedDomains = this.props.userProfile.domains_of_interest.split(" | ");
 		}
 
-		const { userProfile } = this.props;
-		userProfile.first_name = (userProfile.first_name === null ? "" : userProfile.first_name);
-		userProfile.last_name = (userProfile.last_name === null ? "" : userProfile.last_name);
-		userProfile.telephone = (userProfile.telephone === null ? "" : userProfile.telephone);
-
 		this.setState({
-			profile: userProfile,
+			profile: this.props.userProfile,
 			selected_domains: selectedDomains,
 		});
 
