@@ -6,6 +6,7 @@ import { getRequest } from "../../utils/request.jsx";
 import Loading from "../box/Loading.jsx";
 import Message from "../box/Message.jsx";
 import CheckBox from "../button/CheckBox.jsx";
+import CountUp from "react-countup";
 
 export default class DashboardAnalytics extends React.Component {
 	constructor(props) {
@@ -96,17 +97,17 @@ export default class DashboardAnalytics extends React.Component {
 		let minDate = new Date(new Date().setFullYear(new Date().getFullYear() - 1));
 
 		switch (this.state.selectedPeriod) {
-		case "LAST WEEK":
-			minDate = new Date(new Date().setDate(new Date().getDate() - 7));
-			break;
-		case "LAST MONTH":
-			minDate = new Date(new Date().setDate(new Date().getDate() - 31));
-			break;
-		case "LAST YEAR":
-			minDate = new Date(new Date().setFullYear(new Date().getFullYear() - 1));
-			break;
-		default:
-			minDate = new Date(new Date().setFullYear(new Date().getFullYear() - 1));
+			case "LAST WEEK":
+				minDate = new Date(new Date().setDate(new Date().getDate() - 7));
+				break;
+			case "LAST MONTH":
+				minDate = new Date(new Date().setDate(new Date().getDate() - 31));
+				break;
+			case "LAST YEAR":
+				minDate = new Date(new Date().setFullYear(new Date().getFullYear() - 1));
+				break;
+			default:
+				minDate = new Date(new Date().setFullYear(new Date().getFullYear() - 1));
 		}
 
 		// Defining the max date of the range
@@ -119,57 +120,57 @@ export default class DashboardAnalytics extends React.Component {
 		// Build labels according to the granularity
 
 		switch (this.state.selectedGranularity) {
-		case "DAY":
-			while (minDate <= maxDate) {
-				labels.push(minDate.toISOString().slice(0, 10));
-				minDate.setDate(minDate.getDate() + 1);
-			}
-			break;
-		case "WEEK": {
-			const currentSunday = new Date(
-				minDate.getFullYear(),
-				minDate.getMonth(),
-				minDate.getDate() + (8 - minDate.getDay()),
-			);
-
-			labels.push(DashboardAnalytics.formatLabel(minDate, currentSunday));
-			currentSunday.setDate(currentSunday.getDate() + 7);
-
-			while (currentSunday <= maxDate) {
-				const matchingMonday = new Date(currentSunday.getTime() - 6 * 24 * 60 * 60 * 1000);
-
-				labels.push(
-					DashboardAnalytics.formatLabel(
-						matchingMonday,
-						currentSunday,
-					),
+			case "DAY":
+				while (minDate <= maxDate) {
+					labels.push(minDate.toISOString().slice(0, 10));
+					minDate.setDate(minDate.getDate() + 1);
+				}
+				break;
+			case "WEEK": {
+				const currentSunday = new Date(
+					minDate.getFullYear(),
+					minDate.getMonth(),
+					minDate.getDate() + (8 - minDate.getDay()),
 				);
-				currentSunday.setTime(currentSunday.getTime() + 7 * 24 * 60 * 60 * 1000);
+
+				labels.push(DashboardAnalytics.formatLabel(minDate, currentSunday));
+				currentSunday.setDate(currentSunday.getDate() + 7);
+
+				while (currentSunday <= maxDate) {
+					const matchingMonday = new Date(currentSunday.getTime() - 6 * 24 * 60 * 60 * 1000);
+
+					labels.push(
+						DashboardAnalytics.formatLabel(
+							matchingMonday,
+							currentSunday,
+						),
+					);
+					currentSunday.setTime(currentSunday.getTime() + 7 * 24 * 60 * 60 * 1000);
+				}
+				break;
 			}
-			break;
-		}
-		case "MONTH": {
-			const firstDayOfNextMonth = new Date(
-				minDate.getFullYear(),
-				minDate.getMonth() + 1,
-				2,
-			);
+			case "MONTH": {
+				const firstDayOfNextMonth = new Date(
+					minDate.getFullYear(),
+					minDate.getMonth() + 1,
+					2,
+				);
 
-			labels.push(DashboardAnalytics.formatLabel(minDate, firstDayOfNextMonth));
-			firstDayOfNextMonth.setMonth(firstDayOfNextMonth.getMonth() + 1);
-
-			while (firstDayOfNextMonth <= maxDate) {
-				labels.push(DashboardAnalytics.formatLabel(
-					firstDayOfNextMonth,
-					new Date(firstDayOfNextMonth.getFullYear(), firstDayOfNextMonth.getMonth() + 1, 1),
-				));
-
+				labels.push(DashboardAnalytics.formatLabel(minDate, firstDayOfNextMonth));
 				firstDayOfNextMonth.setMonth(firstDayOfNextMonth.getMonth() + 1);
+
+				while (firstDayOfNextMonth <= maxDate) {
+					labels.push(DashboardAnalytics.formatLabel(
+						firstDayOfNextMonth,
+						new Date(firstDayOfNextMonth.getFullYear(), firstDayOfNextMonth.getMonth() + 1, 1),
+					));
+
+					firstDayOfNextMonth.setMonth(firstDayOfNextMonth.getMonth() + 1);
+				}
+				break;
 			}
-			break;
-		}
-		default:
-			break;
+			default:
+				break;
 		}
 
 		return labels;
@@ -205,7 +206,7 @@ export default class DashboardAnalytics extends React.Component {
 
 	render() {
 		return (
-			<div id="DashboardAnalytics">
+			<div id="DashboardAnalytics" className="dashboard-background">
 				<div className={"row"}>
 					<div className="col-md-9">
 						<h1>Usage analytics</h1>
@@ -215,7 +216,7 @@ export default class DashboardAnalytics extends React.Component {
 						<div className="top-right-buttons">
 							<button
 								onClick={() => this.refresh()}>
-								<i className="fas fa-redo-alt"/>
+								<i className="fas fa-redo-alt" />
 							</button>
 						</div>
 					</div>
@@ -246,6 +247,46 @@ export default class DashboardAnalytics extends React.Component {
 						<h2>Users</h2>
 					</div>
 
+					{/* <div className="col-md-6 row-spaced">
+						<h3>Number of users logged the past month</h3>
+						<div>
+								{this.state.activity
+									? <div>
+										<CountUp
+											start={0}
+											end={this.state.filteredEntities.filter((o) => o.size === "Small").length}
+											duration={1.6}
+											delay={0}
+										/>
+									</div>
+									: <Loading
+										height={150}
+									/>
+								}
+							</div>
+					</div> */}
+
+					<div className="col-md-6 row-spaced">
+						<h3>Number of users logged in the past month</h3>
+
+						<div>
+							{this.state.activity
+								? <div className={"PageDashboard-analytic mt-5 blue-font"}>
+									<CountUp
+										start={0}
+										// end={Object.values(this.state.activity.users_logged).reduce((sum, num) => sum + num, 0)}
+										end={Object.keys(this.state.activity.users_logged).length}
+										duration={1.6}
+										delay={0}
+									/>
+								</div>
+								: <Loading
+									height={70}
+								/>
+							}
+						</div>
+					</div>
+
 					<div className="col-md-6 row-spaced">
 						<h3>Number of user creation</h3>
 
@@ -268,7 +309,7 @@ export default class DashboardAnalytics extends React.Component {
 						}
 					</div>
 
-					<div className="col-md-6 row-spaced">
+					{/* <div className="col-md-6 row-spaced">
 						<h3>Number of user actions</h3>
 
 						{this.state.activity
@@ -288,14 +329,34 @@ export default class DashboardAnalytics extends React.Component {
 								height={150}
 							/>
 						}
-					</div>
+					</div> */}
 
 					<div className="col-md-12">
 						<h2>Articles</h2>
 					</div>
 
 					<div className="col-md-6 row-spaced">
-						<h3>Number of news publicated by the community</h3>
+						<h3>Total number of news publicated</h3>
+
+						<div>
+							{this.state.activity
+								? <div className={"PageDashboard-analytic mt-5 blue-font"}>
+									<CountUp
+										start={0}
+										end={Object.values(this.state.activity.news_publication).reduce((sum, num) => sum + num, 0)}
+										duration={1.6}
+										delay={0}
+									/>
+								</div>
+								: <Loading
+									height={70}
+								/>
+							}
+						</div>
+					</div>
+
+					<div className="col-md-6 row-spaced">
+						<h3>Number of news publicated by date</h3>
 
 						{this.state.activity
 							? <div>
@@ -317,7 +378,91 @@ export default class DashboardAnalytics extends React.Component {
 					</div>
 
 					<div className="col-md-6 row-spaced">
-						<h3>Number of events publicated by the community</h3>
+						<h3>Total number of FAQs publicated</h3>
+
+						<div>
+							{this.state.activity
+								? <div className={"PageDashboard-analytic mt-5 blue-font"}>
+									<CountUp
+										start={0}
+										end={Object.values(this.state.activity.faqs_publication).reduce((sum, num) => sum + num, 0)}
+										duration={1.6}
+										delay={0}
+									/>
+								</div>
+								: <Loading
+									height={70}
+								/>
+							}
+						</div>
+					</div>
+
+					<div className="col-md-6 row-spaced">
+						<h3>Number of FAQs publicated by date</h3>
+
+						{this.state.activity
+							? <div>
+								{Object.keys(this.state.activity.faqs_publication).length > 0
+									? <Line
+										data={this.getLineData(this.state.activity.faqs_publication)}
+										options={DashboardAnalytics.getLineOptions()}
+									/>
+									: <Message
+										text={"No data found"}
+										height={150}
+									/>
+								}
+							</div>
+							: <Loading
+								height={150}
+							/>
+						}
+					</div>
+
+					<div className="col-md-6 row-spaced">
+						<h3>Total number of announcements publicated</h3>
+
+						<div>
+							{this.state.activity
+								? <div className={"PageDashboard-analytic mt-5 blue-font"}>
+									<CountUp
+										start={0}
+										end={Object.values(this.state.activity.announcements_publication).reduce((sum, num) => sum + num, 0)}
+										duration={1.6}
+										delay={0}
+									/>
+								</div>
+								: <Loading
+									height={70}
+								/>
+							}
+						</div>
+					</div>
+
+					<div className="col-md-6 row-spaced">
+						<h3>Number of announcements publicated by date</h3>
+
+						{this.state.activity
+							? <div>
+								{Object.keys(this.state.activity.announcements_publication).length > 0
+									? <Line
+										data={this.getLineData(this.state.activity.announcements_publication)}
+										options={DashboardAnalytics.getLineOptions()}
+									/>
+									: <Message
+										text={"No data found"}
+										height={150}
+									/>
+								}
+							</div>
+							: <Loading
+								height={150}
+							/>
+						}
+					</div>
+
+					{/* <div className="col-md-6 row-spaced">
+						<h3>Number of events publicated</h3>
 
 						{this.state.activity
 							? <div>
@@ -336,10 +481,10 @@ export default class DashboardAnalytics extends React.Component {
 								height={150}
 							/>
 						}
-					</div>
+					</div> */}
 
-					<div className="col-md-6 row-spaced">
-						<h3>Number of job offers publicated by the community</h3>
+					{/* <div className="col-md-6 row-spaced">
+						<h3>Number of job offers publicated</h3>
 
 						{this.state.activity
 							? <div>
@@ -358,10 +503,10 @@ export default class DashboardAnalytics extends React.Component {
 								height={150}
 							/>
 						}
-					</div>
+					</div> */}
 
-					<div className="col-md-6 row-spaced">
-						<h3>Number of services publicated by the community</h3>
+					{/* <div className="col-md-6 row-spaced">
+						<h3>Number of services publicated</h3>
 
 						{this.state.activity
 							? <div>
@@ -380,10 +525,10 @@ export default class DashboardAnalytics extends React.Component {
 								height={150}
 							/>
 						}
-					</div>
+					</div> */}
 
-					<div className="col-md-6 row-spaced">
-						<h3>Number of tools publicated by the community</h3>
+					{/* <div className="col-md-6 row-spaced">
+						<h3>Number of tools publicated</h3>
 
 						{this.state.activity
 							? <div>
@@ -402,10 +547,10 @@ export default class DashboardAnalytics extends React.Component {
 								height={150}
 							/>
 						}
-					</div>
+					</div> */}
 
-					<div className="col-md-6 row-spaced">
-						<h3>Number of resources publicated by the community</h3>
+					{/* <div className="col-md-6 row-spaced">
+						<h3>Number of resources publicated</h3>
 
 						{this.state.activity
 							? <div>
@@ -424,7 +569,7 @@ export default class DashboardAnalytics extends React.Component {
 								height={150}
 							/>
 						}
-					</div>
+					</div> */}
 				</div>
 			</div>
 		);

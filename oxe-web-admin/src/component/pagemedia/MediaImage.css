@@ -9,3 +9,18 @@
 	margin: 0px 2px;
 	display: inline;
 }
+
+.heading-media {
+	color: #fff;
+}
+
+.MediaPages {
+	.row-spaced {
+		background-color: rgba(255,255,255,.8);
+		border: 1px solid rgba(0,0,0,.125);
+		border-radius: 0.25rem;
+		margin: 10px 0px;
+		padding: 20px;
+
+	}
+}

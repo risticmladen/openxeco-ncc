@@ -20,6 +20,10 @@ import PageAuditLogs from "./PageAuditLogs.jsx";
 import PageProfile from "./PageProfile.jsx";
 import Loading from "./box/Loading.jsx";
 import PageAcceptedUsers from "./PageAcceptedUsers.jsx";
+import Forum from "./Forum.jsx";
+import ForumDetail from "./forum/ForumDetail.jsx";
+import Posts from "./forum/Posts.jsx";
+import PageActivities from "./PageActivities.jsx";
 
 export default class InsideApp extends React.Component {
 	constructor(props) {
@@ -80,7 +84,15 @@ export default class InsideApp extends React.Component {
 							{...props}
 							user={this.props.user}
 						/>}/>
+						<Route path="/activities" render={(props) => <PageActivities {...props}/>} />
 						<Route path="/taxonomy" render={(props) => <PageTaxonomy {...props} />}/>
+						<Route exact path="/forum" render={(props) => <Forum
+							settings={this.props.settings}
+							myEntities={this.state.myEntities}
+							{...props}
+						/>}/> {/* Updated Forum route */}
+						<Route exact path="/forum/:id" render={(props) => <ForumDetail {...props} />} /> {/* Added ForumDetail route */}
+						<Route path="/forum/:forumId/thread/:threadId" render={(props) => <Posts {...props} />} /> {/* Added Post route */}
 						<Route path="/users" render={(props) => <PageUser {...props} />}/>
 						<Route path="/media" render={(props) => <PageMedia {...props} />}/>
 						<Route path="/settings" render={(props) => <PageSettings

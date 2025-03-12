@@ -15,10 +15,13 @@ export default class PageContact extends React.Component {
 		this.submitRequest = this.submitRequest.bind(this);
 		this.afterDelete = this.afterDelete.bind(this);
 		this.changeState = this.changeState.bind(this);
+		this.filterRequests = this.filterRequests.bind(this);
 
 		this.state = {
-			text: null,
+			text: "",
 			requests: null,
+			filteredRequests: null,
+			statusFilter: "ALL",
 		};
 	}
 
@@ -29,12 +32,14 @@ export default class PageContact extends React.Component {
 	refresh() {
 		this.setState({
 			requests: null,
+			filteredRequests: null,
 		});
 
 		getRequest.call(this, "private/get_my_requests?global_only=true", (data) => {
 			this.setState({
 				requests: data,
-			});
+				filteredRequests: data,
+			}, this.filterRequests);
 		}, (response) => {
 			nm.warning(response.statusText);
 		}, (error) => {
@@ -51,7 +56,7 @@ export default class PageContact extends React.Component {
 			this.refresh();
 			this.props.getNotifications();
 			this.setState({
-				text: null,
+				text: "", // Clear the textbox by setting text to an empty string
 			});
 			nm.info("The request has been submitted");
 		}, (response) => {
@@ -67,7 +72,18 @@ export default class PageContact extends React.Component {
 	}
 
 	changeState(field, value) {
-		this.setState({ [field]: value });
+		this.setState({ [field]: value }, this.filterRequests);
+	}
+
+	filterRequests() {
+		const { requests, statusFilter } = this.state;
+		let filteredRequests = [...requests];
+
+		if (statusFilter !== "ALL") {
+			filteredRequests = filteredRequests.filter(r => r.status === statusFilter);
+		}
+
+		this.setState({ filteredRequests });
 	}
 
 	render() {
@@ -75,10 +91,10 @@ export default class PageContact extends React.Component {
 			<div id={"PageContact"} className={"page max-sized-page"}>
 				<div className={"row row-spaced"}>
 					<div className="col-md-12">
-						<h1>Contact us</h1>
+						 <h1 className="dashboard-header">Contact us</h1>
 					</div>
 
-					<div className="col-md-12">
+					<div className="col-md-12 message-container">
 						<h2>Send us a message</h2>
 
 						<FormLine
@@ -91,6 +107,7 @@ export default class PageContact extends React.Component {
 
 						<div className="right-buttons">
 							<button
+								className="submit-button"
 								onClick={this.submitRequest}
 								disabled={this.state.text === null || this.state.text.length === 0}>
 								<i className="fas fa-paper-plane"/> Submit message
@@ -99,7 +116,7 @@ export default class PageContact extends React.Component {
 					</div>
 				</div>
 
-				<div className={"row row-spaced"}>
+				<div className={"row row-spaced current-messages-container"}>
 					<div className="col-md-9">
 						<h2>Your current messages</h2>
 					</div>
@@ -111,7 +128,18 @@ export default class PageContact extends React.Component {
 						</button>
 					</div>
 
-					{this.state.requests !== null && this.state.requests.length === 0
+					<div className="col-md-3">
+						<select
+							value={this.state.statusFilter}
+							onChange={(e) => this.changeState("statusFilter", e.target.value)}
+						>
+							<option value="ALL">All Status</option>
+							<option value="NEW">New</option>
+							<option value="IN PROCESS">In Process</option>
+						</select>
+					</div>
+
+					{this.state.filteredRequests !== null && this.state.filteredRequests.length === 0
 						&& <div className="col-md-12">
 							<Message
 								text={"No message found"}
@@ -119,8 +147,8 @@ export default class PageContact extends React.Component {
 							/>
 						</div>
 					}
-					{this.state.requests !== null && this.state.requests.length > 0
-						&& this.state.requests.map((r) => (
+					{this.state.filteredRequests !== null && this.state.filteredRequests.length > 0
+						&& this.state.filteredRequests.map((r) => (
 							<div className="col-md-12" key={r.id}>
 								<Request
 									info={r}
@@ -129,7 +157,7 @@ export default class PageContact extends React.Component {
 							</div>
 						))
 					}
-					{this.state.requests === null
+					{this.state.filteredRequests === null
 						&& <div className="col-md-12">
 							<Loading
 								height={150}

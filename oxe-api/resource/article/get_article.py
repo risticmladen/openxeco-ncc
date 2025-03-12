@@ -24,7 +24,7 @@ class GetArticle(MethodResource, Resource):
              "422": {"description": "Object not found"},
          })
     @jwt_required
-    @verify_admin_access
+    # @verify_admin_access
     @catch_exception
     def get(self, id_):
 

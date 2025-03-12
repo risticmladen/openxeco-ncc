@@ -1,5 +1,7 @@
 import random
 import bcrypt
+import string
+# import string
 from itsdangerous import URLSafeTimedSerializer
 
 from config.config import SECRET_KEY, SECURITY_SALT
@@ -19,12 +21,20 @@ def confirm_token(token, expiration=3600):
     )
 
 
-def generate_otp(otp_size = 6):
-    final_otp = ''
-    for _ in range(otp_size):
-        final_otp = final_otp + str(random.randint(0,9))
-    return final_otp
+# def generate_otp(otp_size = 6):
+#     final_otp = ''
+#     for _ in range(otp_size):
+#         final_otp = final_otp + str(random.randint(0,9))
+#     return final_otp
 
+def generate_otp(otp_size=6):
+    half_size = otp_size // 2
+    numbers = ''.join(random.choice(string.digits) for _ in range(half_size))
+    latin_characters = ''.join(random.choice(string.ascii_letters) for _ in range(otp_size - half_size))
+    final_otp = numbers + latin_characters
+    final_otp = ''.join(random.sample(final_otp, len(final_otp)))  # Shuffle the OTP
+    print(final_otp)
+    return final_otp
 
 def hash_otp(otp):
     salt = bcrypt.gensalt()

@@ -76,10 +76,10 @@ export default class MediaDocument extends React.Component {
 
 	render() {
 		return (
-			<div id="MediaDocument" className="max-sized-page fade-in">
+			<div id="MediaDocument" className="max-sized-page fade-in MediaPages">
 				<div className={"row"}>
 					<div className="col-md-12">
-						<h1>Documents</h1>
+						<h1 className="heading-media">Documents</h1>
 						<div className="top-right-buttons">
 							<button
 								onClick={() => this.refresh()}>

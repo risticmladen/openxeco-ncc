@@ -125,10 +125,10 @@ export default class EntityGlobal extends React.Component {
 		}
 
 		return (
-			<div id="EntityGlobal" className="max-sized-page fade-in">
+			<div id="EntityGlobal" className="max-sized-page fade-in EntityGlobal">
 				<div className={"row"}>
 					<div className="col-md-9">
-						<h2>Global information</h2>
+						<h2 className="dashboard-header">Global information</h2>
 					</div>
 
 					{/* <div className="col-md-3 top-title-menu">
@@ -215,7 +215,7 @@ export default class EntityGlobal extends React.Component {
 					{(this.state.address !== null && this.state.address !== undefined)
 						? <>
 							<div className="col-md-12">
-								<h2>Address</h2>
+								<h2 className="dashboard-header">Address</h2>
 							</div>
 							<div className="col-md-12">
 								<FormLine
@@ -247,7 +247,7 @@ export default class EntityGlobal extends React.Component {
 						</>
 						: <>
 							<div className="col-md-12">
-								<h2>Address</h2>
+								<h2 className="dashboard-header">Address</h2>
 							</div>
 							<div className="col-md-12">
 								No address set
@@ -257,7 +257,7 @@ export default class EntityGlobal extends React.Component {
 					{(this.state.contact !== null && this.state.contact !== undefined)
 						? <>
 							<div className="col-md-12">
-								<h2>Contact</h2>
+								<h2 className="dashboard-header">Contact</h2>
 							</div>
 							<div className="col-md-12">
 								<FormLine

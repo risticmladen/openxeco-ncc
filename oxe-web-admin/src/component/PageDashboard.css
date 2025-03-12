@@ -3,7 +3,7 @@
 	font-family: "Fjalla One", "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-weight: normal;
 	text-align: center;
-	font-size: 45px;
+	font-size: 30px;
 }
 
 .PageDashboard-filters {
@@ -11,9 +11,14 @@
     bottom: 20px;
     right: 30px;
     max-width: 400px;
-    width: 40%;
+    width: 70%;
 }
 
 #PageDashboard .Tab-menu {
 	z-index: 1;
+	background-color: rgba(255,255,255,.8);
+  border: 1px solid rgba(0,0,0,.125);
+  border-radius: 0.25rem;
+  margin: 10px 0px;
+  padding: 20px;
 }

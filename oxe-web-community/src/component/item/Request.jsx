@@ -46,63 +46,56 @@ export default class Request extends Component {
 	}
 
 	render() {
+		const { info } = this.props;
 		return (
 			<div className="Request card">
 				<div className="card-horizontal">
 					<div className="card-body">
 						<div className="card-date">
-							{this.props.info.submission_date
-								? this.props.info.submission_date.replace("T", " ")
-								: "NO DATE FOUND"
-							}
+							{info.submission_date ? info.submission_date.replace("T", " ") : "NO DATE FOUND"}
 						</div>
-
 						<div className="card-type">
-							STATUS: {this.props.info.status}
+							STATUS: {info.status}
 						</div>
-
-						{this.props.info.type !== null
-							? <div>
-								<b>{this.props.info.type}</b>
+						{info.type !== null ? (
+							<div>
+								<b>{info.type}</b>
 							</div>
-							: ""
-						}
-
-						{this.props.info.request !== null
-							? <p className="card-text">
-								{this.props.info.request}
-							</p>
-							: ""
-						}
-
-						{this.props.info.data !== null
-							&& typeof this.props.info.data === "object"
-							&& !Array.isArray(this.props.info.data)
-							? <div dangerouslySetInnerHTML={
-								{
-									__html:
-									Request.getPrettyRequestContent(this.props.info.data),
-								}
-							}/>
-							: ""
-						}
-
-						{this.props.info.image !== null
-							? <div>
-								<img src={"data:image/png;base64," + this.props.info.image} />
+						) : (
+							""
+						)}
+						{info.request !== null ? (
+							<p className="card-text">{info.request}</p>
+						) : (
+							""
+						)}
+						{info.data !== null && typeof info.data === "object" && !Array.isArray(info.data) ? (
+							<div
+								dangerouslySetInnerHTML={{
+									__html: Request.getPrettyRequestContent(info.data),
+								}}
+							/>
+						) : (
+							"    "
+						)}
+						{info.image !== null ? (
+							<div>
+								<img src={"data:image/png;base64," + info.image} alt="Request" />
 							</div>
-							: ""
-						}
-
-						{this.props.info.status === "NEW"
-							&& <button
-								className={"red-background"}
+						) : (
+							""
+						)}
+						{info.status === "NEW" ? (
+							<button
+								className="red-background"
 								onClick={this.delete}
-								disabled={this.props.info.link === null}
+								disabled={info.link === null}
 							>
-								<i className="fas fa-trash-alt"/> Delete
+								<i className="fas fa-trash-alt" /> Delete
 							</button>
-						}
+						) : (
+							<div className="hidden-placeholder"></div>
+						)}
 					</div>
 				</div>
 			</div>

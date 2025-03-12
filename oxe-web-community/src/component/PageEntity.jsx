@@ -105,7 +105,7 @@ export default class PageEntity extends React.Component {
 			<div id="PageEntity" className="page max-sized-page">
 				<div className={"row row-spaced"}>
 					<div className="col-md-12">
-						<h1>{this.state.entity !== null
+						<h1 className="dashboard-header">{this.state.entity !== null
 							? "Entity: " + this.state.entity.name
 							: "Unfound entity"}</h1>
 

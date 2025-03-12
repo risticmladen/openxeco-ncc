@@ -43,7 +43,7 @@ class GetArticles(MethodResource, Resource):
         'max_end_date': fields.Str(required=False),
     }, location="query")
     @jwt_required
-    @verify_admin_access
+    # @verify_admin_access
     @catch_exception
     def get(self, **kwargs):
 

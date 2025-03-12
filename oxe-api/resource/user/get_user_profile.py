@@ -23,7 +23,6 @@ class GetUserProfile(MethodResource, Resource):
              "422": {"description": "Object not found"}
          })
     @jwt_required
-    @verify_admin_access
     @catch_exception
     def get(self, user_id):
 
@@ -49,5 +48,7 @@ class GetUserProfile(MethodResource, Resource):
         profile["first_name"] = user.first_name
         profile["last_name"] = user.last_name
         profile["telephone"] = user.telephone
+        
+        print(profile)
 
         return profile, "200 "

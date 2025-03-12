@@ -185,6 +185,22 @@ export default class Menu extends React.Component {
 					</NavItem>
 					<div className="Menu-divider"/>
 					<NavItem
+						eventKey="/forum"
+						active={this.props.selectedMenu === "forum"}
+						onClick={() => this.props.history.push("/forum")}>
+						<NavIcon>
+							<i
+								className={"fas fa-comments "
+									+ (this.props.selectedMenu !== "/forum"
+									&& "Menu-highlight")}
+								style={{ fontSize: "1.75em" }}
+							/>
+						</NavIcon>
+						<NavText>
+							Forum
+						</NavText>
+					</NavItem>
+					<NavItem
 						eventKey="task"
 						active={this.props.selectedMenu === "task"}
 						onClick={() => this.props.history.push("/task")}>
@@ -205,6 +221,17 @@ export default class Menu extends React.Component {
 						</NavIcon>
 						<NavText>
 							Groups & Users
+						</NavText>
+					</NavItem>
+					<NavItem
+						eventKey="activities"
+						active={this.props.selectedMenu === "activities"}
+						onClick={() => this.props.history.push("/activities")}>
+						<NavIcon>
+							<i className="fas fa-calendar" style={{ fontSize: "1.75em" }} />
+						</NavIcon>
+						<NavText>
+							Schedule
 						</NavText>
 					</NavItem>
 					<NavItem
@@ -231,8 +258,8 @@ export default class Menu extends React.Component {
 						</NavText>
 					</NavItem>
 					<NavItem
-						eventKey="audit"
-						active={this.props.selectedMenu === "audit"}
+						eventKey="user_requests"
+						active={this.props.selectedMenu === "user_requests"}
 						onClick={() => this.props.history.push("/user_requests")}>
 						<NavIcon>
 							<i className="fas fa-file-alt" style={{ fontSize: "1.75em" }} />

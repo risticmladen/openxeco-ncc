@@ -15,7 +15,7 @@ class UpdateProfile(MethodResource, Resource):
 
     def __init__(self, db):
         self.db = db
-
+ 
     @log_request
     @doc(tags=['private'],
          description='Add a user profile',
@@ -31,7 +31,9 @@ class UpdateProfile(MethodResource, Resource):
     @verify_admin_access
     @catch_exception
     def post(self, **kwargs):
+        print("yay")
         user_id = kwargs["user_id"]
+        
         # db_profile = self.db.get(self.db.tables["UserProfile"], {"user_id": user_id})
 
         self.db.merge({
@@ -46,17 +48,35 @@ class UpdateProfile(MethodResource, Resource):
         profile_data = {
             'user_id': user_id,
             'gender': kwargs["data"]['gender'],
-            'sector': kwargs["data"]['sector'],
-            'residency': kwargs["data"]['residency'],
-            'mobile': kwargs["data"]['mobile'],
-            'experience': kwargs["data"]['experience'],
-            'domains_of_interest': kwargs["data"]['domains_of_interest'],
-            'how_heard': kwargs["data"]['how_heard'],
-            'profession_id': kwargs["data"]['profession_id'],
-            'industry_id': kwargs["data"]['industry_id'],
-            'nationality_id': kwargs["data"]['nationality_id'],
-            'expertise_id': kwargs["data"]['expertise_id'],
             'public': kwargs["data"]['public'],
+            'entity_name': kwargs["data"]['entity_name'],
+            'vat_number': kwargs["data"]['vat_number'],
+            'website': kwargs["data"]['website'],
+            'company_email': kwargs["data"]['company_email'],
+            'company_phone': kwargs["data"]['company_phone'],
+            'position_organization': kwargs["data"]['position_organization'],
+            'address' : kwargs["data"]['address'],
+            'city': kwargs["data"]['city'],
+            'postal_code': kwargs["data"]['postal_code'],
+            'po_box': kwargs["data"]['po_box'],
+            'headquarter_address': kwargs["data"]['headquarter_address'],
+            'headquarter_city': kwargs["data"]['headquarter_city'],
+            'headquarter_postal_code': kwargs["data"]['headquarter_postal_code'],
+            'headquarter_po_box': kwargs["data"]['headquarter_po_box'],
+            'organizations_types': kwargs["data"]['organizations_types'],
+            'other': kwargs["data"]['other'],
+            'eu_member': kwargs["data"]['eu_member'],
+            'eu_country': kwargs["data"]['eu_country'],
+            'majority_shares': kwargs["data"]['majority_shares'],
+            'shares_country': kwargs["data"]['shares_country'],
+            'comply_article_eu': kwargs["data"]['comply_article_eu'],
+            'taxonomy_types': kwargs["data"]['taxonomy_types'],
+            'person_expertise': kwargs["data"]['person_expertise'],
+            'field_article_expertise': kwargs["data"]['field_article_expertise'],
+            'taxonomy_other': kwargs["data"]['taxonomy_other'],
+            'detail_expertise': kwargs["data"]['detail_expertise'],
+            'achieve_join_community': kwargs["data"]['achieve_join_community'],
+            'contribution_community': kwargs["data"]['contribution_community'],
         }
 
         db_profile = self.db.get(self.db.tables["UserProfile"], {"user_id": user_id})

@@ -13,12 +13,56 @@ export default class EntityGlobal extends React.Component {
 
 		this.state = {
 			entityEnums: null,
+			sector: "",
+			industry: "",
+			sectors: [],
+			industries: null,
+			involvement: "",
+			involvements: [],
 		};
 	}
 
 	componentDidMount() {
 		this.getEntityEnums();
+		getRequest.call(this, "public/get_public_sectors", (data) => {
+			this.setState({
+				sectors: data,
+			});
+		}, (error) => {
+			nm.warning(error.message);
+		}, (error) => {
+			nm.error(error.message);
+		});
+		getRequest.call(this, "public/get_public_involvement", (data) => {
+			this.setState({
+				involvements: data,
+			});
+		}, (error) => {
+			nm.warning(error.message);
+		}, (error) => {
+			nm.error(error.message);
+		});
 	}
+
+	changeState(field, value) {
+		this.setState({ [field]: value });
+	}
+
+	setIndustries(name) {
+		const sector = this.state.sectors.find(
+			(s) => (s.name === name),
+		);
+		const sectorIndustries = sector.industries.split("|");
+		this.changeState("sector", sector.name);
+		this.changeState("industries", sectorIndustries);
+		this.changeState("industry", "");
+		this.forceUpdate();
+	}
+
+	handleSectorChange = (v) => {
+		this.setIndustries(v);
+		this.saveEntityValue("sector", v);
+	};
 
 	getEntityEnums() {
 		if (this.props.node && this.props.node.api_endpoint) {
@@ -38,6 +82,7 @@ export default class EntityGlobal extends React.Component {
 				this.setState({
 					entityEnums: data,
 				});
+				console.log(data);
 			}, (response) => {
 				nm.warning(response.statusText);
 			}, (error) => {
@@ -128,13 +173,13 @@ export default class EntityGlobal extends React.Component {
 						onChange={(v) => this.saveEntityValue("status", v)}
 						disabled={!this.props.editable}
 					/>
-					<FormLine
+					{/* <FormLine
 						label={"Name"}
 						value={this.props?.entity?.name}
 						onBlur={(v) => this.saveEntityValue("name", v)}
 						disabled={!this.props.editable}
 						fullWidth={true}
-					/>
+					/> */}
 				</div>
 
 				<div className="col-md-12">
@@ -145,53 +190,121 @@ export default class EntityGlobal extends React.Component {
 					<FormLine
 						label={"Name"}
 						value={this.props?.entity?.name}
-						disabled={true}
+						// disabled={true}
+						onBlur={(v) => this.saveEntityValue("name", v)}
+						disabled={!this.props.editable}
 					/>
 					<FormLine
 						label={"Entity Type"}
-						value={this.props?.entity?.entity_type || ""}
-						disabled={true}
+						type={"select"}
+						value={this.props?.entity?.entity_type}
+						options={this.state.entityEnums === null
+							|| typeof this.state.entityEnums.entity_type === "undefined" ? []
+							: this.state.entityEnums.entity_type.map((o) => ({ label: o, value: o }))}
+						onChange={(v) => this.saveEntityValue("entity_type", v)}
+						disabled={!this.props.editable}
 					/>
 					<FormLine
 						label={"VAT Number"}
 						value={this.props?.entity?.vat_number || ""}
-						disabled={true}
+						// disabled={true}
+						onBlur={(v) => this.saveEntityValue("vat_number", v)}
+						disabled={!this.props.editable}
 					/>
 					<FormLine
 						label={"Website"}
 						value={this.props?.entity?.website || ""}
-						disabled={true}
+						// disabled={true}
+						onBlur={(v) => this.saveEntityValue("website", v)}
+						disabled={!this.props.editable}
 					/>
 					<FormLine
 						label={"Company Email"}
 						value={this.props?.entity?.email || ""}
-						disabled={true}
+						// disabled={true}
+						onBlur={(v) => this.saveEntityValue("email", v)}
+						disabled={!this.props.editable}
 					/>
 					<FormLine
 						label={"Size"}
-						value={this.props?.entity?.size || ""}
-						disabled={true}
+						type={"select"}
+						value={this.props?.entity?.size}
+						options={this.state.entityEnums === null
+							|| typeof this.state.entityEnums.size === "undefined" ? []
+							: this.state.entityEnums.size.map((o) => ({ label: o, value: o }))}
+						onChange={(v) => this.saveEntityValue("size", v)}
+						disabled={!this.props.editable}
 					/>
+					{this.state.sectors
+						? <FormLine
+							label={"Sector *"}
+							type={"select"}
+							options={this.state.sectors
+								? this.state.sectors
+									.map((d) => ({ label: d.name, value: d.name }))
+								: []
+							}
+							value={this.props?.entity?.sector}
+							// value={this.state.sector}
+							// onChange={(v) => this.setIndustries(v)}
+							onChange={(v) => this.handleSectorChange(v)}
+							// onChange={this.handleSectorChange(v)}
+							disabled={false}
+						/>
+						: <Loading
+							height={200}
+						/>
+					}
 					<FormLine
-						label={"Sector"}
-						value={this.props?.entity?.sector || ""}
-						disabled={true}
+						label={"Industry *"}
+						type={"select"}
+						options={this.state.industries
+							? this.state.industries
+								.map((d) => ({ label: d, value: d }))
+							: []
+						}
+						// value={this.state.industry}
+						value={this.props?.entity?.industry}
+						// onChange={(v) => this.handleIndustryChange(v)}
+						onChange={(v) => this.saveEntityValue("industry", v)}
+						disabled={!this.props.editable}
 					/>
-					<FormLine
-						label={"Industry"}
-						value={this.props?.entity?.industry || ""}
-						disabled={true}
-					/>
-					<FormLine
+					{/* <FormLine
 						label={"Primary involvement"}
 						value={this.props?.entity?.involvement || ""}
-						disabled={true}
-					/>
-					<FormLine
+						// disabled={true}
+						disabled={!this.props.editable}
+					/> */}
+					{this.state.involvements
+						? <FormLine
+							label={"Primary involvement *"}
+							type={"select"}
+							options={
+								this.state.involvements.map((o) => ({
+									label: (
+										<>
+											<div title={o.description}>{o.name}</div>
+										</>
+									),
+									value: o.name,
+								}))
+							}
+							value={this.props?.entity?.involvement}
+							onChange={(v) => this.saveEntityValue("involvement", v)}
+							// value={this.state.involvement}
+							// onChange={(v) => this.setState({ involvement: v })}
+							disabled={false}
+						/>
+						: <Loading
+							height={200}
+						/>
+					}
+					{/* <FormLine
 						label="Authorisation by Approved Signatory"
 						value={this.props?.entity?.approved_signatory?.filename}
-						disabled={true}
-					/>
+						// disabled={true}
+						disabled={!this.props.editable}
+					/> */}
 				</div>
 				<div className="col-md-12">
 					<h3>Address</h3>

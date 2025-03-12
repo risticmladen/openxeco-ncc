@@ -11,6 +11,7 @@ import Loading from "./box/Loading.jsx";
 import DynamicTable from "./table/DynamicTable.jsx";
 // import { getUrlParameter } from "../utils/url.jsx";
 // import { getSettingValue } from "../utils/setting.jsx";
+import "./PageAuditLogs.css";
 
 export default class PageAuditLogs extends React.Component {
 	constructor(props) {
@@ -118,7 +119,7 @@ export default class PageAuditLogs extends React.Component {
 			<div id="PageAuditLogs" className="max-sized-page fade-in">
 				<div className={"row row-spaced"}>
 					<div className="col-md-12">
-						<h1>{this.state.pagination !== null ? this.state.pagination.total : 0} Audit Log{this.state.pagination !== null && this.state.pagination.total > 1 ? "s" : ""}</h1>
+						<h1 className="common-heading">{this.state.pagination !== null ? this.state.pagination.total : 0} Audit Log{this.state.pagination !== null && this.state.pagination.total > 1 ? "s" : ""}</h1>
 						<div className="top-right-buttons">
 							<button
 								onClick={() => this.refresh()}>

@@ -276,10 +276,10 @@ export default class ArticleRssFeed extends React.Component {
 		];
 
 		return (
-			<div id="ArticleRssFeed" className="max-sized-page fade-in">
+			<div id="ArticleRssFeed" className="max-sized-page fade-in article-container">
 				<div className={"row row-spaced"}>
 					<div className="col-md-9">
-						<h1>RSS Feeds</h1>
+						<h1 className="article-heading">RSS Feeds</h1>
 					</div>
 
 					<div className="col-md-3">
@@ -358,12 +358,12 @@ export default class ArticleRssFeed extends React.Component {
 					</div>
 				}
 
-				<div className={"row"}>
+				<div className="row import-news-container">
 					<div className="col-md-12">
-						<h1>Import news</h1>
+						<h1 className="article-heading">Import news</h1>
 					</div>
 
-					<div className="col-md-12 row-spaced">
+					<div className="col-md-12 row-spaced common-background">
 						<FormLine
 							label={"Filter by words"}
 							value={this.state.articleFilterField}

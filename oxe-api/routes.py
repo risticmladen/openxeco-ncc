@@ -12,6 +12,8 @@ from resource.account.update_status import UpdateStatus
 from resource.account.add_profile import AddProfile
 from resource.account.verify_login import VerifyLogin
 from resource.account.update_my_profile import UpdateMyProfile
+from resource.account.upload_profile_image import UploadProfilePic
+from resource.account.get_profile_image import GetProfilePic
 from resource.analytics.get_ecosystem_activity import GetEcosystemActivity
 from resource.article.copy_article_version import CopyArticleVersion
 from resource.article.get_articles import GetArticles
@@ -66,6 +68,7 @@ from resource.entity.add_entity import AddEntity
 from resource.entity.delete_entity import DeleteEntity
 from resource.entity.request_entity_form import RequestEntityForm
 from resource.entity.verify_work_email import VerifyWorkEmail
+from resource.entity.get_entities_addresses import GetEntitiesAddresses
 from resource.contact.add_contact import AddContact
 from resource.contact.delete_contact import DeleteContact
 from resource.contact.get_contact_enums import GetContactEnums
@@ -148,6 +151,7 @@ from resource.private.update_my_user import UpdateMyUser
 from resource.private.get_my_profile import GetMyProfile
 from resource.private.disassociate_from_entity import DisassociateFromEntity
 from resource.private.update_profile import UpdateProfile
+from resource.public.update_profile import UpdateProfile
 from resource.public.get_public_article_content import GetPublicArticleContent
 from resource.public.get_public_article_enums import GetArticleEnums
 from resource.public.get_public_article import GetPublicArticle
@@ -238,6 +242,27 @@ from resource.taxonomy.get_taxonomy_value_hierarchy import GetTaxonomyValueHiera
 from resource.taxonomy.update_taxonomy_category import UpdateTaxonomyCategory
 from resource.workforce.add_workforce import AddWorkforce
 from resource.workforce.delete_workforce import DeleteWorkforce
+from resource.forum.get_forum import GetForum
+from resource.forum.getforumbyid import GetForumById
+from resource.forum.getlistofthreads import GetListOFThreads
+from resource.forum.getthreadcreator import GetThreadCreator
+from resource.forum.getthreadcompany import GetThreadCompany
+from resource.forum.getlistofposts import GetListOfPosts
+from resource.forum.getrepliescount import GetRepliesCount
+from resource.forum.addthread import AddThread
+from resource.forum.deletethread import DeleteThread
+from resource.forum.addpost import AddPost
+from resource.forum.deletepost import DeletePost
+from resource.forum.editpost import EditPost
+from resource.forum.getthreadbyid import GetThreadById
+from resource.public.get_public_organization_types import GetPublicOrganizationTypes
+from resource.public.get_public_taxonomy_types import GetPublicTaxonomyTypes
+from resource.user.get_accept_status_users import GetAcceptStatusUsers
+from resource.activities.get_activities import GetActivities
+from resource.activities.add_activity import AddActivity
+from resource.activities.update_activity import UpdateActivity
+from resource.activities.delete_activity import DeleteActivity
+from resource.forum.getpostdocument import GetPostDocument
 import inspect
 import sys
 

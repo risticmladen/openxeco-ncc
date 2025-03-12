@@ -53,7 +53,7 @@ export default class Tab extends React.Component {
 					<div className={this.props.fullWidth ? "col-md-12" : "col-md-2"}>
 						<div className={"row"}>
 							<div className="col-md-12">
-								<div className={this.props.fullWidth ? "Tab-menu-fw" : "Tab-menu"}>
+								<div className={this.props.fullWidth ? "Tab-menu-fw common-background" : "Tab-menu common-background"}>
 									{this.props.keys.map((k, i) => {
 										if (k === null) {
 											return (

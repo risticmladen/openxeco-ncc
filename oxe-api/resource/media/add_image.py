@@ -81,7 +81,7 @@ class AddImage(MethodResource, Resource):
         stream = io.BytesIO(base64.b64decode(kwargs["image"].split(",")[-1]))
 
         try:
-            f = open(os.path.join(IMAGE_FOLDER, str(image.id)), 'wb')
+            f = open(os.path.join("./image_folder/", str(image.id)), 'wb')
             f.write(stream.read())
             f.close()
         except Exception:

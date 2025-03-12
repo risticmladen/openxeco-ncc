@@ -2,3 +2,7 @@
 .PageTaxonomy-Table-button {
 	width: calc(100% - 5px);
 }
+
+.heading-taxonomy {
+	color: #fff;
+}

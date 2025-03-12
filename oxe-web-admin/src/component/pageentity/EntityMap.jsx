@@ -81,7 +81,7 @@ export default class EntityMap extends React.Component {
 
 				<div className={"row row-spaced EntityMap-buttons"}>
 					<div className="col-md-12">
-						<h1>
+						<h1 >
 							{this.props.entities ? this.props.entities.length : 0}
 							&nbsp;Entit{this.props.entities && this.props.entities.length > 1 ? "ies" : "y"}
 						</h1>

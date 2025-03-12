@@ -1,0 +1,324 @@
+.Upload-dragdrop {
+	width: 100%;
+	border: 3px dashed #999;
+	border-radius: 8px;
+	display: table;
+	padding: 20px;
+	cursor: pointer;
+}
+
+.Upload-dragdrop-done {
+	width: 100%;
+	border: 3px solid #999;
+	border-radius: 8px;
+	display: table;
+	padding: 20px;
+	cursor: pointer;
+}
+
+.Upload-dragdrop-textContent {
+	display: table-cell;
+	height: 100%;
+	width: 100%;
+	text-align: center;
+	color: rgb(112, 112, 112);
+	vertical-align: middle;
+}
+
+.validation-error {
+	color: rgb(167, 63, 63);
+	font-style: italic;
+	font-size: 0.8rem;
+}
+
+.icon {
+	margin-right: 8px;
+	font-size: 0.8em;
+	color: #555;
+	vertical-align: middle; /* This aligns the icon vertically with the text */
+	cursor: pointer;
+}
+
+.comment-icon {
+	font-size: 1em;
+}
+
+.forum-detail {
+	max-width: 85%; /* Make the forum-detail container full width */
+	margin: 0 auto;
+	padding: 20px;
+	flex: 1;
+	box-sizing: border-box;
+	padding-bottom: 50px;
+}
+
+.threads-container {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+
+.thread-info-row {
+	display: flex;
+	gap: 20px; /* Space between the items */
+	align-items: center; /* Vertically align the items */
+	justify-content: flex-start; /* Align all items to the left */
+}
+
+.thread-info-row .thread-meta {
+	margin: 0; /* Remove extra margin or padding around meta items */
+}
+
+.thread-card {
+	display: flex;
+	flex-direction: column;
+	padding: 40px;
+	border: 1px solid #ddd;
+	border-radius: 10px;
+	background-color: #fff;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+	position: relative; /* Ensure relative positioning for absolute positioned dropdown */
+	/* width: calc(100% - 40px); Make thread cards wider and adjust for padding */
+	margin-bottom: 20px;
+}
+
+.thread-footer {
+	display: flex;
+  align-items: flex-start;
+	width: 100%
+}
+
+.thread-avatar img {
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+}
+
+.thread-content {
+	flex: 1;
+	padding: 0 20px 20px 0;
+}
+
+.thread-content h3 {
+	margin: 0;
+	font-size: 18px;
+}
+
+.thread-name {
+	padding: 0;
+}
+
+.thread-content p {
+	margin: 5px 0;
+	color: #555;
+	font-size: 16px; /* Increased font size for thread content */
+}
+
+.thread-meta {
+	font-size: 14px;
+	color: #999;
+}
+
+.thread-replies-options {
+	height: inherit;
+}
+
+.thread-replies, .thread-last-activity, .thread-created-activity {
+	flex: 1;
+	text-align: center;
+	display: flex;
+	align-items: center;
+}
+
+.thread-replies p, .thread-last-activity p, .thread-created-activity p {
+	margin: 0;
+	font-size: 14px;
+	color: #555;
+}
+
+.thread-options {
+	justify-content: flex-end;
+	display: flex;
+	align-items: flex-end;
+	/* padding-top: 50px; */
+	/* padding-right: 10px; */
+}
+
+.thread-link {
+	display: flex;
+	align-items: center;
+	color: inherit;
+	text-decoration: none;
+}
+
+.thread-link:hover {
+	text-decoration: underline;
+}
+
+.thread-link span {
+	margin-left: 8px;
+}
+
+.thread-buttons-container {
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: flex-start; /* Align items to the start */
+	padding: 0 10px; /* Add padding if necessary */
+	gap: 20px; /* Add gap to create space between the buttons */
+}
+
+.thread-button {
+	margin-bottom: 20px;
+	padding: 10px 20px;
+	background-color: #007bff;
+	color: #fff;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	font-size: 16px;
+	display: flex;
+	align-items: center;
+}
+
+.thread-button .icon {
+	margin-right: 8px;
+}
+
+.thread-button:hover {
+	background-color: rgba(0,51,153,255);
+}
+
+.thread-editor {
+	margin-bottom: 50px;
+	padding: 20px;
+	border: 1px solid #ddd;
+	border-radius: 5px;
+	background-color: #fff;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.thread-editor input,
+.thread-editor .ql-container {
+	width: 100%;
+	padding: 10px;
+	border: 1px solid #ddd;
+	border-radius: 5px;
+	font-size: 16px;
+}
+
+.thread-editor .ql-container {
+	height: auto; /* Ensure the editor's height adapts to the content */
+}
+
+.thread-editor .ql-toolbar {
+	background: #eaecec;
+	border-radius: 5px 5px 0 0;
+}
+
+.thread-editor .submit-button {
+	width: 200px;
+	margin-top: 20px;
+	opacity: 1;
+	padding: 10px 20px;
+	background-color: #007bff;
+	color: #fff;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	font-size: 16px;
+}
+
+.thread-editor .submit-button:hover {
+	background-color: rgba(0,51,153,255);
+}
+
+.thread-options {
+	position: relative;
+}
+
+.delete-thread-button {
+	background-color: #dc3545;
+	color: #fff;
+	border: none;
+	border-radius: 5px;
+	padding: 10px 20px;
+	cursor: pointer;
+}
+
+.delete-thread-button:hover {
+	background-color: #c82333;
+}
+
+.delete-button {
+	background: none;
+	border: none;
+	color: red;
+	cursor: pointer;
+	font-size: 2em;
+	padding: 0;
+}
+
+.delete-button:hover {
+	color: darkred;
+}
+
+.clickable-text {
+	color: #007bff; /* Bootstrap primary color */
+	cursor: pointer;
+	text-decoration: underline;
+}
+
+.pagination {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-top: 20px;
+}
+
+.pagination-button {
+	cursor: pointer;
+	margin: 0 5px;
+	font-size: 16px;
+}
+
+.pagination-button:disabled {
+	cursor: not-allowed;
+	opacity: 0.5;
+}
+
+.pagination-pages {
+	display: flex;
+	gap: 5px;
+}
+
+.pagination-page-number {
+	cursor: pointer;
+	font-size: 16px;
+}
+
+.pagination-page-number:disabled {
+	cursor: not-allowed;
+	font-weight: bold;
+	text-decoration: underline;
+}
+
+.filter-container {
+	display: flex;
+	gap: 10px;
+	margin-bottom: 10px;
+}
+
+.filter-container label {
+	display: flex;
+	flex-direction: column;
+	font-size: 14px;
+}
+
+.filter-container select {
+	margin-top: 2px;
+	padding: 2px;
+}

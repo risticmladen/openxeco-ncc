@@ -18,6 +18,8 @@ import FormLine from "../button/FormLine.jsx";
 import { getUrlParameter } from "../../utils/url.jsx";
 import Chip from "../button/Chip.jsx";
 import Item from "./Item.jsx";
+import DialogSendMail from "../dialog/DialogSendMail.jsx";
+import Loading from "../box/Loading.jsx";
 
 export default class Entity extends Item {
 	constructor(props) {
@@ -41,6 +43,9 @@ export default class Entity extends Item {
 
 			sync_global: true,
 			sync_address: true,
+			entity_email: "",
+			subject: "Subject of the email",
+			email_content: "Content of the email",
 		};
 	}
 
@@ -89,6 +94,7 @@ export default class Entity extends Item {
 			getForeignRequest.call(this, url, (data) => {
 				this.setState({
 					entity: data,
+					entity_email: data.email,
 				});
 			}, (response) => {
 				nm.warning(response.statusText);
@@ -99,6 +105,7 @@ export default class Entity extends Item {
 			getRequest.call(this, "entity/get_entity/" + this.props.id, (data) => {
 				this.setState({
 					entity: data,
+					entity_email: data.email,
 				});
 			}, (response) => {
 				nm.warning(response.statusText);
@@ -304,6 +311,24 @@ export default class Entity extends Item {
 								<span><i className="far fa-times-circle"/></span>
 							</button>
 						</div>
+					</div>
+					<div className="col-md-12 row-spaced">
+						{this.state.entity ? (
+							<DialogSendMail
+								trigger={
+									<button
+										className={"blue-background"}
+										id="Request-send-mail-button">
+										<i className="fas fa-envelope-open-text"/> Prepare email...
+									</button>
+								}
+								email={this.state.entity_email}
+								subject={this.state.subject}
+								content={this.state.email_content}
+							/>
+						) : (
+							<Loading height={50} />
+						)}
 					</div>
 
 					<div className="col-md-12">

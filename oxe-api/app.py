@@ -8,6 +8,7 @@ from sqlalchemy.engine.url import URL
 from apispec import APISpec
 from apispec.ext.marshmallow import MarshmallowPlugin
 from flask_apispec.extension import FlaskApiSpec
+from datetime import timedelta
 
 from seeder.seeder import DatabaseSeeder
 from utils.re import has_mail_format
@@ -30,6 +31,7 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["ERROR_404_HELP"] = False
 
 app.config["JWT_SECRET_KEY"] = config.JWT_SECRET_KEY
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=4)
 app.config["JWT_TOKEN_LOCATION"] = ['headers', 'cookies', 'query_string']
 app.config["JWT_COOKIE_SECURE"] = config.ENVIRONMENT != "dev"
 app.config['JWT_COOKIE_CSRF_PROTECT'] = False

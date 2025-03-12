@@ -9,23 +9,50 @@
 }
 
 .DynamicTable-elements {
-    height: calc(100% - 25px);
-    overflow-y: hidden;
-    overflow-x: hidden;
+    height: auto;
+    overflow-y: auto;
+    overflow-x: auto;
+    background-color: white; /* Add white background for the table */
+    border: 1px solid #ddd; /* Add border around the table */
+    border-radius: 10px; /* Add rounded corners to the table */
+    padding: 10px; /* Optional: Add padding inside the table container */
+}
+
+table {
+    width: 100%;
+    border-collapse: separate; /* Change from collapse to separate for rounded corners to work */
+    border-spacing: 0; /* Ensure no spacing between cells */
+    border-radius: 10px; /* Add rounded corners to the table */
+    overflow: hidden; /* Ensure rounded corners are not hidden */
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+    background-color: white; /* Ensure cells have a white background */
+}
+
+th {
+    background-color: #f2f2f2;
 }
 
 .DynamicTable-pagination {
     margin-bottom: 5px;
     height: 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .DynamicTable-info {
     font-size: 20px;
-    bottom: 0px;
-    width: 100%;
-    height: 60px;
     text-align: center;
-    padding-top: 20px;
+}
+
+.DynamicTable-arrows {
+    display: flex;
+    align-items: center;
 }
 
 .DynamicTable-arrowLeft {
@@ -33,7 +60,7 @@
     color: #2E52C1;
     font-size: 20px;
     position: absolute;
-    top: 20px;
+    top: 590px;
     left: 30px;
 }
 
@@ -42,7 +69,7 @@
     color: #2E52C1;
     font-size: 20px;
     position: absolute;
-    top: 20px;
+    top: 590px;
     right: 30px;
 }
 
@@ -52,6 +79,11 @@
 }
 
 .DynamicTable-arrowRight .iconDisabled {
+    color: grey !important;
+    cursor: default !important;
+}
+
+.iconDisabled {
     color: grey !important;
     cursor: default !important;
 }

@@ -1,0 +1,109 @@
+.Table {
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    max-width: 100%;
+    width: 100%;
+    margin: 0 auto;
+    position: relative;
+    padding: 20px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  .Table thead {
+    display: table-header-group;
+    vertical-align: middle;
+    border-color: inherit;
+    margin: 6px 0px;
+  }
+  
+  .Table tr {
+    color: gray;
+    line-height: 1.2;
+    font-weight: unset;
+  }
+  
+  .Table th {
+    display: table-cell;
+    padding: 12px 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    background-color: lightgrey;
+    font-weight: bold;
+    border-bottom: 2px solid #ddd;
+  }
+  
+  .Table td {
+    display: table-cell;
+    padding: 6px 12px 4px 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .Table td:last-child {
+    border-right: 0;
+  }
+  
+  .Table .Table-content {
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+  }
+  
+  .Table .Table-pagination {
+    padding: 0.5rem;
+		padding-top: 40px;
+    height: 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .Table .Table-pagination-button-left {
+    margin-left: 10px;
+  }
+  
+  .Table .Table-pagination-button-right {
+    margin-right: 10px;
+  }
+  
+  .Table .Table-pagination-center {
+    flex-grow: 1;
+    text-align: center;
+  }
+  
+  .Table .Table-pagination-center span {
+    line-height: 2.2;
+  }
+  
+  .Table .Table-pagination-center input {
+    display: inline-block;
+    margin: auto;
+  }
+  
+  .Table .Table-pagination-center select {
+    display: inline-block;
+    margin: auto;
+    width: 130px;
+  }
+  
+  .Table .Table-right-button {
+    float: right;
+  }
+  
+  .Table .Table-CheckBox {
+    height: 20px !important;
+    width: 100% !important;
+    padding: 1px !important;
+    line-height: 1;
+  }
+  
+  .Table .Table-CheckBox i {
+    width: 100% !important;
+    margin: 0px !important;
+  }
+  

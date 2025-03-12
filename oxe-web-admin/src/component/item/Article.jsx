@@ -137,7 +137,7 @@ export default class Article extends Item {
 			>
 				{(close) => <div className="row row-spaced">
 					<div className="col-md-9">
-						<h1>
+						<h1 className="article-title">
 							<i className="fas fa-feather-alt"/> {this.props.name}
 						</h1>
 					</div>

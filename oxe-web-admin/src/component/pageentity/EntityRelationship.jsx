@@ -201,7 +201,7 @@ export default class EntityRelationship extends React.Component {
 			<div id="EntityRelationship" className="fade-in">
 				<div className={"row"}>
 					<div className="col-md-9">
-						<h1>Relationship</h1>
+						<h1 className="common-heading">Relationship</h1>
 					</div>
 
 					<div className="col-md-3">

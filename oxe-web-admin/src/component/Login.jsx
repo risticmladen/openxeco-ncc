@@ -6,7 +6,7 @@ import { getRequest, postRequest } from "../utils/request.jsx";
 import { validatePassword, validateOtp } from "../utils/re.jsx";
 import Info from "./box/Info.jsx";
 import { getUrlParameter } from "../utils/url.jsx";
-import { getApiURL, getCookieOptions } from "../utils/env.jsx";
+import { getCookieOptions } from "../utils/env.jsx";
 import Version from "./box/Version.jsx";
 
 export default class Login extends React.Component {
@@ -161,7 +161,8 @@ export default class Login extends React.Component {
 			this.props.cookies.remove("access_token_cookie", {});
 			document.location.href = "/?reset_password=true";
 		}, (response) => {
-			nm.warning(response.statusText);
+			console.log(response);
+			nm.warning("LINK IS EXPIRED");
 		}, (error) => {
 			nm.error(error.message);
 		});
@@ -173,7 +174,7 @@ export default class Login extends React.Component {
 		window.history.pushState({ path: "/login" }, "", "/login");
 	}
 
-	onKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
+	onKeyDown(event) {
 		if (event.key === "Enter" || event.code === "NumpadEnter") {
 			if (this.state.view === "login" && !this.state.verifyLogin) this.login();
 			if (this.state.view === "login" && this.state.verifyLogin) this.verifyLogin();
@@ -188,22 +189,11 @@ export default class Login extends React.Component {
 
 	render() {
 		return (
-			<div id="Login">
-				<Version/>
+			<div id="Login" className="background-img">
+				{/* <Version/> */}
 
 				<div id="Login-area">
-					<ul className="Login-circles">
-						<li style={{ backgroundImage: "url(" + getApiURL() + "public/get_public_image/logo.png)" }}></li>
-						<li style={{ backgroundImage: "url(" + getApiURL() + "public/get_public_image/logo.png)" }}></li>
-						<li style={{ backgroundImage: "url(" + getApiURL() + "public/get_public_image/logo.png)" }}></li>
-						<li style={{ backgroundImage: "url(" + getApiURL() + "public/get_public_image/logo.png)" }}></li>
-						<li style={{ backgroundImage: "url(" + getApiURL() + "public/get_public_image/logo.png)" }}></li>
-						<li style={{ backgroundImage: "url(" + getApiURL() + "public/get_public_image/logo.png)" }}></li>
-						<li style={{ backgroundImage: "url(" + getApiURL() + "public/get_public_image/logo.png)" }}></li>
-						<li style={{ backgroundImage: "url(" + getApiURL() + "public/get_public_image/logo.png)" }}></li>
-						<li style={{ backgroundImage: "url(" + getApiURL() + "public/get_public_image/logo.png)" }}></li>
-						<li style={{ backgroundImage: "url(" + getApiURL() + "public/get_public_image/logo.png)" }}></li>
-					</ul>
+
 				</div>
 				<div id="Login-box" className={"fade-in"}>
 					<div id="Login-inner-box">
@@ -243,7 +233,7 @@ export default class Login extends React.Component {
 										/>
 										<div className="bottom-right-buttons">
 											<button
-												className="blue-button"
+												className="gold-button"
 												onClick={this.login}
 											>
 												Login
@@ -251,7 +241,7 @@ export default class Login extends React.Component {
 										</div>
 										<div className="bottom-left-buttons">
 											<button
-												className="link-button"
+												className="gold-letters"
 												onClick={() => this.changeState("view", "forgot")}
 											>
 												I forgot my password
@@ -262,7 +252,7 @@ export default class Login extends React.Component {
 								{this.state.verifyLogin === true
 									&& <div className="col-md-12">
 										<div className="Login-title">
-											Verify Login
+											<h1>Verify Login</h1>
 										</div>
 										<FormLine
 											label="Please enter the One Time Pin you received via email"
@@ -277,7 +267,7 @@ export default class Login extends React.Component {
 										<div>
 											<div className="right-buttons">
 												<button
-													className="blue-button"
+													className="gold-button"
 													onClick={this.verifyLogin}
 												>
 													Submit
@@ -285,7 +275,7 @@ export default class Login extends React.Component {
 											</div>
 											<div className="left-buttons">
 												<button
-													className="link-button"
+													className="gold-letters"
 													onClick={this.login}
 												>
 													Resend Code
@@ -293,7 +283,7 @@ export default class Login extends React.Component {
 											</div>
 											<div className="left-buttons">
 												<button
-													className="link-button"
+													className="gold-letters"
 													onClick={() => this.changeState("verifyLogin", false)}
 												>
 													Back to login
@@ -322,7 +312,7 @@ export default class Login extends React.Component {
 								/>
 								<div className="bottom-right-buttons">
 									<button
-										className="blue-button"
+										className="gold-button"
 										onClick={this.requestReset}
 									>
 										Reset password
@@ -330,7 +320,7 @@ export default class Login extends React.Component {
 								</div>
 								<div className="bottom-left-buttons">
 									<button
-										className="link-button"
+										className="gold-letters"
 										onClick={() => this.backToLogin()}
 									>
 										Back to login
@@ -354,7 +344,7 @@ export default class Login extends React.Component {
 											<li>contain at least 1 uppercase alphabetical character</li>
 											<li>contain at least 1 numeric character</li>
 											<li>contain at least 1 special character being !@#$%^&*</li>
-											<li>be between 8 and 30 characters long</li>
+											<li>be between 10 and 30 characters long</li>
 											<li>not contain any part of a name, surname or both</li>
 										</div>
 									}
@@ -380,7 +370,7 @@ export default class Login extends React.Component {
 								/>
 								<div className="bottom-right-buttons">
 									<button
-										className="blue-button"
+										className="gold-button"
 										onClick={this.resetPassword}
 										disabled={!validatePassword(this.state.password)
 									|| !validatePassword(this.state.passwordConfirmation)
@@ -392,7 +382,7 @@ export default class Login extends React.Component {
 								</div>
 								<div className="bottom-left-buttons">
 									<button
-										className="link-button"
+										className="gold-letters"
 										onClick={() => this.backToLogin()}
 									>
 										Back to login

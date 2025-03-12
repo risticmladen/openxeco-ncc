@@ -1,15 +1,15 @@
 import React from "react";
 import "./PageArticles.css";
 import { NotificationManager as nm } from "react-notifications";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import { getRequest } from "../utils/request.jsx";
 import { getUrlParameter, dictToURI } from "../utils/url.jsx";
-import DynamicTable from "./table/DynamicTable.jsx";
-import ArticleHorizontal from "./item/ArticleHorizontal.jsx";
-import Message from "./box/Message.jsx";
-import Loading from "./box/Loading.jsx";
-import DialogAddArticle from "./dialog/DialogAddArticle.jsx";
-import DialogHint from "./dialog/DialogHint.jsx";
+// import DynamicTable from "./table/DynamicTable.jsx";
+// import ArticleHorizontal from "./item/ArticleHorizontal.jsx";
+// import Message from "./box/Message.jsx";
+// import Loading from "./box/Loading.jsx";
+// import DialogAddArticle from "./dialog/DialogAddArticle.jsx";
+// import DialogHint from "./dialog/DialogHint.jsx";
 import CheckBox from "./form/CheckBox.jsx";
 
 export default class PageArticles extends React.Component {
@@ -111,6 +111,13 @@ export default class PageArticles extends React.Component {
 	}
 
 	render() {
+		// Test data
+		const testSettings = {
+			AUTHORIZED_ARTICLE_TYPES_FOR_ECOSYSTEM: "News, Blogs, Reviews",
+		};
+
+		const testEntities = ["Entity1", "Entity2", "Entity3"];
+
 		return (
 			<div className={"PageArticles page max-sized-page"}>
 				<div className={"row"}>
@@ -118,7 +125,7 @@ export default class PageArticles extends React.Component {
 						<h1>My articles</h1>
 					</div>
 
-					<div className="col-md-2 top-title-menu">
+					{/* <div className="col-md-2 top-title-menu">
 						<DialogHint
 							content={
 								<div className="row">
@@ -204,10 +211,34 @@ export default class PageArticles extends React.Component {
 								</div>
 							}
 						/>
-					</div>
+					</div> */}
 				</div>
-
-				{this.props.myEntities !== null && this.props.myEntities.length > 0
+				<ul>
+					{testSettings !== null
+					&& testSettings.AUTHORIZED_ARTICLE_TYPES_FOR_ECOSYSTEM !== undefined
+					&& testSettings.AUTHORIZED_ARTICLE_TYPES_FOR_ECOSYSTEM
+						.split(",")
+						.map((t) => <li
+							key={t}>
+							{t}
+						</li>)}
+				</ul>
+				{testEntities !== null && testEntities.length > 0
+				&& <div className={"row"}>
+					<div className="col-md-12 PageArticles-Checkboxes">
+						{testSettings.AUTHORIZED_ARTICLE_TYPES_FOR_ECOSYSTEM
+							.split(",")
+							.map((t) => <CheckBox
+								key={t}
+								label={t}
+								value={this.state.selectedTypes.indexOf(t) >= 0}
+								onClick={(v) => this.onChangeTypeSelection(t, v)}
+							/>)}
+					</div>
+					{/* ... */}
+				</div>
+				}
+				{/* {this.props.myEntities !== null && this.props.myEntities.length > 0
 					&& <div className={"row"}>
 						<div className="col-md-8">
 							{this.props.settings
@@ -323,7 +354,7 @@ export default class PageArticles extends React.Component {
 					&& <Loading
 						height={200}
 					/>
-				}
+				} */}
 			</div>
 		);
 	}

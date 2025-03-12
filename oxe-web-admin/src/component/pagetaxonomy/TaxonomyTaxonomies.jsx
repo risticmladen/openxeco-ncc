@@ -117,7 +117,7 @@ export default class TaxonomyTaxonomies extends React.Component {
 			<div id="TaxonomyTaxonomies" className="max-sized-page">
 				<div className={"row"}>
 					<div className="col-md-9">
-						<h1>
+						<h1 className="heading-taxonomy">
 							{this.state.categories ? this.state.categories.length : 0}
 							&nbsp;Taxonom{this.state.categories && this.state.categories.length > 1 ? "ies" : "y"}
 						</h1>

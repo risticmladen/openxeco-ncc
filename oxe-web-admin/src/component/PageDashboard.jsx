@@ -16,11 +16,13 @@ export default class PageDashboard extends React.Component {
 		this.getAnalytics = this.getAnalytics.bind(this);
 		this.getEntities = this.getEntities.bind(this);
 		this.onMenuClick = this.onMenuClick.bind(this);
+		this.getEntitiesAddresses = this.getEntitiesAddresses.bind(this);
 
 		this.state = {
 			analytics: null,
 			entities: null,
 			selectedMenu: null,
+			addresses: null,
 			tabs: [
 				"community",
 				"graph",
@@ -48,6 +50,7 @@ export default class PageDashboard extends React.Component {
 	refresh() {
 		this.getAnalytics();
 		this.getEntities();
+		this.getEntitiesAddresses();
 	}
 
 	getAnalytics() {
@@ -78,6 +81,20 @@ export default class PageDashboard extends React.Component {
 		});
 	}
 
+	getEntitiesAddresses() {
+		this.setState({ addresses: null }, () => {
+			getRequest.call(this, "entity/get_entities_addresses", (data) => {
+				this.setState({
+					addresses: data,
+				});
+			}, (response) => {
+				nm.warning(response.statusText);
+			}, (error) => {
+				nm.error(error.message);
+			});
+		});
+	}
+
 	onMenuClick(m) {
 		this.props.history.push("?tab=" + m);
 	}
@@ -95,6 +112,7 @@ export default class PageDashboard extends React.Component {
 							key={"community"}
 							analytics={this.state.analytics}
 							entities={this.state.entities}
+							addresses={this.state.addresses}
 						/>,
 						<DashboardGraph
 							key={"graph"}

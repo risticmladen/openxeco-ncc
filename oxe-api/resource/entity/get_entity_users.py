@@ -21,7 +21,7 @@ class GetEntityUsers(MethodResource, Resource):
              "200": {},
          })
     @jwt_required
-    @verify_admin_access
+    # @verify_admin_access
     @catch_exception
     def get(self, id_):
         entity_id = int(id_)

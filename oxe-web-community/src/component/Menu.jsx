@@ -58,6 +58,18 @@ export default class Menu extends React.Component {
 					</NavItem>
 					<div className="Menu-divider"/>
 					<NavItem
+						eventKey="board"
+						active={this.props.selectedMenu === "board"}
+						onClick={() => this.props.history.push("/board/")}>
+						<NavIcon>
+							<i className="far fa-calendar" style={{ fontSize: "1.75em" }}/>
+						</NavIcon>
+						<NavText>
+							Activity Board
+						</NavText>
+					</NavItem>
+					<div className="Menu-divider"/>
+					<NavItem
 						eventKey="profile"
 						active={this.props.selectedMenu === "profile"}
 						onClick={() => this.props.history.push("/profile")}>
@@ -71,7 +83,7 @@ export default class Menu extends React.Component {
 					{this.props.settings
 						&& this.props.settings.ALLOW_ECOSYSTEM_TO_EDIT_ARTICLE === "TRUE"
 						&& <NavItem
-							eventKey={"articles"}
+							eventKey="articles"
 							active={this.props.selectedMenu === "articles"}
 							onClick={() => this.props.history.push("/articles")}>
 							<NavIcon>
@@ -118,7 +130,7 @@ export default class Menu extends React.Component {
 						: this.props.myEntities.map((c) => <NavItem
 							key={c.id}
 							eventKey={"entity/" + c.id}
-							active={this.props.selectedMenu === "entity/" + c.id}
+							active={this.props.selectedMenu === "/entity/" + c.id}
 							onClick={() => this.props.history.push("/entity/" + c.id)}>
 							<NavIcon>
 								<i className="fas fa-building" style={{ fontSize: "1.75em" }} />
@@ -128,7 +140,7 @@ export default class Menu extends React.Component {
 							</NavText>
 						</NavItem>)
 					}
-					<NavItem
+					{/* <NavItem
 						eventKey="/add_entity"
 						active={this.props.selectedMenu === "add_entity"}
 						onClick={() => this.props.history.push("/add_entity")}>
@@ -145,13 +157,79 @@ export default class Menu extends React.Component {
 						<NavText>
 							Associate or register an entity
 						</NavText>
+					</NavItem> */}
+					<NavItem
+						eventKey="forum"
+						active={this.props.selectedMenu === "/forum/"}
+						onClick={() => this.props.history.push("/forum/")}>
+						<NavIcon>
+							<i className="far fa-comments" style={{ fontSize: "1.75em" }}/>
+						</NavIcon>
+						<NavText>
+							Forum
+						</NavText>
 					</NavItem>
-
+					<NavItem
+						eventKey="announcements"
+						active={this.props.selectedMenu === "/announcements/"}
+						onClick={() => this.props.history.push("/announcements/")}>
+						<NavIcon>
+							<i className="fas fa-bullhorn" style={{ fontSize: "1.75em" }}/>
+						</NavIcon>
+						<NavText>
+							Announcements
+						</NavText>
+					</NavItem>
+					<NavItem
+						eventKey="faqs"
+						active={this.props.selectedMenu === "/faqs/"}
+						onClick={() => this.props.history.push("/faqs/")}>
+						<NavIcon>
+							<i className="far fa-question-circle" style={{ fontSize: "1.75em" }}/>
+						</NavIcon>
+						<NavText>
+							FAQ
+						</NavText>
+					</NavItem>
+					<NavItem
+						eventKey="news"
+						active={this.props.selectedMenu === "/news/"}
+						onClick={() => this.props.history.push("/news/")}>
+						<NavIcon>
+							<i className="fas fa-newspaper" style={{ fontSize: "1.75em" }}/>
+						</NavIcon>
+						<NavText>
+							European News
+						</NavText>
+					</NavItem>
+					<NavItem
+						eventKey="members"
+						active={this.props.selectedMenu === "/members/"}
+						onClick={() => this.props.history.push("/members/")}>
+						<NavIcon>
+							<i className="fas fa-user-friends" style={{ fontSize: "1.75em" }}/>
+						</NavIcon>
+						<NavText>
+							Members
+						</NavText>
+					</NavItem>
 					{/* <NavItem
-						className="Menu-bug-nav-item"
 						eventKey="contact"
 						active={this.props.selectedMenu === "contact"}
 						onClick={() => this.props.history.push("/contact")}>
+						<NavIcon>
+							<i className="fas fa-headset" style={{ fontSize: "1.75em" }}/>
+						</NavIcon>
+						<NavText>
+							Contact
+						</NavText>
+					</NavItem> */}
+
+					<NavItem
+						className="Menu-bug-nav-item"
+						eventKey="contact"
+						active={this.props.selectedMenu === "/contact/"}
+						onClick={() => this.props.history.push("/contact/")}>
 						<NavIcon>
 							<i className="fas fa-headset" style={{ fontSize: "1.75em" }} />
 						</NavIcon>
@@ -159,7 +237,7 @@ export default class Menu extends React.Component {
 							Contact us
 						</NavText>
 						{this.getTaskNotificationBlock("/contact")}
-					</NavItem> */}
+					</NavItem>
 					<NavItem
 						className="Menu-log-out-nav-item"
 						eventKey="disconnect"

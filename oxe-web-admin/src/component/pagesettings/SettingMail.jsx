@@ -185,7 +185,7 @@ export default class SettingMail extends React.Component {
 		return (
 			<div id="SettingMail" className="max-sized-page fade-in">
 				<h1>Email</h1>
-
+				<div className="common-background">
 				<Tab
 					labels={this.state.tabs.map((n) => n.replace("_", " "))}
 					keys={this.state.tabs}
@@ -198,6 +198,7 @@ export default class SettingMail extends React.Component {
 						this.getTabContent(this.state.emailDescription[2]),
 					]}
 				/>
+					</div>
 			</div>
 		);
 	}

@@ -134,7 +134,7 @@ export default class SettingCron extends React.Component {
 					</div>
 
 					{this.state.resources !== null
-						? <div className="col-md-12">
+						? <div className="col-md-12 common-background">
 							{this.state.resources.map((r) => (
 								<div
 									className={"row"}
@@ -170,7 +170,7 @@ export default class SettingCron extends React.Component {
 						</div>
 
 						{this.state.logs !== null && this.state.logs.length > 0
-							&& <div className="col-md-12">
+							&& <div className="col-md-12 common-background">
 								{this.state.logs.map((l) => (
 									<Log
 										key={"Log" + l.id}
@@ -180,10 +180,11 @@ export default class SettingCron extends React.Component {
 							</div>
 						}
 						{this.state.logs !== null && this.state.logs.length === 0
-							&& <Message
+							&& <div className="common-background"><Message
 								text={"No log found for the scheduled tasks"}
 								height={150}
 							/>
+							</div>
 						}
 						{this.state.logs === null
 							&& <Loading

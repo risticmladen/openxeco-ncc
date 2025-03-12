@@ -9,11 +9,11 @@ from flask import request, render_template
 from PIL import Image
 from flask_apispec import MethodResource
 from flask_apispec import use_kwargs, doc
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity,fresh_jwt_required
 from flask_restful import Resource
 from sqlalchemy.orm.exc import NoResultFound
 from webargs import fields
-
+# from utils.env import get_admin_portal_url
 from decorator.catch_exception import catch_exception
 from decorator.log_request import log_request
 from config.config import DOCUMENT_FOLDER
@@ -47,6 +47,7 @@ class AddRequest(MethodResource, Resource):
         'uploaded_file': fields.Str(),
     })
     @jwt_required
+    # @fresh_jwt_required
     @catch_exception
     def post(self, **kwargs):
 
@@ -55,11 +56,11 @@ class AddRequest(MethodResource, Resource):
         user_id = get_jwt_identity()
         # Control image
 
-        if "data" in kwargs:
-            if "vat_number" in kwargs["data"]:
-                data = self.db.get(self.db.tables["Entity"], {"vat_number": kwargs["data"]["vat_number"]})
-                if len(data) > 0:
-                    return "", "422 The VAT Number you entered has already been registered"
+        # if "data" in kwargs:
+        #     if "vat_number" in kwargs["data"]:
+        #         data = self.db.get(self.db.tables["Entity"], {"vat_number": kwargs["data"]["vat_number"]})
+        #         if len(data) > 0:
+        #             return "", "422 The VAT Number you entered has already been registered"
         if 'HTTP_ORIGIN' in request.environ and request.environ['HTTP_ORIGIN']:
             origin = request.environ['HTTP_ORIGIN']
         else:
@@ -118,35 +119,39 @@ class AddRequest(MethodResource, Resource):
                     .one()
             except NoResultFound:
                 return "", "422 Object not found or you don't have the required access to it"
+        try:
 
-        if kwargs["type"] == "NEW INDIVIDUAL ACCOUNT":
-            data = self.db.get(self.db.tables["User"], {"id": get_jwt_identity()})
-            if len(data) == 0:
-                return "", "401 The user has not been found"
+            if kwargs["type"] == "NEW INDIVIDUAL ACCOUNT":
+                data = self.db.get(self.db.tables["User"], {"id": get_jwt_identity()})
+                if len(data) == 0:
+                    return "", "401 The user has not been found"
 
-            user_check = self.db.get(self.db.tables["UserRequest"], {
-                "user_id": get_jwt_identity(),
-                "type": "NEW INDIVIDUAL ACCOUNT"
-            })
-            if len(user_check) > 0:
-                return "", "401 You have already submitted your profile for review"
+                user_check = self.db.get(self.db.tables["UserRequest"], {
+                    "user_id": get_jwt_identity(),
+                    "type": "NEW INDIVIDUAL ACCOUNT"
+                })
+                if len(user_check) > 0:
+                    return "", "401 You have already submitted your profile for review"
 
-            user = data[0]
-            user.status = "REQUESTED"
-            self.db.merge(user, self.db.tables["User"])
+                user = data[0]
+                user.status = "REQUESTED"
+                self.db.merge(user, self.db.tables["User"])
 
-        if kwargs["type"] == "ENTITY ASSOCIATION CLAIM":
-            assignments = self.db.get(self.db.tables["UserEntityAssignment"], {
-                "user_id": get_jwt_identity(),
-                "entity_id": kwargs["data"]["entity_id"]
-            })
-            if len(assignments) > 0:
-                return "", "401 You are already associated with this entity"
+            if kwargs["type"] == "ENTITY ASSOCIATION CLAIM":
+                assignments = self.db.get(self.db.tables["UserEntityAssignment"], {
+                    "user_id": get_jwt_identity(),
+                    "entity_id": kwargs["data"]["entity_id"]
+                })
+                if len(assignments) > 0:
+                    return "", "401 You are already associated with this entity"
+        except:
+            print("ERROR") ## need fix
 
 
         # Insert request
         user_request = {
             "user_id": int(user_id),
+            # "user_id": int(get_jwt_identity()),
             "entity_id": kwargs["entity_id"] if "entity_id" in kwargs else None,
             "request": kwargs["request"],
             "type": kwargs["type"] if "type" in kwargs else None,

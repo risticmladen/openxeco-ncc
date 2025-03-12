@@ -20,9 +20,10 @@ export default class DialogEntityFilter extends React.Component {
 		this.applyFilter = this.applyFilter.bind(this);
 		this.fetchTaxonomyData = this.fetchTaxonomyData.bind(this);
 		this.fetchEntityEnums = this.fetchEntityEnums.bind(this);
+		this.fetchEntityEmails = this.fetchEntityEmails.bind(this);
 
 		this.initialState = {
-			allowedFilters: ["name", "startup_only", "status", "legal_status"],
+			allowedFilters: ["name", "startup_only", "status", "legal_status", "email"],
 
 			...this.props.filters,
 
@@ -30,6 +31,7 @@ export default class DialogEntityFilter extends React.Component {
 			taxonomy_values: null,
 
 			entityEnums: null,
+			entityEmmails: null,
 		};
 
 		this.state = _.cloneDeep(this.initialState);
@@ -38,6 +40,7 @@ export default class DialogEntityFilter extends React.Component {
 	onOpen() {
 		this.fetchTaxonomyData();
 		this.fetchEntityEnums();
+		this.fetchEntityEmails();
 	}
 
 	fetchTaxonomyData() {
@@ -66,6 +69,18 @@ export default class DialogEntityFilter extends React.Component {
 		getRequest.call(this, "public/get_public_entity_enums", (data) => {
 			this.setState({
 				entityEnums: data,
+			});
+		}, (response) => {
+			nm.warning(response.statusText);
+		}, (error) => {
+			nm.error(error.message);
+		});
+	}
+
+	fetchEntityEmails() {
+		getRequest.call(this, "entity/get_entities?", (email) => {
+			this.setState({
+				entityEmmails: email,
 			});
 		}, (response) => {
 			nm.warning(response.statusText);
@@ -130,6 +145,10 @@ export default class DialogEntityFilter extends React.Component {
 
 		filters.taxonomy_values = values;
 
+		if (this.state.email) {
+			filters.email = this.state.email;
+		}
+
 		this.props.applyFilter(filters);
 		DialogEntityFilter.cancel();
 	}
@@ -158,14 +177,14 @@ export default class DialogEntityFilter extends React.Component {
 			>
 				<div className={"DialogEntityFilter-form"}>
 					<h2>Filter entities</h2>
-					<button
+					{/* <button
 						className={"link-button"}
 						data-hover="Cancel"
 						data-active=""
 						onClick={this.eraseFilters}
 						disabled={this.getNumberOfFilter() === 0}>
 						<span><i className="fas fa-eraser"/> Erase filters</span>
-					</button>
+					</button> */}
 					<FormLine
 						label="Entity name"
 						fullWidth={true}
@@ -231,6 +250,12 @@ export default class DialogEntityFilter extends React.Component {
 							height={200}
 						/>
 					}
+					{/* <FormLine
+						label="Entity email"
+						fullWidth={true}
+						value={this.state.email}
+						onChange={(v) => this.changeState("email", v)}
+					/> */}
 				</div>
 				<div className={"bottom-right-buttons"}>
 					<button

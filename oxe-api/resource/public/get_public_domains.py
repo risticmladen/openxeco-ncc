@@ -16,7 +16,7 @@ class GetPublicDomains(MethodResource, Resource):
 
     @log_request
     @doc(tags=['public'],
-         description='Get all domains',
+         description='Get all organization  types',
          responses={
              "200": {},
              "422": {"description": "Object not found"},

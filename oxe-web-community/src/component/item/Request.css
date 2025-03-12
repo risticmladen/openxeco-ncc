@@ -6,7 +6,15 @@
 .Request-link {
     color: inherit;
 }
-
+.red-background.visible {
+    visibility: visible; /* Only make it visible when needed */
+}
+.hidden-placeholder {
+    visibility: hidden; /* Keep the space occupied without displaying content */
+    display: inline-block;
+    width: 100px;  /* Same width as the button */
+    height: 40px;  /* Same height as the button */
+}
 .Request-link:hover {
     color: initial !important;
     text-decoration: none;
@@ -41,7 +49,7 @@
     color: #fff;
     top: 0;
     right: 10px;
-    text-transform: uppercase;
+    text-transform: uppercase; 
 }
 
 .Request img {

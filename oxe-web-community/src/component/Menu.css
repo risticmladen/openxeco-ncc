@@ -1,8 +1,9 @@
 nav {
-	background: #1D1D1B !important;
+	background: white !important;
 	font-family: "Fjalla One", "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-weight: normal;
-    z-index: 300 !important;
+    z-index: 10000 !important;
+	background-color: #f8f9fa;
 }
 
 .Menu-log-out-nav-item {
@@ -23,20 +24,44 @@ nav {
 .sidenav---sidenav-nav---3tvij > .sidenav---sidenav-navitem---uwIJ-.sidenav---highlighted---oUx9u > .sidenav---navitem---9uL5T .sidenav---navtext---1AE_f {
   color: #fff !important;
 }
+
+.sidenav---sidenav-nav---3tvij > .sidenav---sidenav-navitem---uwIJ-:hover,
+.sidenav---sidenav-nav---3tvij > .sidenav---sidenav-navitem---uwIJ-:hover {
+	background-color: #f4a404 !important;
+}
+
 .sidenav---sidenav-nav---3tvij > .sidenav---sidenav-navitem---uwIJ-:hover > .sidenav---navitem---9uL5T .sidenav---navicon---3gCRo > *,
 .sidenav---sidenav-nav---3tvij > .sidenav---sidenav-navitem---uwIJ-:hover > .sidenav---navitem---9uL5T .sidenav---navtext---1AE_f > *,
 .sidenav---sidenav-nav---3tvij > .sidenav---sidenav-navitem---uwIJ-.sidenav---highlighted---oUx9u > .sidenav---navitem---9uL5T .sidenav---navicon---3gCRo > *,
 .sidenav---sidenav-nav---3tvij > .sidenav---sidenav-navitem---uwIJ-.sidenav---highlighted---oUx9u > .sidenav---navitem---9uL5T .sidenav---navtext---1AE_f > * {
   color: #fff !important;
+
+}
+
+.sidenav---sidenav-nav---3tvij > .sidenav---sidenav-navitem---uwIJ-:hover,
+.sidenav---sidenav-nav---3tvij > .sidenav---sidenav-navitem---uwIJ-:hover {
+	background-color: #f4a404 !important;
+}
+
+.sidenav-toggle {
+	background-color: #f4a404 !important;
+}
+
+.sidenav---sidenav-toggle---1KRjR {
+	background-color: #f4a404 !important;
+}
+
+.sidenav---highlighted---oUx9u {
+	background-color: #f4a404 !important;
 }
 
 nav i {
-	color: grey !important;
+	color: black !important;
 	margin-top: 12px !important;
 }
 
 nav div {
-	color: grey !important;
+	color: black !important;
 }
 
 .Menu-notification {
@@ -52,10 +77,6 @@ nav div {
 	right: 10px;
 }
 
-.Menu-highlight {
-    animation: colorchange 1.5s linear infinite;
-}
-
 @keyframes colorchange {
   0% { color: #f9dcdd; }
   50% { color: #e40613; }
@@ -65,6 +86,6 @@ nav div {
 .Menu-divider {
 	margin: 3px 10px;
 	background-color: white;
-  opacity: 0.4;
+  	opacity: 0.4;
 	height: 2px;
 }

@@ -1,0 +1,53 @@
+.FilterButton {
+	border: none;
+  background: none;
+  /* color: grey; */
+  font-size: 20px;
+	height: 48px;
+}
+
+.FilterButton:hover {
+	background-color: transparent;
+}
+
+.FilterContainer {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	align-items: center;
+	justify-content: center;
+}
+
+.FilterButtonsWrapper {
+	align-self: flex-end;
+	padding: 20px 0;
+}
+
+.ClearButton {
+	background-color: lightgray;
+	color: gray;
+  font-size: 20px;
+	height: 48px;
+}
+
+.ClearButton:hover {
+	background-color: gray;
+	border-color: gray;
+	color: white;
+}
+
+.FilterDropdownsContainer {
+	height: 100px;
+	width: 100%;
+	display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.FilterDropdowns {
+	display: flex;
+  flex-direction: row;
+  gap: 10px;
+	width: 100%;
+  padding: 20px 0 40px;
+}

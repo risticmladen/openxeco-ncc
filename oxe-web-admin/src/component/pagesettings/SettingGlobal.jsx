@@ -174,7 +174,7 @@ export default class SettingGlobal extends React.Component {
 						<h2>Project and app names</h2>
 					</div>
 
-					<div className="col-md-12 row-spaced">
+					<div className="col-md-12 row-spaced common-background">
 						<FormLine
 							label={"Project name"}
 							value={getSettingValue(this.props.settings, "PROJECT_NAME")}
@@ -196,7 +196,7 @@ export default class SettingGlobal extends React.Component {
 						<h2>Contact details</h2>
 					</div>
 
-					<div className="col-md-12 row-spaced">
+					<div className="col-md-12 row-spaced common-background">
 						<FormLine
 							label={"Email address"}
 							value={getSettingValue(this.props.settings, "EMAIL_ADDRESS")}
@@ -223,7 +223,7 @@ export default class SettingGlobal extends React.Component {
 						</h2>
 					</div>
 
-					<div className="col-md-12 row-spaced">
+					<div className="col-md-12 row-spaced common-background">
 						<FormLine
 							type={"checkbox"}
 							label={"Show network page"}
@@ -262,7 +262,7 @@ export default class SettingGlobal extends React.Component {
 						</h2>
 					</div>
 
-					<div className="col-md-12 row-spaced">
+					<div className="col-md-12 row-spaced common-background">
 						<h3>Subscription</h3>
 						<FormLine
 							type={"checkbox"}
@@ -340,7 +340,7 @@ export default class SettingGlobal extends React.Component {
 						<br/>
 					</div>
 
-					<div className="col-md-12 row-spaced">
+					<div className="col-md-12 row-spaced common-background">
 						<h3>Entities</h3>
 
 						<FormLine
@@ -470,7 +470,7 @@ export default class SettingGlobal extends React.Component {
 						</h2>
 					</div>
 
-					<div className="col-md-12 row-spaced">
+					<div className="col-md-12 row-spaced common-background">
 						<Info
 							content={<div>
 								<div>
@@ -482,7 +482,7 @@ export default class SettingGlobal extends React.Component {
 						/>
 					</div>
 
-					<div className="col-md-12 row-spaced">
+					<div className="col-md-12 row-spaced common-background">
 						<FormLine
 							label={"Property"}
 							value={this.state.newProperty}
@@ -505,7 +505,7 @@ export default class SettingGlobal extends React.Component {
 						</div>
 					</div>
 
-					<div className="col-md-12 row-spaced">
+					<div className="col-md-12 row-spaced common-background">
 						{this.props.settings
 							&& <Table
 								columns={columns}

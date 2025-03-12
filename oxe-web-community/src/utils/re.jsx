@@ -32,7 +32,7 @@ export function validateTelephoneNumber(number) {
 
 export function validateVatNumber(number) {
 	if (number === null || typeof number === "undefined" || number.length === 0) return false;
-	const re = /^(MT)?([0-9]){8}$/;
+	const re = /^(CY)?([0-9]){8}$/;
 	return re.test(String(number).replace(/\s/g, "").toUpperCase()) || !number;
 }
 
@@ -62,7 +62,8 @@ export function validatePostcode(postcode) {
 
 export function validateOtp(otp) {
 	if (otp === null || typeof otp === "undefined" || otp.length === 0) return false;
-	const re = /^[0-9]{6}$/;
+	// const re = /^[0-9]{6}$/;
+	const re = /^[a-zA-Z0-9]{6}$/;
 	return re.test(String(otp).toUpperCase()) || !otp;
 }
 
@@ -70,4 +71,14 @@ export function validateName(name) {
 	if (name === null || typeof name === "undefined" || name.length === 0) return false;
 	const re = /^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$/;
 	return re.test(String(name)) || !name;
+}
+
+export function validateUrl(value) {
+	if (typeof value === "undefined" || value === null || value.length === 0) return false;
+	return value.match(/^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)$/);
+}
+
+export function validateWords(value) {
+	if (typeof value === "undefined" || value === null || value.length === 0) return false;
+	return value.match(/^([0-9a-zA-Z-\s]){3,100}$/);
 }

@@ -15,6 +15,7 @@
 	padding: 20px;
 }
 
+
 #PageProfile .PageProfile-divider {
 	background-color: lightgrey;
 	width: calc(100% - 40px);
@@ -67,4 +68,31 @@
 
 #PageProfile .PageProfile-qr-code {
 	max-width: 100%;
+}
+.upload-container {
+    position: relative;
+    display: inline-block;
+    width: 160px; /* Set the width and height of the container */
+    height: 160px;
+     /* Clip the image to fit the container */
+    border-radius: 50%; /* Make the container round */
+    border: none; /* Remove the border around the container */
+}
+
+.upload-container.uploaded {
+    border-radius: 50%;
+}
+
+.upload-container img.uploaded-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensure the image covers the entire container */
+    border-radius: 50%; /* Make the image round */
+}
+
+.upload-container i.fa-user-circle {
+    font-size: 10em; /* Increase the font size for a bigger circle */
 }

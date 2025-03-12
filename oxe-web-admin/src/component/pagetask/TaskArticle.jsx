@@ -56,7 +56,7 @@ export default class TaskArticle extends React.Component {
 			<div id="TaskArticle" className="max-sized-page fade-in">
 				<div className={"row row-spaced"}>
 					<div className="col-md-12">
-						<h1>Article to review</h1>
+						<h1 className="heading-task">Article to review</h1>
 						<div className="top-right-buttons">
 							<button
 								onClick={() => this.refresh()}>
@@ -75,7 +75,7 @@ export default class TaskArticle extends React.Component {
 				}
 
 				{this.state.articles !== null && this.state.articles.length === 0
-					&& <div className={"row row-spaced"}>
+					&& <div className={"row row-spaced common-background"}>
 						<Message
 							text={"No request found"}
 							height={300}
@@ -84,7 +84,7 @@ export default class TaskArticle extends React.Component {
 				}
 
 				{this.state.articles !== null && this.state.articles.length > 0
-					&& <div className={"row row-spaced"}>
+					&& <div className={"row row-spaced common-background"}>
 						{this.state.articles !== null
 							? <div className="col-md-12">
 								{this.state.articles

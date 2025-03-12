@@ -2,3 +2,9 @@
 .DialogSendMail-wrapper textarea {
 	height: 250px;
 }
+.DialogSendMail .attachment-info {
+	display: flex;
+	align-items: center;
+	font-size: 14px;
+	color: #555;
+}

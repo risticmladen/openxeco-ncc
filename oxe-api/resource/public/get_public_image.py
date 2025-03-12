@@ -28,7 +28,7 @@ class GetPublicImage(MethodResource, Resource):
 
         if id_.isdigit() or id_ in ["favicon.ico", "logo.png"]:
             try:
-                f = open(os.path.join(IMAGE_FOLDER, id_), "rb")
+                f = open(os.path.join("./image_folder/", id_), "rb")
             except FileNotFoundError:
                 raise ImageNotFound
 

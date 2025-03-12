@@ -18,3 +18,7 @@
     width: fit-content !important;
     margin: 0px 2px;
 }
+
+.red-link {
+    color: red;
+}

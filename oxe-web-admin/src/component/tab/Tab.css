@@ -72,10 +72,18 @@
     line-height: 15px;
     border-radius: 20px;
     background-color: #e40613;
-    padding: 3px 7px;
+    padding: 3px 15px 3px 7px;
     border-left: 4px solid #e40613;
 }
 
 .Tab-menu-el-empty {
     height: 15px;
+}
+
+.common-background {
+	background-color: rgba(255,255,255,.8);
+  border: 1px solid rgba(0,0,0,.125);
+  border-radius: 0.25rem;
+  margin: auto;
+  padding: 20px;
 }

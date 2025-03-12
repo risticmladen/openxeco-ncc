@@ -58,6 +58,36 @@ export async function getNoCorsRequest(url, callback, catchBadResponse, catchErr
 	});
 }
 
+export async function postRequestWithFile(url, formData, callback, catchBadResponse, catchError) {
+    fetch(getApiURL() + url, {
+        method: "POST",
+        body: formData,
+        headers: new Headers({
+            Accept: "application/json, text/html",
+            // 'Content-Type' is automatically set to 'multipart/form-data' when sending FormData
+        }),
+        credentials: "include",
+    }).then((response) => {
+        if (response.status === 200) {
+            return response.json();
+        }
+        if (response.status === 403) {
+            window.location.replace("/?status=expiredSession");
+        }
+        if (catchBadResponse !== null) {
+            catchBadResponse(response);
+            throw new Error(null);
+        }
+        throw new Error("An error happened while requesting the server");
+    }).then((jsonBody) => {
+        if (typeof jsonBody !== "undefined") callback(jsonBody);
+    }).catch((error) => {
+        if (error.message !== "null") {
+            catchError(error);
+        }
+    });
+}
+
 export async function getBlobRequest(url, callback, catchBadResponse, catchError) {
 	fetch(getApiURL() + url, {
 		method: "GET",

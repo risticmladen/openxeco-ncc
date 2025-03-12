@@ -1,4 +1,17 @@
 
 #PageEntity .Tab-menu, #EntityMap .Tab {
 	z-index: 100;
+	h1 {
+		color: #fff;
+	}
+	
 }
+
+.common-background {
+	background-color: rgba(255,255,255,.8);
+  border: 1px solid rgba(0,0,0,.125);
+  border-radius: 0.25rem;
+  margin: 10px 0px;
+  padding: 20px;
+}
+

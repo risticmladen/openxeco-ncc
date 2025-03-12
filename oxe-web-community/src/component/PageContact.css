@@ -1,5 +1,31 @@
-
 #PageContact .Message-text {
 	width: 100%;
 	text-align: center;
+}
+
+.message-container, .current-messages-container {
+	background: white;
+	border: 2px black solid;
+	color: black;
+	border-radius: 10px;
+	padding-bottom: 20px;
+}
+
+.current-messages-container {
+	background: white;
+}
+
+.submit-button {
+	background-color: #f4a404;
+	color: white;
+	border: none;
+	padding: 10px 20px;
+	border-radius: 5px;
+	cursor: pointer;
+	transition: background-color 0.3s, color 0.3s;
+}
+
+.submit-button:hover {
+	background-color: #e59500;
+	color: white;
 }

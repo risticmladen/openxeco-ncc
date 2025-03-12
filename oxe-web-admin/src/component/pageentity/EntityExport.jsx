@@ -64,7 +64,7 @@ export default class EntityExport extends React.Component {
 			<div id="EntityExport">
 				<div className={"row row-spaced"}>
 					<div className="col-md-12">
-						<h1>
+						<h1 className="common-heading">
 							{this.props.entities ? this.props.entities.length : 0}
 							&nbsp;Entit{this.props.entities && this.props.entities.length > 1 ? "ies" : "y"}
 						</h1>
@@ -88,7 +88,7 @@ export default class EntityExport extends React.Component {
 						</div>
 					</div>
 
-					<div className="col-md-12">
+					<div className="col-md-12 common-background">
 						<h2>Export into XLSX</h2>
 
 						<FormLine

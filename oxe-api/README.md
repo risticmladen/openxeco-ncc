@@ -67,8 +67,8 @@ For Windows
 
 ```
 > cd %USERPROFILE%\openxeco-core\oxe-api
-> python -m venv venv
-> .\venv\Scripts\activate
+> python3 -m venv venv
+> source ./venv/bin/activate
 > pip install -U pip setuptools
 > pip install -U -r requirements.txt
 ```

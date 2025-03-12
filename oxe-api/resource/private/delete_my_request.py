@@ -30,7 +30,7 @@ class DeleteMyRequest(MethodResource, Resource):
     @jwt_required
     @catch_exception
     def post(self, **kwargs):
-
+        
         entities = self.db.get(self.db.tables["UserRequest"], {
             "id": kwargs["id"],
             "user_id": int(get_jwt_identity())

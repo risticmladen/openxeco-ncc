@@ -39,7 +39,7 @@ export default class PageUser extends React.Component {
 
 	render() {
 		return (
-			<div id="PageUser" className="page max-sized-page">
+			<div id="PageUser" className="page max-sized-page PageUser">
 				<Tab
 					labels={["User", "Group"]}
 					selectedMenu={this.state.selectedMenu}

@@ -1,0 +1,68 @@
+.Upload-dragdrop {
+	width: 100%;
+	border: 3px dashed #999;
+	border-radius: 8px;
+	display: table;
+	padding: 20px;
+	cursor: pointer;
+}
+
+.Upload-dragdrop-done {
+	width: 100%;
+	border: 3px solid #999;
+	border-radius: 8px;
+	display: table;
+	padding: 20px;
+	cursor: pointer;
+}
+
+.Upload-dragdrop-textContent {
+	display: table-cell;
+	height: 100%;
+	width: 100%;
+	text-align: center;
+	color: rgb(112, 112, 112);
+	vertical-align: middle;
+}
+
+.validation-error {
+	color: rgb(167, 63, 63);
+	font-style: italic;
+	font-size: 0.8rem;
+}
+
+.icon {
+	margin-right: 8px;
+	font-size: 0.8em;
+	color: #555;
+	vertical-align: middle; /* This aligns the icon vertically with the text */
+}
+
+.forumList {
+	width: 60vw;
+}
+
+.forumItemsContainer {
+	width: 60vw;
+	background-color: rgba(255,255,255,.8);
+	border: 1px solid rgba(0,0,0,.125);
+	border-radius: 0.25rem;
+	margin: 10px 0px;
+	padding: 20px;
+}
+
+.forum-item {
+	background: linear-gradient(110deg, #EEE 60%, #E9E9E9 60%);
+	padding: 10px;
+	border-radius: 5px;
+	margin: 10px 0;
+}
+
+.forum-item a {
+	color: rgba(0,51,153,255); /* Ensures the link is blue */
+	text-decoration: none; /* Removes underline */
+}
+
+.forum-item a:hover {
+	text-decoration: underline; /* Underlines on hover */
+}

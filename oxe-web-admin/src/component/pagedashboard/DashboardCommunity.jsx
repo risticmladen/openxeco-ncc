@@ -1,14 +1,15 @@
 import React from "react";
 import "./DashboardCommunity.css";
 import CountUp from "react-countup";
-import { Bar, Doughnut } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
 import Loading from "../box/Loading.jsx";
 import Filter from "../box/Filter.jsx";
-import Message from "../box/Message.jsx";
-import BarActorAge from "../chart/BarActorAge.jsx";
-import BarWorkforceRange from "../chart/BarWorkforceRange.jsx";
-import TreeMap from "../chart/TreeMap.jsx";
+// import Message from "../box/Message.jsx";
+// import BarActorAge from "../chart/BarActorAge.jsx";
+// import BarWorkforceRange from "../chart/BarWorkforceRange.jsx";
+// import TreeMap from "../chart/TreeMap.jsx";
 import { getPastDate } from "../../utils/date.jsx";
+import EntitiesPerCityChart from "./EntitiesPerCityChart.jsx";
 
 export default class DashboardCommunity extends React.Component {
 	constructor(props) {
@@ -17,16 +18,19 @@ export default class DashboardCommunity extends React.Component {
 		this.filterEntities = this.filterEntities.bind(this);
 		this.getTreeValues = this.getTreeValues.bind(this);
 		this.manageFilter = this.manageFilter.bind(this);
-		this.getTotalEmployees = this.getTotalEmployees.bind(this);
+		// this.getTotalEmployees = this.getTotalEmployees.bind(this);
+		this.getPercentageSME = this.getPercentageSME.bind(this);
 
 		this.state = {
 			filters: {},
 			filteredEntities: null,
+			// entitiesAddresses: null,
 		};
 	}
 
 	componentDidMount() {
 		this.filterEntities();
+		//this.populateEntitiesAddresses();
 	}
 
 	componentDidUpdate(prevProps, prevState) {
@@ -34,6 +38,7 @@ export default class DashboardCommunity extends React.Component {
 			|| prevProps.analytics !== this.props.analytics
 			|| prevProps.entities !== this.props.entities) {
 			this.filterEntities();
+			//this.populateEntitiesAddresses();
 		}
 	}
 
@@ -99,10 +104,7 @@ export default class DashboardCommunity extends React.Component {
 		}
 	}
 
-	/**
-	 * Filter the entities according to the selection defined in this.state.filters
-	 * The result is set in this.state.filteredEntities
-	 */
+
 	filterEntities() {
 		if (!this.props.analytics || !this.props.entities) return;
 
@@ -321,24 +323,22 @@ export default class DashboardCommunity extends React.Component {
 	}
 
 	/**
-	 * Get the total amount of employees of the filtered entities
+	 * Get the percentage of the SMEs from the total number of entities
 	 */
-	getTotalEmployees() {
-		let total = 0;
-		const acceptedIDs = this.state.filteredEntities.map((a) => a.id);
+	getPercentageSME() {
+		let percentage = 0;
+		const totalSmall = this.state.filteredEntities.filter((o) => o.size === "Small").length;
+		const totalMedium = this.state.filteredEntities.filter((o) => o.size === "Medium").length;
+		const totalEntities = this.state.filteredEntities.length;
 
-		for (let i = 0; i < this.props.analytics.workforces.length; i++) {
-			if (acceptedIDs.indexOf(this.props.analytics.workforces[i].entity_id) >= 0) {
-				total += this.props.analytics.workforces[i].workforce;
-			}
-		}
+		percentage = ((totalMedium + totalSmall) / totalEntities) * 100;
 
-		return total;
+		return percentage;
 	}
 
 	render() {
 		return (
-			<div id="DashboardCommunity">
+			<div id="DashboardCommunity" className="DashboardCommunityBackground">
 				<div className={"row row-spaced"}>
 					<div className="col-md-12">
 						<h1>Community</h1>
@@ -364,6 +364,7 @@ export default class DashboardCommunity extends React.Component {
 												end={this.state.filteredEntities.length}
 												duration={1}
 												delay={0}
+												// prefix="Total Entities: "
 											/>
 										</div>
 										: <Loading
@@ -385,6 +386,7 @@ export default class DashboardCommunity extends React.Component {
 												end={this.state.filteredEntities.filter((o) => o.is_startup).length}
 												duration={1.6}
 												delay={0}
+												// prefix="Startups: "
 											/>
 										</div>
 										: <Loading
@@ -396,7 +398,7 @@ export default class DashboardCommunity extends React.Component {
 						</div>
 					</div>
 
-					<div className="col-md-8 row-spaced">
+					<div className="col-md-6 row-spaced">
 						<div className={"row"}>
 							<div className="col-md-12">
 								{this.state.filteredEntities && this.state.filteredEntities
@@ -431,6 +433,17 @@ export default class DashboardCommunity extends React.Component {
 													{
 														ticks: {
 															beginAtZero: true,
+															stepSize: 1,
+														},
+														gridLines: {
+															display: false,
+														},
+													},
+												],
+												xAxes: [
+													{
+														gridLines: {
+															display: false,
 														},
 													},
 												],
@@ -459,136 +472,190 @@ export default class DashboardCommunity extends React.Component {
 						</div>
 					</div>
 
-					<div className="col-md-6">
-						<h3>Legal status</h3>
+					<div className="col-md-4 row-spaced">
+						<div className={"row"}>
 
-						{this.state.filteredEntities && this.state.filteredEntities.length > 0
-							&& <Doughnut
-								data={{
-									labels: [...new Set(this.state.filteredEntities
-										.map((c) => c.legal_status))],
-									datasets: [{
-										label: [...new Set(this.state.filteredEntities
-											.map((c) => c.legal_status))],
-										data: [...new Set(this.state.filteredEntities
-											.map((c) => c.legal_status))]
-											.map((s) => this.state.filteredEntities
-												.filter((o) => o.legal_status === s).length),
-										backgroundColor: this.state.filters.legal_status ? ["#fed7da"]
-											: ["rgba(46, 83, 193, 0.123)", "rgba(46, 83, 193, 0.123)", "rgba(46, 83, 193, 0.123)"],
-										borderColor: this.state.filters.legal_status ? ["#e40613"]
-											: ["#2E52C1", "#grey", "lightgrey"],
-										borderWidth: 1,
-									}],
-								}}
-								options={{
-									legend: {
-										display: true,
-										position: "bottom",
-									},
-									onClick: (mouseEvent, data) => {
-										if (data.length > 0) {
-											// eslint-disable-next-line no-underscore-dangle
-											const l = data[0]._chart.config.data.datasets[0].label[data[0]._index];
-											if (this.state.filters.legal_status) {
-												this.manageFilter("legal_status", undefined, false);
-											} else {
-												this.manageFilter("legal_status", l, true);
-											}
-										}
-									},
-								}}
-							/>
-						}
+							<div className="col-md-12 mt-5 mb-1">
+								<h3>Entities by Size</h3>
+							</div>
 
-						{this.state.filteredEntities && this.state.filteredEntities.length === 0
-							&& <Message
-								text={"No data found"}
-								height={200}
-							/>
-						}
+							<div className="col-md-12">
+								<h3>Micro</h3>
 
-						{!this.state.filteredEntities
-							&& <Loading
-								height={200}
-							/>
-						}
+								<div>
+									{this.state.filteredEntities
+										? <div className={"PageDashboard-analytic "
+											+ (this.state.filters.is_startup ? "red-font" : "blue-font")}>
+											<CountUp
+												start={0}
+												end={this.state.filteredEntities.filter((o) => o.size === "Micro").length}
+												duration={1.6}
+												delay={0}
+											/>
+										</div>
+										: <Loading
+											height={70}
+										/>
+									}
+								</div>
+							</div>
+							<div className="col-md-12">
+								<h3>Small</h3>
+
+								<div>
+									{this.state.filteredEntities
+										? <div className={"PageDashboard-analytic "
+											+ (this.state.filters.is_startup ? "red-font" : "blue-font")}>
+											<CountUp
+												start={0}
+												end={this.state.filteredEntities.filter((o) => o.size === "Small").length}
+												duration={1.6}
+												delay={0}
+											/>
+										</div>
+										: <Loading
+											height={70}
+										/>
+									}
+								</div>
+							</div>
+							<div className="col-md-12">
+								<h3>Medium</h3>
+
+								<div>
+									{this.state.filteredEntities
+										? <div className={"PageDashboard-analytic "
+											+ (this.state.filters.is_startup ? "red-font" : "blue-font")}>
+											<CountUp
+												start={0}
+												end={this.state.filteredEntities.filter((o) => o.size === "Medium").length}
+												duration={1.6}
+												delay={0}
+											/>
+										</div>
+										: <Loading
+											height={70}
+										/>
+									}
+								</div>
+							</div>
+							<div className="col-md-12">
+								<h3>Large</h3>
+
+								<div>
+									{this.state.filteredEntities
+										? <div className={"PageDashboard-analytic "
+											+ (this.state.filters.is_startup ? "red-font" : "blue-font")}>
+											<CountUp
+												start={0}
+												end={this.state.filteredEntities.filter((o) => o.size === "Large").length}
+												duration={1.6}
+												delay={0}
+											/>
+										</div>
+										: <Loading
+											height={70}
+										/>
+									}
+								</div>
+							</div>
+						</div>
 					</div>
 
-					<div className="col-md-6">
-						<h3>Status</h3>
+					<div className="col-md-6 row-spaced mt-5">
+						<h3>Number of entities per size</h3>
+						<div className={"row"}>
+							<div className="col-md-12 mt-5">
+								{this.state.filteredEntities && this.state.filteredEntities
+									? <Bar
+										data={{
+											labels: ["Micro", "Small", "Medium", "Large"],
+											datasets: [{
+												label: [],
+												data: [
+													this.state.filteredEntities.filter((o) => o.size === "Micro").length,
+													this.state.filteredEntities.filter((o) => o.size === "Small").length,
+													this.state.filteredEntities.filter((o) => o.size === "Medium").length,
+													this.state.filteredEntities.filter((o) => o.size === "Large").length,
+												],
+												backgroundColor: [
+													this.state.filteredEntities.length === this.props.entities.length
+														? "#fed7da" : "rgba(46, 83, 193, 0.123)",
+													this.state.filters.is_startup ? "#fed7da" : "rgba(46, 83, 193, 0.123)",
+												],
+												borderColor: [
+													this.state.filteredEntities.length === this.props.entities.length
+														? "#e40613" : "#2E52C1",
+													this.state.filters.is_startup ? "#e40613" : "#2E52C1",
+												],
+												borderWidth: 1,
+											}],
+										}}
+										options={{
+											legend: {
+												display: false,
+											},
+											scales: {
+												yAxes: [
+													{
+														ticks: {
+															beginAtZero: true,
+															stepSize: 1,
+														},
+														gridLines: {
+															display: false,
+														},
+													},
+												],
+												xAxes: [
+													{
+														gridLines: {
+															display: false,
+														},
+													},
+												],
+											},
+											onClick: (mouseEvent, data) => {
+												if (data.length > 0) {
+													// eslint-disable-next-line no-underscore-dangle
+													const l = data[0]._chart.config.data.datasets[0].label[data[0]._index];
 
-						{this.state.filteredEntities && this.state.filteredEntities.length > 0
-							&& <Doughnut
-								data={{
-									labels: [...new Set(this.state.filteredEntities
-										.map((c) => c.status))],
-									datasets: [{
-										label: [...new Set(this.state.filteredEntities
-											.map((c) => c.status))],
-										data: [...new Set(this.state.filteredEntities
-											.map((c) => c.status))]
-											.map((s) => this.state.filteredEntities
-												.filter((o) => o.status === s).length),
-										backgroundColor: this.state.filters.status ? ["#fed7da"]
-											: ["rgba(46, 83, 193, 0.123)", "rgba(46, 83, 193, 0.123)", "rgba(46, 83, 193, 0.123)"],
-										borderColor: this.state.filters.status ? ["#e40613"]
-											: ["#2E52C1", "#grey", "lightgrey"],
-										borderWidth: 1,
-									}],
-								}}
-								options={{
-									legend: {
-										display: true,
-										position: "bottom",
-									},
-									onClick: (mouseEvent, data) => {
-										if (data.length > 0) {
-											// eslint-disable-next-line no-underscore-dangle
-											const l = data[0]._chart.config.data.datasets[0].label[data[0]._index];
-
-											if (this.state.filters.status) {
-												this.manageFilter("status", undefined, false);
-											} else {
-												this.manageFilter("status", l, true);
-											}
-										}
-									},
-								}}
-							/>
-						}
-
-						{this.state.filteredEntities && this.state.filteredEntities.length === 0
-							&& <Message
-								text={"No data found"}
-								height={200}
-							/>
-						}
-
-						{!this.state.filteredEntities
-							&& <Loading
-								height={200}
-							/>
-						}
+													if (l === null) {
+														this.manageFilter("is_startup", null, false);
+													} else if (!this.state.filters[l]) {
+														this.manageFilter(l, true, true);
+													} else {
+														this.manageFilter(l, null, false);
+													}
+												}
+											},
+										}}
+									/>
+									: <Loading
+										height={300}
+									/>
+								}
+							</div>
+						</div>
 					</div>
+
 				</div>
 
 				<div className={"row row-spaced"}>
-					<div className="col-md-12">
-						<h2>Age and employees</h2>
-					</div>
 
 					<div className="col-md-6">
-						<h3>Total employees</h3>
+						<h3>Percentage of SMEs</h3>
 						<div>
 							{this.props.analytics && this.state.filteredEntities
 								? <div className={"PageDashboard-analytic blue-font"}>
-									<i className="fas fa-user-tie"/><br/>
+									<i className="far fa-building mt-5" style={{ fontSize: '2em' }}/><br/>
 									<CountUp
 										start={0}
-										end={this.getTotalEmployees()}
+										end={this.getPercentageSME()}
 										duration={1.6}
 										delay={0}
+										suffix="%"
+										style={{ fontSize: '2em' }}
 									/>
 								</div>
 								: <Loading
@@ -598,144 +665,12 @@ export default class DashboardCommunity extends React.Component {
 						</div>
 					</div>
 
-					<div className="col-md-6 row-spaced">
-						<h3>Employees per entity size ranges</h3>
-						{this.props.analytics && this.state.filteredEntities
-							? <BarWorkforceRange
-								actors={this.state.filteredEntities}
-								workforces={this.props.analytics.workforces}
-								addRangeFilter={(v) => this.manageFilter("size_range", v, "true")}
-								selected={this.state.filters.size_range}
-							/>
-							: <Loading
-								height={300}
-							/>
-						}
-					</div>
-
-					<div className="col-md-6 row-spaced">
-						<h3>Age of entities</h3>
-						{this.state.filteredEntities
-							? <BarActorAge
-								actors={this.state.filteredEntities}
-								addRangeFilter={(v) => this.manageFilter("age_range", v, "true")}
-								selected={this.state.filters.age_range}
-							/>
-							: <Loading
-								height={300}
-							/>
-						}
-					</div>
-
-					<div className="col-md-6">
-						<h3>Entities per size ranges</h3>
-						{this.props.analytics && this.state.filteredEntities
-							? <BarWorkforceRange
-								actors={this.state.filteredEntities}
-								workforces={this.props.analytics.workforces}
-								entitiesAsGranularity={true}
-								addRangeFilter={(v) => this.manageFilter("size_range", v, "true")}
-								selected={this.state.filters.size_range}
-							/>
-							: <Loading
-								height={300}
-							/>
-						}
-					</div>
-				</div>
-
-				<div className={"row row-spaced"}>
-					<div className="col-md-12">
-						<h2>Taxonomy</h2>
-					</div>
-
-					{this.getEntityTaxonomyCategory().length === 0
-						&& <Message
-							text={"No data found"}
-							height={300}
-						/>
-					}
-
-					{this.state.filteredEntities !== null
-						? this.getEntityTaxonomyCategory()
-							.map((category) => (
-								<div
-									className="col-md-12 row-spaced"
-									key={category}
-								>
-									<h3>{category}</h3>
-
-									{this.getTreeValues(category) !== null
-										? <TreeMap
-											data={{
-												datasets: [{
-													tree: this.getTreeValues(category),
-													key: "amount",
-													groups: ["value"],
-													fontColor: "grey",
-													borderColor: (ctx) => (
-														ctx.dataset.data.length > 0
-														&& this.state.filters.taxonomy_values
-														&& this.state.filters.taxonomy_values
-															.indexOf(ctx.dataset.data[ctx.dataIndex].g) >= 0
-															? "#e40613" : "#8fddff"
-													),
-													backgroundColor: (ctx) => (
-														ctx.dataset.data.length > 0
-														&& this.state.filters.taxonomy_values
-														&& this.state.filters.taxonomy_values
-															.indexOf(ctx.dataset.data[ctx.dataIndex].g) >= 0
-															? "#fed7da" : "rgba(46, 83, 193, 0.123)"
-													),
-													borderWidth: 1,
-												}],
-											}}
-											options={{
-												legend: {
-													display: false,
-												},
-												tooltips: {
-													callbacks: {
-														title(item, data) {
-															return data.datasets[item[0].datasetIndex].key;
-														},
-														label(item, data) {
-															const dataset = data.datasets[item.datasetIndex];
-															const dataItem = dataset.data[item.index];
-															// eslint-disable-next-line no-underscore-dangle
-															const obj = dataItem._data;
-															const label = obj.value;
-															return label + ": " + dataItem.v;
-														},
-													},
-												},
-												onClick: (mouseEvent, data) => {
-													// eslint-disable-next-line no-underscore-dangle
-													const dataset = data[0]._chart.config.data
-													// eslint-disable-next-line no-underscore-dangle
-														.datasets[data[0]._datasetIndex];
-													// eslint-disable-next-line no-underscore-dangle
-													const dataItem = dataset.data[data[0]._index];
-													// eslint-disable-next-line no-underscore-dangle
-													const obj = dataItem._data;
-													const label = obj.value;
-
-													if (this.state.filters.taxonomy_values
-													&& this.state.filters.taxonomy_values.indexOf(label) >= 0) this.manageFilter("taxonomy_values", label, false);
-													else this.manageFilter("taxonomy_values", label, true);
-												},
-											}}
-										/>
-										: <Message
-											height={180}
-											text={"No data matched"}
-										/>
-									}
-								</div>))
-						: <Loading
-							height={300}
-						/>
-					}
+					<EntitiesPerCityChart 
+						entities={this.props.entities}
+						entitiesAddresses={this.props.addresses}
+						filteredEntities={this.state.filteredEntities}
+						filters={this.state.filters}
+					/>
 				</div>
 
 				<div className={"PageDashboard-filters"}>

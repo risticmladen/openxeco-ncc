@@ -24,13 +24,16 @@ export default class DashboardRecentActivity extends React.Component {
 	}
 
 	refresh() {
-		this.getLastArticlesByType("lastEvents", "EVENT");
 		this.getLastArticlesByType("lastNews", "NEWS");
-		this.getLastArticlesByType("lastJobOffers", "JOB OFFER");
-		this.getLastArticlesByType("lastServices", "SERVICE");
-		this.getLastArticlesByType("lastTools", "TOOL");
-		this.getLastArticlesByType("lastResources", "RESOURCE");
-		this.getNotes();
+		this.getLastArticlesByType("lastFaqs", "FAQ");
+		this.getLastArticlesByType("lastAnnouncements", "ANNOUNCEMENTS");
+		// this.getLastArticlesByType("lastEvents", "EVENT");
+		// this.getLastArticlesByType("lastNews", "NEWS");
+		// this.getLastArticlesByType("lastJobOffers", "JOB OFFER");
+		// this.getLastArticlesByType("lastServices", "SERVICE");
+		// this.getLastArticlesByType("lastTools", "TOOL");
+		// this.getLastArticlesByType("lastResources", "RESOURCE");
+		// this.getNotes();
 	}
 
 	getLastArticlesByType(stateVar, type) {
@@ -47,19 +50,19 @@ export default class DashboardRecentActivity extends React.Component {
 		});
 	}
 
-	getNotes() {
-		this.setState({ notes: null }, () => {
-			getRequest.call(this, "note/get_notes?per_page=10", (data) => {
-				this.setState({
-					notes: data,
-				});
-			}, (response) => {
-				nm.warning(response.statusText);
-			}, (error) => {
-				nm.error(error.message);
-			});
-		});
-	}
+	// getNotes() {
+	// 	this.setState({ notes: null }, () => {
+	// 		getRequest.call(this, "note/get_notes?per_page=10", (data) => {
+	// 			this.setState({
+	// 				notes: data,
+	// 			});
+	// 		}, (response) => {
+	// 			nm.warning(response.statusText);
+	// 		}, (error) => {
+	// 			nm.error(error.message);
+	// 		});
+	// 	});
+	// }
 
 	buildArticleBlock(typeName, stateVar) {
 		return <div className="col-md-6 row-spaced">
@@ -97,7 +100,7 @@ export default class DashboardRecentActivity extends React.Component {
 
 	render() {
 		return (
-			<div id={"DashboardRecentActivity"}>
+			<div id={"DashboardRecentActivity"} className="dashboard-background">
 				<div className={"row"}>
 					<div className="col-md-9">
 						<h1>Recent activities</h1>
@@ -153,68 +156,9 @@ export default class DashboardRecentActivity extends React.Component {
 					</div>
 
 					{this.buildArticleBlock("news", "lastNews")}
-					{this.buildArticleBlock("events", "lastEvents")}
-					{this.buildArticleBlock("job offers", "lastJobOffers")}
-					{this.buildArticleBlock("services", "lastServices")}
-					{this.buildArticleBlock("tools", "lastTools")}
-					{this.buildArticleBlock("resources", "lastResources")}
-
-					<div className="col-md-12">
-						<h2>Notes</h2>
-					</div>
-
-					<div className="col-md-12 row-spaced">
-						<div>
-							{this.state.notes && this.state.notes.pagination.total > 0
-								&& this.state.notes.items
-									.map((o) => (
-										<div key={o.id}>
-											{o.entity
-												&& <Entity
-													id={o.entity}
-												/>
-											}
-
-											{o.article
-												&& <Article
-													id={o.article}
-												/>
-											}
-
-											{o.taxonomy_category
-												&& <Taxonomy
-													id={o.taxonomy_category}
-												/>
-											}
-
-											{o.user
-												&& <User
-													id={o.user}
-												/>
-											}
-
-											<Note
-												key={o.id}
-												note={o}
-											/>
-										</div>
-									))
-							}
-
-							{this.state.notes && this.state.notes.pagination.total === 0
-								&& <Message
-									text={"No data found"}
-									height={160}
-								/>
-							}
-
-							{!this.state.notes
-								&& <Loading
-									height={160}
-								/>
-							}
-						</div>
-					</div>
+					{this.buildArticleBlock("frequently asked questions", "lastFaqs")}
+					{this.buildArticleBlock("announcements", "lastAnnouncements")}
+					
 				</div>
 			</div>
 		);

@@ -11,14 +11,19 @@ import { getApiURL } from "./utils/env.jsx";
 import { getRequest, postRequest } from "./utils/request.jsx";
 import DialogMessage from "./component/dialog/DialogMessage.jsx";
 import PageAddProfile from "./component/PageAddProfile.jsx";
+// import Header from "./component/Header.jsx";
+// import Footer from "./component/Footer.jsx";
 
 class App extends React.Component {
 	constructor(props) {
 		super(props);
 
 		this.connect = this.connect.bind(this);
+		this.getSettings = this.getSettings.bind(this);
 		this.setUserStatus = this.setUserStatus.bind(this);
-
+		this.logoutTimeout = null;
+		this.setLogoutTimer = this.setLogoutTimer.bind(this);
+	
 		this.state = {
 			settings: null,
 			logged: false,
@@ -29,10 +34,15 @@ class App extends React.Component {
 		};
 	}
 
-	// eslint-disable-next-line class-methods-use-this
 	componentDidMount() {
 		document.getElementById("favicon").href = getApiURL() + "public/get_public_image/favicon.ico";
 		this.getSettings();
+	}
+
+	componentWillUnmount() {
+		if (this.logoutTimeout) {
+			clearTimeout(this.logoutTimeout);
+		}
 	}
 
 	getSettings() {
@@ -53,11 +63,32 @@ class App extends React.Component {
 		});
 	}
 
+	// connect(email) {
+	// 	this.setState({
+	// 		logged: true,
+	// 		email,
+	// 	});
+	// }
+
 	connect(email) {
 		this.setState({
-			logged: true,
 			email,
+			logged: true,
+		}, () => {
+			this.setLogoutTimer();
 		});
+	}
+
+	setLogoutTimer() {
+		// Clear any existing timeout
+		if (this.logoutTimeout) {
+			clearTimeout(this.logoutTimeout);
+		}
+
+		// Set a new timeout to log out after 4 hours (14400000 milliseconds)
+		this.logoutTimeout = setTimeout(() => {
+			this.logout();
+		}, 14400000); // 4 hours in milliseconds
 	}
 
 	setUserStatus(status) {
@@ -77,6 +108,9 @@ class App extends React.Component {
 				logged: false,
 				user_status: "",
 			});
+			if (this.logoutTimeout) {
+				clearTimeout(this.logoutTimeout);
+			}
 		}, (response) => {
 			nm.warning(response.statusText);
 		}, (error) => {
@@ -87,6 +121,8 @@ class App extends React.Component {
 	render() {
 		return (
 			<div id="App">
+				{/* <ArticlesGrid articles={articles}></ArticlesGrid> */}
+				{/* <Header></Header> */}
 				{this.state.logged
 					? <BrowserRouter>
 						{this.state.user_status === "ACCEPTED"
@@ -129,6 +165,7 @@ class App extends React.Component {
 						logout={() => this.logout()}
 					/>
 				}
+
 				<NotificationContainer/>
 
 				<DialogMessage
@@ -147,6 +184,7 @@ class App extends React.Component {
 					</div>}
 					open={this.state.openMobileDialog}
 				/>
+				{/* <Footer></Footer> */}
 			</div>
 		);
 	}

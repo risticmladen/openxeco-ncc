@@ -8,6 +8,8 @@
   	},
   	"rules": {
     	"no-console": "off",
+			"no-confusing-arrow": "off",
+			"comma-dangle": ["error", "never"],
     	"linebreak-style": 0,
     	"indent": [2, "tab"],
       "quotes": [2, "double", { "avoidEscape": true }],
@@ -18,5 +20,5 @@
       "no-param-reassign": ["error", { "props": true, "ignorePropertyModificationsFor": ["data"] }],
       "prefer-destructuring": ["error", {"object": true, "array": false}]
   	},
-  	"ignorePatterns": ["/node_modules/*", "/build/*", "/public/*"],
+  	"ignorePatterns": ["/node_modules/*", "/build/*", "/public/*"]
 }

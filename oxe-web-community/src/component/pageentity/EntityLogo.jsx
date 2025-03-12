@@ -78,10 +78,10 @@ export default class EntityGlobal extends React.Component {
 		}
 
 		return (
-			<div id="EntityLogo" className="max-sized-page fade-in">
+			<div id="EntityLogo" className="max-sized-page fade-in EntityLogo-container ">
 				<div className={"row"}>
 					<div className="col-md-9">
-						<h2>Logo</h2>
+						<h2 className="dashboard-header">Logo</h2>
 					</div>
 
 					{/* <div className="col-md-3 top-title-menu">
@@ -141,9 +141,9 @@ export default class EntityGlobal extends React.Component {
 				</div>
 
 				<div className={"row row-spaced"}>
-					<div className="col-md-12 row-spaced">
+					{/* <div className="col-md-12 row-spaced">
 						<h3>Current logo</h3>
-					</div>
+					</div> */}
 
 					<div className="col-md-12 row-spaced EntityLogo-center">
 						{this.state.entityInfo.image === null

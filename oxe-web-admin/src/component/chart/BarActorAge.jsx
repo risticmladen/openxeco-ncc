@@ -54,6 +54,16 @@ export default class BarActorAge extends React.Component {
 								ticks: {
 									beginAtZero: true,
 								},
+								gridLines: {
+									color: "rgba(0, 0, 0, 0)",
+								},
+							},
+						],
+						xAxes: [
+							{
+								gridLines: {
+									color: "rgba(0, 0, 0, 0)",
+								},
 							},
 						],
 					},

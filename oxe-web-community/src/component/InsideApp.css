@@ -2,6 +2,10 @@
 #InsideApp {
     width: 100%;
     height: 100%;
+    background-image: url('./COMUNITY PORTAL BACKGROUND.png'); /* Update with the actual path to your image */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 #InsideApp-content {
@@ -9,4 +13,9 @@
     width: calc(100% - 62px);
     height: 100%;
     overflow-y: auto;
+    /* display: flex; */
+    flex-direction: column;
+    /* padding-top: 5%; */
 }
+
+

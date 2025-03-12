@@ -1,0 +1,41 @@
+.DialogAddAttachment-content {
+	max-height: 100%;
+}
+
+.DialogAddAttachment-content .right-buttons {
+	width: 100%;
+	margin: 20px 20px 0px 0px;
+}
+
+.DialogAddAttachment-dragdrop {
+	width: 100%;
+	max-height: calc(100vh - 300px);
+	min-height: 300px;
+	border: 7px dashed #8fddff;
+	border-radius: 8px;
+	display: table;
+	cursor: pointer;
+}
+
+.DialogAddAttachment-dragdrop-textContent {
+	display: table-cell;
+	height: 100%;
+	width: 100%;
+	text-align: center;
+	color: #8fddff;
+	vertical-align: middle;
+}
+
+.DialogAddAttachment-dragdrop-textContent i {
+	font-size: 35px;
+}
+
+.DialogAddAttachment-textContent {
+	padding: 20px 10px;
+	width: 100%;
+	text-align: center;
+}
+
+.DialogAddAttachment-textContent i {
+	font-size: 35px !important;
+}

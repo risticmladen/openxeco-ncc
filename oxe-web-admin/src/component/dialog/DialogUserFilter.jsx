@@ -16,9 +16,15 @@ export default class DialogUserFilter extends React.Component {
 		this.applyFilter = this.applyFilter.bind(this);
 
 		this.initialState = {
-			allowedFilters: ["email"],
+			allowedFilters: ["email", "first_name", "last_name", "status"],
 
 			email: null,
+			first_name: null,
+			last_name: null,
+			status: null,
+			entityEnums: {
+				status: ['NEW', 'VERIFIED', 'REQUESTED', 'ACCEPTED', 'REJECTED'],
+			},
 		};
 
 		this.state = _.cloneDeep(this.initialState);
@@ -87,20 +93,43 @@ export default class DialogUserFilter extends React.Component {
 			>
 				<div className={"DialogUserFilter-form"}>
 					<h2>Filter users</h2>
-					<button
+					{/* <button
 						className={"link-button"}
 						data-hover="Cancel"
 						data-active=""
 						onClick={this.eraseFilters}
 						disabled={this.getNumberOfFilter() === 0}>
 						<span><i className="fas fa-eraser"/> Erase filters</span>
-					</button>
+					</button> */}
 					<FormLine
 						label="Email"
 						fullWidth={true}
 						value={this.state.email}
 						onChange={(v) => this.changeState("email", v)}
 						autofocus={true}
+					/>
+					<FormLine
+						label="Name"
+						fullWidth={true}
+						value={this.state.first_name}
+						onChange={(v) => this.changeState("first_name", v)}
+					/>
+					<FormLine
+						label="Surname"
+						fullWidth={true}
+						value={this.state.last_name}
+						onChange={(v) => this.changeState("last_name", v)}
+					/>
+					<FormLine
+						label={"Status"}
+						type={"select"}
+						value={this.state.status}
+						options={this.state.entityEnums === null
+							|| typeof this.state.entityEnums.status === "undefined" ? []
+							: [{ value: null, label: "-" }].concat(
+								this.state.entityEnums.status.map((o) => ({ label: o, value: o })),
+							)}
+						onChange={(v) => this.changeState("status", v)}
 					/>
 				</div>
 				<div className={"bottom-right-buttons"}>
@@ -109,13 +138,13 @@ export default class DialogUserFilter extends React.Component {
 						data-hover="Close"
 						data-active=""
 						onClick={DialogUserFilter.cancel}>
-						<span><i className="far fa-times-circle"/> Close</span>
+						<span><i className="far fa-times-circle" /> Close</span>
 					</button>
 					<button
 						data-hover="Apply"
 						data-active=""
 						onClick={this.applyFilter}>
-						<span><i className="far fa-check-circle"/> Apply</span>
+						<span><i className="far fa-check-circle" /> Apply</span>
 					</button>
 				</div>
 			</Popup>

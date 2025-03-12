@@ -79,10 +79,10 @@ export default class MediaImage extends React.Component {
 
 	render() {
 		return (
-			<div id="MediaImage" className="max-sized-page fade-in">
+			<div id="MediaImage" className="max-sized-page fade-in MediaPages">
 				<div className={"row"}>
 					<div className="col-md-12">
-						<h1>Images</h1>
+						<h1 className="heading-media">Images</h1>
 						<div className="top-right-buttons">
 							<button
 								onClick={() => this.refresh()}>

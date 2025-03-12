@@ -87,10 +87,10 @@ export default class TaskRequest extends React.Component {
 
 	render() {
 		return (
-			<div id="TaskRequest" className="max-sized-page fade-in">
+			<div id="TaskRequest" className="max-sized-page fade-in TaskRequest">
 				<div className={"row"}>
 					<div className="col-md-12">
-						<h1>Request</h1>
+						<h1 className="heading-task">Request</h1>
 						<div className="top-right-buttons">
 							<button
 								onClick={() => this.refresh()}>

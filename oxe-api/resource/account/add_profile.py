@@ -4,6 +4,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from flask_restful import Resource
 from webargs import fields
 from sqlalchemy.exc import IntegrityError
+from datetime import datetime
 
 from decorator.catch_exception import catch_exception
 from decorator.log_request import log_request
@@ -35,29 +36,59 @@ class AddProfile(MethodResource, Resource):
     def post(self, **kwargs):
         user_id = kwargs["user_id"]
 
+        user = self.db.session.query(self.db.tables["User"]).filter_by(id=user_id).first()
+        if user:
+            email = user.email
+            password = user.password
+        else:
+            return {"message": "User not found"}, 404
+        
         self.db.merge({
             'id': user_id,
             'first_name': kwargs["data"]['first_name'],
             'last_name': kwargs["data"]['last_name'],
             'telephone': kwargs["data"]['telephone'],
-            'is_vcard_public': kwargs["data"]['public'],
+            # 'is_vcard_public': kwargs["data"]['public'],
             'status': "ACCEPTED",
+            'community_access': 1, 
         }, self.db.tables["User"])
         try:
             self.db.insert({
                 'user_id': user_id,
                 'gender': kwargs["data"]['gender'],
-                'sector': kwargs["data"]['sector'],
-                'residency': kwargs["data"]['residency'],
-                'mobile': kwargs["data"]['mobile'],
-                'experience': kwargs["data"]['experience'],
-                'domains_of_interest': kwargs["data"]['domains_of_interest'],
-                'how_heard': kwargs["data"]['how_heard'],
-                'profession_id': kwargs["data"]['profession_id'],
-                'industry_id': kwargs["data"]['industry_id'],
-                'nationality_id': kwargs["data"]['nationality_id'],
-                'expertise_id': kwargs["data"]['expertise_id'],
-                'public': kwargs["data"]['public'],
+                'entity_name': kwargs["data"]['entity_name'],
+                'vat_number': kwargs["data"]['vat_number'],
+                'website': kwargs["data"]['website'],
+                'company_email': kwargs["data"]['company_email'],
+                'company_phone': kwargs["data"]['company_phone'],
+                'position_organization': kwargs["data"]['position_organization'],
+                'address': kwargs["data"]['address'],
+                'city': kwargs["data"]['city'],
+                'postal_code': kwargs["data"]['postal_code'],
+                'po_box': kwargs["data"]['po_box'],
+                'headquarter_address': kwargs["data"].get('headquarter_address') or kwargs["data"]['address'],
+                'headquarter_city': kwargs["data"].get('headquarter_city') or kwargs["data"]['city'],
+                'headquarter_postal_code': kwargs["data"].get('headquarter_postal_code') or kwargs["data"]['postal_code'],
+                'headquarter_po_box': kwargs["data"].get('headquarter_po_box') or kwargs["data"]['po_box'],
+                'organizations_types': kwargs["data"]['organizations_types'],
+                'other': kwargs["data"]['other'],
+                'eu_member': kwargs["data"]['eu_member'],
+                'eu_country': kwargs["data"]['eu_country'],
+                'majority_shares': kwargs["data"]['majority_shares'],
+                'shares_country': kwargs["data"]['shares_country'],
+                'comply_article_eu': kwargs["data"]['comply_article_eu'],   
+                'taxonomy_types': kwargs["data"]['taxonomy_types'],
+                'person_expertise': kwargs["data"]['person_expertise'],
+                'field_article_expertise': kwargs["data"]['field_article_expertise'],
+                'taxonomy_other': kwargs["data"]['taxonomy_other'],
+                'article_compy_regulation':kwargs["data"]['article_compy_regulation'],
+                'detail_expertise': kwargs["data"]['detail_expertise'],
+                'achieve_join_community': kwargs["data"]['achieve_join_community'],
+                'contribution_community': kwargs["data"]['contribution_community'],
+                'ncc_consent': kwargs["data"]['ncc_consent'],
+                'signature': kwargs["data"]['signature'],
+                'registration_date': datetime.now(),
+
             }, self.db.tables["UserProfile"])
         except IntegrityError as e:
             self.db.session.rollback()

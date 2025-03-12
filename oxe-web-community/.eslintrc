@@ -1,6 +1,18 @@
 {
 	"parser": "@babel/eslint-parser",
 	"extends": ["airbnb-base", "plugin:react/recommended"],
+	"parserOptions": {
+		"requireConfigFile": false,
+    "ecmaFeatures": {
+      "jsx": true
+    },
+		"ecmaVersion": 12
+    // "sourceType": "module",
+    
+  },
+	"plugins": [
+    "react"
+  ],
   	"env": {
     	"node": true,
     	"es6": true,
@@ -13,10 +25,17 @@
       "quotes": [2, "double", { "avoidEscape": true }],
       "no-tabs": 0,
       "no-plusplus": 0,
+			"no-nested-ternary": 0,
       "prefer-template": 0,
       "react/prop-types": 0,
       "no-param-reassign": ["error", { "props": true, "ignorePropertyModificationsFor": ["data"] }],
-      "prefer-destructuring": ["error", {"object": true, "array": false}]
+      "prefer-destructuring": ["error", {"object": true, "array": false}],
+			"no-mixed-spaces-and-tabs": 0
   	},
+		"settings": {
+			"react": {
+				"version": "detect"
+			}
+		},
   	"ignorePatterns": ["/node_modules/*", "/build/*", "/public/*"],
 }

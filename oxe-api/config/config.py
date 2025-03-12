@@ -49,7 +49,9 @@ HTTP_PROXY          = _getenv('HTTP_PROXY', mandatory=False)
 INITIAL_ADMIN_EMAIL =       _getenv('INITIAL_ADMIN_EMAIL',      mandatory=False)
 INITIAL_ADMIN_PASSWORD =    _getenv('INITIAL_ADMIN_PASSWORD',   default="Passw0rd!")
 
-IMAGE_FOLDER        = _getenv('IMAGE_FOLDER',    default="/openxeco_image")
+# IMAGE_FOLDER        = _getenv('IMAGE_FOLDER',    default="/oxe-api/openxeco_image")
+IMAGE_FOLDER = _getenv('IMAGE_FOLDER', default="/home/platform/openxeco-ncc-mita/oxe-api/openxeco_image")
+
 DOCUMENT_FOLDER     = _getenv('DOCUMENT_FOLDER', default="/openxeco_document")
 
 CORS_DOMAINS        = _getenv('CORS_DOMAINS',    mandatory=ENVIRONMENT != "dev",
@@ -57,5 +59,6 @@ CORS_DOMAINS        = _getenv('CORS_DOMAINS',    mandatory=ENVIRONMENT != "dev",
 
 # remove extra spaces, remove empty items
 domains = filter(len, map(str.strip, CORS_DOMAINS.split(",")))
+print(domains)
 # pylint: disable=unnecessary-lambda
 CORS_ORIGINS = list(map(lambda d: r'((http|https)://)?(.*\.)?{}'.format(d), domains))

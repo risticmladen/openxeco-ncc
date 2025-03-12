@@ -59,6 +59,7 @@ export default class PageEntity extends React.Component {
 				entities: data.sort((a, b) => (a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1)),
 				loading: false,
 			});
+			console.log(data);
 		}, (response) => {
 			this.setState({ loading: false });
 			nm.warning(response.statusText);

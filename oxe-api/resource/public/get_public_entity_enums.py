@@ -25,6 +25,8 @@ class GetPublicEntityEnums(MethodResource, Resource):
         data = {
             "status": self.db.tables["Entity"].status.prop.columns[0].type.enums,
             "legal_status": self.db.tables["Entity"].legal_status.prop.columns[0].type.enums,
+            "entity_type": self.db.tables["Entity"].entity_type.prop.columns[0].type.enums,
+            "size": self.db.tables["Entity"].size.prop.columns[0].type.enums,        
         }
-
+        print(data)
         return build_no_cors_response(data)

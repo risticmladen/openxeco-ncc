@@ -59,7 +59,7 @@ class AddDocument(MethodResource, Resource):
         # Save file in dir
 
         try:
-            f = open(os.path.join(DOCUMENT_FOLDER, str(document.id)), 'wb')
+            f = open(os.path.join("./add_documents/", str(document.id)), 'wb')
             f.write(kwargs["data"].encode('latin-1'))
             f.close()
         except Exception:

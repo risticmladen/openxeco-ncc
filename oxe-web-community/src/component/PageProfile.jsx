@@ -3,6 +3,7 @@ import "./PageProfile.css";
 import vCard from "vcf";
 import Popup from "reactjs-popup";
 import { NotificationManager as nm } from "react-notifications";
+import { getApiURL } from "../utils/env.jsx";
 import Info from "./box/Info.jsx";
 import FormLine from "./form/FormLine.jsx";
 import { getRequest, postRequest } from "../utils/request.jsx";
@@ -12,6 +13,7 @@ import {
 import Loading from "./box/Loading.jsx";
 import Message from "./box/Message.jsx";
 import UpdateProfile from "./pageprofile/UpdateProfile.jsx";
+import DialogConfirmation from "./dialog/DialogConfirmation.jsx";
 
 export default class PageProfile extends React.Component {
 	constructor(props) {
@@ -24,40 +26,40 @@ export default class PageProfile extends React.Component {
 		this.updateProfile = this.updateProfile.bind(this);
 		this.setProfileValues = this.setProfileValues.bind(this);
 		this.updateDetails = this.updateDetails.bind(this);
-
+		this.uploadProfileImage = this.uploadProfileImage.bind(this);
+		this.deleteUserAfterCheck = this.deleteUserAfterCheck.bind(this);
+		this.deleteUser = this.deleteUser.bind(this);
+		this.fetchCheckUsers = this.fetchCheckUsers.bind(this);
+		this.getCheckEntityUsers = this.getCheckEntityUsers.bind(this);
+		
 		this.state = {
 			currentUser: null,
 			dbVcard: null,
 			currentVcard: null,
-
 			userChanged: false,
 			profileChanged: false,
 			userProfile: null,
-
 			socialEmpty: true,
-
 			password: "",
 			newPassword: "",
 			newPasswordConfirmation: "",
-
 			fullName: "",
 			title: "",
 			email: "",
-
 			entityToDelete: "",
 			passwordForDelete: "",
-
 			countries: [],
 			professions: [],
+			profilePic: null, // New state variable
 		};
 	}
 
 	componentDidMount() {
 		this.refreshProfile();
 
-		getRequest.call(this, "public/get_public_countries", (data) => {
+		getRequest.call(this, "public/get_public_countries", (countriesData) => {
 			this.setState({
-				countries: data,
+				countries: countriesData,
 			});
 		}, (error) => {
 			nm.warning(error.message);
@@ -65,9 +67,9 @@ export default class PageProfile extends React.Component {
 			nm.error(error.message);
 		});
 
-		getRequest.call(this, "public/get_public_professions", (data) => {
+		getRequest.call(this, "public/get_public_professions", (professionsData) => {
 			this.setState({
-				professions: data,
+				professions: professionsData,
 			});
 		}, (error) => {
 			nm.warning(error.message);
@@ -76,31 +78,48 @@ export default class PageProfile extends React.Component {
 		});
 	}
 
-	refreshProfile() {
+	refreshProfile(forceImageRefresh = false) {
 		this.setState({
 			userProfile: null,
 			profileChanged: false,
 			userChanged: false,
 		});
 
-		getRequest.call(this, "private/get_my_user", (data) => {
+		getRequest.call(this, "private/get_my_user", (userData) => {
+			/* eslint-disable new-cap */
 			this.setState({
-				currentUser: data,
-				/* eslint-disable-next-line new-cap */
-				dbVcard: data.vcard ? new vCard().parse(data.vcard) : new vCard(),
-				/* eslint-disable-next-line new-cap */
-				currentVcard: data.vcard ? new vCard().parse(data.vcard) : new vCard(),
+				currentUser: userData,
+				dbVcard: userData.vcard ? new vCard().parse(userData.vcard) : new vCard(),
+				currentVcard: userData.vcard ? new vCard().parse(userData.vcard) : new vCard(),
 			});
+			/* eslint-enable new-cap */
+			// console.log("User data fetched:", userData);
 		}, (response) => {
 			nm.warning(response.statusText);
 		}, (error) => {
 			nm.error(error.message);
 		});
 
-		getRequest.call(this, "private/get_my_profile", (data) => {
+		getRequest.call(this, "private/get_my_profile", (profileData) => {
 			this.setState({
-				userProfile: data,
+				userProfile: profileData,
 			});
+			if (forceImageRefresh || !this.state.profilePic) {
+				const timestamp = new Date().getTime(); // Generate a unique timestamp
+				const imageUrl = `${getApiURL()}account/get_profile_image/${this.state.userProfile.user_id}?t=${timestamp}`;
+				fetch(imageUrl)
+					.then((response) => response.json())
+					.then((imageData) => {
+						if (imageData.image) {
+							this.setState({ profilePic: imageData.image });
+						} else {
+							this.setState({ profilePic: null });
+						}
+					})
+					.catch(() => {
+						this.setState({ profilePic: null });
+					});
+			}
 		}, (error) => {
 			nm.warning(error.message);
 		}, (error) => {
@@ -246,31 +265,32 @@ export default class PageProfile extends React.Component {
 		});
 	}
 
-	isStudentOrRetired() {
-		const role = this.state.professions.find(
-			(p) => (p.id === this.state.userProfile.profession_id),
-		);
-		if (role === undefined) {
-			return false;
-		}
-		return role.name === "Student" || role.name === "Retired";
-	}
+	// isStudentOrRetired() {
+	// 	const role = this.state.professions.find(
+	// 		(p) => (p.id === this.state.userProfile.profession_id),
+	// 	);
+	// 	if (role === undefined) {
+	// 		return false;
+	// 	}
+	// 	return role.name === "Student" || role.name === "Retired";
+	// }
 
 	isProfileFormValid() {
 		let valid = true;
-		const malta = this.state.countries.find(
-			(country) => (country.name === "Malta"),
-		);
+		// const cyprus = this.state.countries.find(
+		// 	(country) => (country.name === "Cyprus"),
+		// );
 
 		if (this.state.userProfile.telephone !== "" && !validateTelephoneNumber(this.state.userProfile.telephone)) {
 			valid = false;
 			nm.warning("Telephone number is not valid");
 		}
 
-		if (this.state.userProfile.mobile !== "" && !validateTelephoneNumber(this.state.userProfile.mobile)) {
-			valid = false;
-			nm.warning("Mobile number is not valid");
-		}
+		// if (this.state.userProfile.mobile !== "" &&
+		// !validateTelephoneNumber(this.state.userProfile.mobile)) {
+		// 	valid = false;
+		// 	nm.warning("Mobile number is not valid");
+		// }
 
 		if (this.state.userProfile.first_name !== "" && !validateName(this.state.userProfile.first_name)) {
 			valid = false;
@@ -282,37 +302,51 @@ export default class PageProfile extends React.Component {
 			nm.warning("Surname is not valid");
 		}
 
-		if (malta === undefined
-			|| this.state.userProfile.first_name === ""
+		// if (cyprus === undefined
+		if (this.state.userProfile.first_name === ""
 			|| this.state.userProfile.last_name === ""
-			|| this.state.userProfile.domains_of_interest === null
-			|| this.state.userProfile.experience === null
-			|| this.state.userProfile.expertise_id === null
+			|| this.state.userProfile.entity_name === ""
+			|| this.state.userProfile.website === ""
+			|| this.state.userProfile.company_email === ""
+			|| this.state.userProfile.company_phone === ""
+			|| this.state.userProfile.position_organization === ""
+			|| this.state.userProfile.address === ""
+			|| this.state.userProfile.city === ""
+			|| this.state.userProfile.postal_code === ""
+			|| this.state.userProfile.person_expertise === ""
+			|| this.state.userProfile.detail_expertise === ""
+			|| this.state.userProfile.contribution_community === ""
+			// || this.state.userProfile.domains_of_interest === null
+			// || this.state.userProfile.experience === null
+			// || this.state.userProfile.expertise_id === null
 			|| this.state.userProfile.gender === null
-			|| this.state.userProfile.how_heard === null
-			|| this.state.userProfile.nationality_id === null
-			|| this.state.userProfile.profession_id === null
-			|| this.state.userProfile.residency === null
-			|| (
-				this.isStudentOrRetired() === false
-				&& (this.state.userProfile.sector === null || this.state.userProfile.industry_id === null)
-			)
+			// || this.state.userProfile.how_heard === null
+			// || this.state.userProfile.nationality_id === null
+			// || this.state.userProfile.profession_id === null
+			// || this.state.userProfile.residency === null
+			// || (
+			// 	this.isStudentOrRetired() === false
+			// 	&& (this.state.userProfile.sector === null || this.state.userProfile.industry_id === null)
+			// )
 		) {
 			nm.warning("Please fill in all of the required fields");
 			valid = false;
 		}
-		if (malta !== undefined) {
-			if (
-				this.state.nationality_id !== null
-				&& this.state.userProfile.nationality_id !== malta.id
-				&& this.state.userProfile.residency !== ""
-				&& this.state.userProfile.residency !== "Malta"
-				&& this.state.userProfile.residency !== "Gozo"
-			) {
-				nm.warning("The account is only available to Maltese or Gozo residents or Maltese nationals");
-				valid = false;
-			}
-		}
+		// if (cyprus !== undefined) {
+		// 	if (
+		// 		this.state.nationality_id !== null
+		// 		&& this.state.userProfile.nationality_id !== cyprus.id
+		// 		&& this.state.userProfile.residency !== ""
+		// 		&& this.state.residency !== "Nicosia"
+		// 		&& this.state.residency !== "Limassol"
+		// 		&& this.state.residency !== "Larnaca"
+		// 		&& this.state.residency !== "Pafos"
+		// 	) {
+		// 		nm.warning("The account is only available to Maltese or
+		// Gozo residents or Maltese nationals");
+		// 		valid = false;
+		// 	}
+		// }
 		return valid;
 	}
 
@@ -335,6 +369,89 @@ export default class PageProfile extends React.Component {
 		if (this.state.userChanged) {
 			this.updateUser();
 		}
+	}
+
+	deleteUserAfterCheck() {
+		postRequest.call(this, "private/delete_my_user", {}, () => {			
+			nm.info("The account has been deleted");
+			// Close the dialog after user is deleted
+			//this.dialogRef.current.closePopup();
+			this.props.logout();
+		}, (response) => {
+			nm.warning(response.statusText);
+		}, (error) => {
+			nm.error(error.message);
+		});	
+	}
+
+	getCheckEntityUsers(currentUserId) {
+		const userEntities = this.props.myEntities;
+		// console.log('userEntities: ', userEntities);
+		if(userEntities.length === 0) {
+			return this.deleteUserAfterCheck();
+		}
+		userEntities.forEach((entity) => {
+		const entityId = entity.id;
+		
+			getRequest.call(this, "entity/get_entity_users/" + entityId, (data) => {
+					// console.log('getRequest.call and entityId : ', entityId );
+					const entityUsers = data;
+					// console.log('getRequest.call entityUsers: ', entityUsers);
+					const otherUsersExist = entityUsers.some(user => user.id !== currentUserId);
+
+					// console.log('otherUsersExist?: ', otherUsersExist);
+
+					if(!otherUsersExist) {
+						nm.warning('You are the only representative of ' + entity.name + '. Please appoint some other member prior account deleting.');
+						
+					} else {
+						// delete user
+						this.deleteUserAfterCheck();
+					}
+				
+				}, (response) => {
+					nm.warning(response.statusText);
+				}, (error) => {
+					nm.error(error.message);
+				});
+			});			
+	}
+
+	fetchCheckUsers(currentUserId){
+
+		getRequest.call(this, "user/get_users", (data) => {
+			const users = data.items;
+			const isOtherAdminsExist = users.some(user => user.is_admin === 1 && user.id !== currentUserId);
+		
+			
+			if(!isOtherAdminsExist) {
+				nm.warning('You need to appoint another forum admin prior deleting your account.');
+				
+			} else {
+				this.getCheckEntityUsers(currentUserId);
+			}
+
+		}, (response) => {
+			nm.warning(response.statusText);
+			console.info('get all users response:', response);
+		}, (error) => {
+			nm.error(error.message);
+		});
+	}
+
+	deleteUser() {
+		const isUserAdmin = this.state.currentUser?.is_admin === 1;
+		const currentUserId = this.state.currentUser.id;
+		
+			if(isUserAdmin){
+			//check there is another forum admin then delete if there is any
+			this.fetchCheckUsers(currentUserId );
+		
+		} else {
+			//check if entities user represents has another member prior deleting
+			this.getCheckEntityUsers(currentUserId);
+		}
+		
 	}
 
 	setProfileValues(newProfile) {
@@ -395,13 +512,38 @@ export default class PageProfile extends React.Component {
 		});
 	}
 
+	uploadProfileImage(close) {
+		if (!this.state.profilePic) {
+			nm.warning("Please select an image to upload.");
+			return; // Exit function early if no image is selected
+		}
+		const imageData = {
+			image: this.state.profilePic,
+			user_id: this.state.currentUser.id, // Include the currentUser ID
+		};
+		// Make a POST request to upload the image data to the backend
+		postRequest.call(this, "account/upload_profile_image", imageData, () => {
+			// Reset the state and display success message
+			nm.info("The profile picture has been uploaded successfully.");
+			this.refreshProfile(true); // Pass a parameter to force image refresh
+			if (close) {
+				close();
+			}
+		}, (response) => {
+			nm.warning(response.statusText);
+		}, (error) => {
+			nm.error(error.message);
+		});
+	}
+
 	render() {
+		// console.log(this.state.profilePic);
 		if (!this.state.currentUser) {
-			return <div id={"PageProfile"} className={"page max-sized-page"}>
-				<Loading
-					height={300}
-				/>
-			</div>;
+			return (
+				<div id={"PageProfile"} className={"page max-sized-page"}>
+					<Loading height={300} />
+				</div>
+			);
 		}
 
 		return (
@@ -411,54 +553,45 @@ export default class PageProfile extends React.Component {
 						<div className={"row"}>
 							<div className="col-md-12">
 								<div className="PageProfile-white-box">
-									<div className="PageProfile-icon centered">
-										<i className="fas fa-user-circle"/>
-
-										{/* {this.state.user.handle
-											&& <Popup
-												className="Popup-small-size"
-												trigger={
-													<button className="PageProgile-qr-button blue-button">
-														<i className="fas fa-qrcode"/>
-													</button>
-												}
-												modal
-												closeOnDocumentClick
-											>
-												{(close) => <div className="row">
-													<div className="col-md-12">
-														<h2>Profile QR code</h2>
-
-														<div className={"top-right-buttons"}>
-															<button
-																className={"grey-background"}
-																data-hover="Close"
-																data-active=""
-																onClick={close}>
-																<span><i className="far fa-times-circle"/></span>
-															</button>
-														</div>
-													</div>
-													<div className="col-md-12 centered">
-														<QRCode
-															className="PageProfile-qr-code"
-															value={
-																getApiURL()
-																+ "public/get_public_vcard/"
-																+ this.state.user.handle
-															}
-															bgColor={"#EEEEEE"}
-															level={"M"}
-														/>
-													</div>
-												</div>}
-											</Popup>
-										} */}
+									<div className="PageProfile-upload-photo centered">
+										<label htmlFor="file-upload" className="upload-container" onClick={() => this.fileInput.click()}>
+											{this.state.profilePic ? (
+												<img
+													src={this.state.profilePic}
+													alt="Profile"
+													className="uploaded-image"
+												/>
+											) : (
+												<i className="fas fa-user-circle fa-5x" />
+											)}
+											<input
+												id="file-upload"
+												type="file"
+												accept="image/*"
+												ref={(input) => { this.fileInput = input; }}
+												onChange={(e) => {
+													const file = e.target.files[0];
+													if (file) {
+														const reader = new FileReader();
+														reader.onload = (event) => {
+															// console.log("FileReader result:", event.target.result);
+															this.setState({ profilePic: event.target.result }, () => {
+																this.uploadProfileImage();
+															});
+														};
+														reader.onerror = (error) => {
+															console.error("FileReader error:", error);
+														};
+														reader.readAsDataURL(file);
+													}
+												}}
+												style={{ display: "none" }} // Hide the file input element
+											/>
+										</label>
 									</div>
 									<FormLine
 										label={"Full name"}
 										value={this.state.currentUser.first_name + " " + this.state.currentUser.last_name}
-										// onChange={(v) => this.updateCurrentVcard("fn", v)}
 										fullWidth={true}
 										disabled={true}
 									/>
@@ -498,7 +631,7 @@ export default class PageProfile extends React.Component {
 														data-hover="Close"
 														data-active=""
 														onClick={close}>
-														<span><i className="far fa-times-circle"/></span>
+														<span><i className="far fa-times-circle" /></span>
 													</button>
 												</div>
 											</div>
@@ -512,12 +645,12 @@ export default class PageProfile extends React.Component {
 												<Info
 													content={
 														<div>
-															The password must:<br/>
+															The password must:<br />
 															<li>contain at least 1 lowercase alphabetical character</li>
 															<li>contain at least 1 uppercase alphabetical character</li>
 															<li>contain at least 1 numeric character</li>
 															<li>contain at least 1 special character being !@#$%^&*</li>
-															<li>be between 8 and 30 characters long</li>
+															<li>be between 10 and 30 characters long</li>
 															<li>not contain any part of a name, surname or both</li>
 														</div>
 													}
@@ -576,11 +709,11 @@ export default class PageProfile extends React.Component {
 														data-hover="Close"
 														data-active=""
 														onClick={close}>
-														<span><i className="far fa-times-circle"/></span>
+														<span><i className="far fa-times-circle" /></span>
 													</button>
 												</div>
 											</div>
-											{ this.props.myEntities !== null && this.props.myEntities.length > 0
+											{this.props.myEntities !== null && this.props.myEntities.length > 0
 												? <div className="col-md-12">
 													<div>
 														<FormLine
@@ -599,16 +732,14 @@ export default class PageProfile extends React.Component {
 															fullWidth={true}
 															value={this.state.entityToDelete}
 															onChange={(v) => this.changeState("entityToDelete", v)}
-															onKeyDown={this.onKeyDown}
 															format={validateNotNull}
 														/>
-														{ this.state.entityToDelete !== ""
+														{this.state.entityToDelete !== ""
 															&& <FormLine
 																label="Please enter your password to confirm"
 																fullWidth={true}
 																value={this.state.passwordForDelete}
 																onChange={(v) => this.changeState("passwordForDelete", v)}
-																onKeyDown={this.onKeyDown}
 																format={validateNotNull}
 																type="password"
 															/>
@@ -630,19 +761,16 @@ export default class PageProfile extends React.Component {
 										</div>}
 									</Popup>
 
-									{/* <button
-										className="blue-button"
-										onClick={() => window.open(
-											getApiURL() + "public/get_public_vcard/" + this.state.user.handle,
-											"_blank",
-										)}
-										disabled={!this.state.user.is_vcard_public || !this.state.user.handle}
-										title={(!this.state.user.is_vcard_public || !this.state.user.handle)
-											&& "The profile must be public with an handle"
+									<DialogConfirmation
+										text={"Are you sure you want to delete this account? The data related to the account won't be retrievable."}
+										trigger={
+											<button
+												className={"red-background"}>
+												Delete account...
+											</button>
 										}
-									>
-										Open VCF file
-									</button> */}
+										afterConfirmation={() => this.deleteUser()}
+									/>
 								</div>
 							</div>
 						</div>
@@ -650,19 +778,19 @@ export default class PageProfile extends React.Component {
 
 					<div className="col-md-8">
 						<div className={"row row-spaced"}>
-							<div className="col-md-12 PageProfile-white-box">
+							{/* <div className="col-md-12 PageProfile-white-box">
 								<h3>Communication</h3>
-								<br/>
+								<br />
 								<FormLine
 									label={"Would you like to receive communications from the NCC?"}
 									type={"checkbox"}
 									value={this.state.currentUser.accept_communication}
 									onChange={(v) => this.updateUserDetail("accept_communication", v)}
 								/>
-							</div>
-							<div className="col-md-12 PageProfile-white-box">
+							</div> */}
+							{/* <div className="col-md-12 PageProfile-white-box">
 								<h3>Accessibility</h3>
-								<br/>
+								<br />
 
 								<FormLine
 									label={"Make my profile public"}
@@ -670,29 +798,17 @@ export default class PageProfile extends React.Component {
 									value={this.state.currentUser.is_vcard_public}
 									onChange={(v) => this.updateUserDetail("is_vcard_public", v)}
 								/>
-								{/* <FormLine
-									label={"Handle"}
-									disabled={true}
-									value={this.state.user.handle}
-								/>
-								<div className="right-buttons">
-									<button
-										onClick={this.generateHandle}
-										disabled={this.state.value === null}>
-										Generate new handle
-									</button>
-								</div> */}
-							</div>
+							</div> */}
 							<div className="col-md-12 PageProfile-white-box">
 								<h3>Contact</h3>
-								<br/>
+								<br />
 								<FormLine
 									label={"Email"}
 									value={this.state.currentUser.email}
 									onChange={(v) => this.updateUserDetail("email", v)}
 									disabled={true}
 								/>
-								<FormLine
+								{/* <FormLine
 									label={"Include email in my public profile"}
 									type={"checkbox"}
 									value={this.getVcardValue("email") !== null}
@@ -703,11 +819,12 @@ export default class PageProfile extends React.Component {
 									type={"checkbox"}
 									value={this.getVcardValue("tel") !== null}
 									onChange={(v) => this.updateCurrentVcard("tel", v ? this.state.currentUser.telephone : null)}
-								/>
+								/> */}
 							</div>
 							<div className="col-md-12 PageProfile-white-box">
 								<h3>Details</h3>
-								<br/>
+								<h4>*To change any of your details please contact admin using the Contacts Us button.</h4>
+								<br />
 								{this.state.userProfile != null
 									&& <UpdateProfile
 										userProfile={this.state.userProfile}
@@ -716,7 +833,7 @@ export default class PageProfile extends React.Component {
 							</div>
 							<div className="col-md-12 PageProfile-white-box">
 								<h3>Social media and website</h3>
-								<br/>
+								<br />
 
 								{this.getVcardValue("socialprofile")
 									? [].concat(this.getVcardValue("socialprofile")).map((s, i) => (
@@ -734,7 +851,6 @@ export default class PageProfile extends React.Component {
 														{ label: "Instragram", value: "Instragram" },
 														{ label: "Medium", value: "Medium" },
 														{ label: "GitHub", value: "GitHub" },
-														// { label: "BitBucket", value: "BitBucket" },
 														{ label: "Other", value: "Other" },
 													]}
 													value={s.type}
@@ -755,7 +871,7 @@ export default class PageProfile extends React.Component {
 													<button
 														className={"red-background"}
 														onClick={() => this.deleteSocialeProfile(i)}>
-														<i className="fas fa-trash-alt"/>
+														<i className="fas fa-trash-alt" />
 													</button>
 												</div>
 											</div>
@@ -770,7 +886,7 @@ export default class PageProfile extends React.Component {
 								<div className="right-buttons">
 									<button
 										onClick={() => this.addCurrentVcardSocialeProfile()}>
-										<i className="fas fa-plus"/> Add
+										<i className="fas fa-plus" /> Add
 									</button>
 								</div>
 							</div>
@@ -797,28 +913,6 @@ export default class PageProfile extends React.Component {
 						</div>
 					</div>
 				}
-
-				{/* {((this.state.dbVcard && !this.state.currentVcard)
-					|| (!this.state.dbVcard && this.state.currentVcard)
-					|| this.state.dbVcard.toString("4.0") !== this.state.currentVcard.toString("4.0"))
-					&& <div className="PageProfile-save-button">
-						<div className="row">
-							<div className="col-md-6">
-								<button
-									className={"red-background"}
-									onClick={this.refreshProfile}>
-									<i className="far fa-times-circle"/> Discard changes
-								</button>
-							</div>
-							<div className="col-md-6">
-								<button
-									onClick={() => this.updateUser("vcard", this.state.currentVcard.toString("4.0"))}>
-									<i className="fas fa-save"/> Save profile
-								</button>
-							</div>
-						</div>
-					</div>
-				} */}
 			</div>
 		);
 	}

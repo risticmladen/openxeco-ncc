@@ -1,0 +1,89 @@
+.faq-articles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1rem;
+}
+
+.faq-article-card {
+    border: 1px solid #ccc;
+    padding: 1rem;
+    background: white;
+}
+
+.faq-article-image-preview {
+    height: 200px;
+    width: 345px;
+    border: 1px solid black;
+}
+
+.faq-article-image-default {
+    height: 200px;
+    width: 345px; /* Stretch the image a bit horizontally */
+    border: 1px solid black;
+    object-fit: cover;
+}
+
+.faq-article-title {
+    border: none !important;
+		text-wrap: auto;
+}
+
+.faq-header {
+    color: white;
+}
+
+.faq-publication-date {
+    text-decoration: none !important;
+    color: grey !important;
+}
+
+.max-sized-page {
+    min-height: 80vh !important;
+}
+
+.faq-article-abstract {
+    display: -webkit-box;
+    max-width: 300px;
+    height: 100px;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+#page-numbers {
+    display: flex;
+    justify-content: center;
+    list-style-type: none;
+    padding: 0;
+}
+
+#page-numbers li {
+    border: 1px solid #ddd;
+    padding: 10px 15px;
+    margin: 0 5px;
+    cursor: pointer;
+}
+
+#page-numbers li:hover {
+    background-color: #ddd;
+}
+
+.filter-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-bottom: 20px;
+}
+
+.order-by-label {
+    color: white;
+}
+
+.order-by-select {
+    color: white;
+    background-color: #333;
+    border: 1px solid #ccc;
+    padding: 5px;
+    border-radius: 4px;
+    margin-left: 10px;
+}

@@ -22,6 +22,10 @@ class App extends React.Component {
 				.matchMedia("only screen and (max-width: 760px)")
 				.matches,
 		};
+		this.logoutTimeout = null;
+		this.setLogoutTimer = this.setLogoutTimer.bind(this);
+	  this.connect = this.connect.bind(this);
+		this.logout = this.logout.bind(this);		
 	}
 
 	// eslint-disable-next-line class-methods-use-this
@@ -29,12 +33,40 @@ class App extends React.Component {
 		document.getElementById("favicon").href = getApiURL() + "public/get_public_image/favicon.ico";
 	}
 
+	// connect(user) {
+	// 	this.setState({
+	// 		user,
+	// 		logged: true,
+	// 	});
+	// }
+
+	componentWillUnmount() {
+		if (this.logoutTimeout) {
+			clearTimeout(this.logoutTimeout);
+		}
+	}
+
 	connect(user) {
 		this.setState({
 			user,
 			logged: true,
+		}, () => {
+			this.setLogoutTimer();
 		});
 	}
+
+	setLogoutTimer() {
+		// Clear any existing timeout
+		if (this.logoutTimeout) {
+			clearTimeout(this.logoutTimeout);
+		}
+
+		// Set a new timeout to log out after 4 hours (14400000 milliseconds)
+		this.logoutTimeout = setTimeout(() => {
+			this.logout();
+		}, 14400000); // 4 hours in milliseconds
+	}
+
 
 	logout() {
 		postRequest.call(this, "account/logout", null, () => {
@@ -42,6 +74,9 @@ class App extends React.Component {
 				user: null,
 				logged: false,
 			});
+			if (this.logoutTimeout) {
+				clearTimeout(this.logoutTimeout);
+			}
 		}, (response) => {
 			nm.warning(response.statusText);
 		}, (error) => {

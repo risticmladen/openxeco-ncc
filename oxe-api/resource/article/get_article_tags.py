@@ -22,7 +22,7 @@ class GetArticleTags(MethodResource, Resource):
              "200": {},
          })
     @jwt_required
-    @verify_admin_access
+    # @verify_admin_access
     @catch_exception
     def get(self, id_):
         taxonomy_sub_query = self.db.session.query(self.db.tables["ArticleTaxonomyTag"]) \

@@ -26,3 +26,16 @@
 .EntityLogo-center {
 	text-align: center;
 }
+
+.EntityLogo-container {
+	background: #efefef;
+  padding: 20px;
+	h2 {
+		color: black;
+	}
+
+	.right-buttons {
+		padding: 20px;
+	}
+}
+

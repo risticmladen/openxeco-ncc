@@ -51,7 +51,7 @@ class ForgotPassword(MethodResource, Resource):
         data = self.db.get(self.db.tables["User"], {"email": kwargs["email"]})
 
         user = data[0] if len(data) > 0 else self.db.tables["User"](id=-1, email=kwargs["email"])
-        expires = datetime.timedelta(minutes=15 if len(data) > 0 else 0)
+        expires = datetime.timedelta(minutes=60 if len(data) > 0 else 0)
         reset_token = create_access_token(str(user.id), expires_delta=expires)
         url = f"{origin}/login?action=reset_password&token={reset_token}"
 
@@ -62,4 +62,4 @@ class ForgotPassword(MethodResource, Resource):
             html_body=render_template('password_reset.html', url=url)
         )
 
-        return "", "200 If that email address is in our database, we will send you an email to reset your password"
+        return "", "200 If dwdw that email address is in our database, we will send you an email to reset your password"

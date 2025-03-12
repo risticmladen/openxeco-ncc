@@ -1,0 +1,39 @@
+.article-page {
+	width: 60%;
+	margin-top: 5%;
+	margin-left: 20%;
+	background-color: white;
+	padding: 20px;
+	margin-bottom: 5%;
+}
+
+.article-image {
+	width: 300px;
+	height: 250px;
+}
+
+.article-image-stretch {
+	width: 50%;
+	height: auto;
+	object-fit: cover;
+}
+
+.single-article-title {
+	border: none;
+	margin-top: 40px;
+	margin-bottom: 40px;
+	text-wrap: auto;
+}
+
+.single-article-content {
+	min-height: 40vh;
+
+}
+
+.single-article-content img {
+		object-fit: contain;
+		max-width: 100%;
+		max-height: 100%;
+		margin-top: 10px;
+	}
+

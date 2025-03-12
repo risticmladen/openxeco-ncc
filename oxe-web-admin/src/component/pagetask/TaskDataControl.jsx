@@ -122,10 +122,10 @@ export default class TaskDataControl extends React.Component {
 		];
 
 		return (
-			<div id="TaskDataControl" className="max-sized-page fade-in">
+			<div id="TaskDataControl" className="max-sized-page fade-in TaskRequest">
 				<div className={"row"}>
 					<div className="col-md-12">
-						<h1>Data control</h1>
+						<h1 className="heading-task">Data control</h1>
 						<div className="top-right-buttons">
 							<button
 								onClick={() => this.refresh()}>

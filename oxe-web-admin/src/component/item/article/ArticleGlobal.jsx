@@ -68,10 +68,11 @@ export default class ArticleGlobal extends React.Component {
 	}
 
 	render() {
+		console.log(this.props.article);
 		if (!this.props.article || !this.state.articleEnums) {
 			return <Loading height={300} />;
 		}
-
+		console.log(this.props.article.image);
 		return (
 			<div id="ArticleGlobal" className={"row"}>
 				{this.props.editable
@@ -147,10 +148,16 @@ export default class ArticleGlobal extends React.Component {
 						label={"Type"}
 						type={"select"}
 						value={this.props.article.type}
-						options={this.state.articleEnums === null
-							|| typeof this.state.articleEnums.type === "undefined" ? []
-							: this.state.articleEnums.type.map((o) => ({ label: o, value: o }))}
-						onChange={(v) => this.saveArticleValue("type", v)}
+						options={
+							this.state.articleEnums === null
+							|| typeof this.state.articleEnums.type === "undefined"
+								? []
+								: this.state.articleEnums.type.map((o) => ({ label: o, value: o }))
+						}
+						onChange={(v) => {
+							console.log("Selected value: ", v);
+							this.saveArticleValue("type", v);
+						}}
 						disabled={!this.props.editable}
 					/>
 					<FormLine
@@ -183,7 +190,7 @@ export default class ArticleGlobal extends React.Component {
 				</div>
 
 				<div className="col-md-12">
-					{["NEWS", "EVENT", "JOB OFFER", "TOOL", "SERVICE"].indexOf(this.props.article.type) >= 0
+					{["NEWS", "ANNOUNCEMENTS", "FAQ", "EVENT", "JOB OFFER", "TOOL", "SERVICE"].indexOf(this.props.article.type) >= 0
 						&& <div className="right-buttons">
 							<button
 								className="link-button"
@@ -197,7 +204,7 @@ export default class ArticleGlobal extends React.Component {
 				</div>
 
 				<div className="col-md-12">
-					{(["NEWS", "EVENT", "JOB OFFER", "TOOL", "SERVICE"].indexOf(this.props.article.type) >= 0
+					{(["NEWS", "ANNOUNCEMENTS", "FAQ", "EVENT", "JOB OFFER", "TOOL", "SERVICE"].indexOf(this.props.article.type) >= 0
 						|| this.state.showOptionalFields)
 						&& <FormLine
 							label={"Link"}

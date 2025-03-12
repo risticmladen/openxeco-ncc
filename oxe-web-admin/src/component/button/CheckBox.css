@@ -24,7 +24,9 @@
 }
 
 .CheckBox-on {
-    background-color: rgba(46, 83, 193, 0.123);
+    /* background-color: rgba(46, 83, 193, 0.123); */
+    background-color: #2E52C1;
+    color: white;
 }
 
 .CheckBox-off {
