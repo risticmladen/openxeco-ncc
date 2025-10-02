@@ -9,7 +9,7 @@ services:
   # API Service
   - type: web
     name: openxeco-api
-    runtime: python3
+    runtime: python
     plan: free
     buildCommand: "pip install --upgrade pip && pip install -r oxe-api/requirements.txt && pip install 'marshmallow<4.0.0,>=3.0.0' python-magic gunicorn psycopg2-binary"
     startCommand: "cd oxe-api && gunicorn --bind 0.0.0.0:$PORT --workers 1 app:app"
