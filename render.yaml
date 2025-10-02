@@ -1,20 +1,19 @@
-services:
-  # Database - PostgreSQL (Render's managed database)
-  - type: pserv
-    name: openxeco-db
+# Database - PostgreSQL (Render's managed database)
+databases:
+  - name: openxeco-db
+    databaseName: openxeco
     plan: free
-    databases:
-      - name: openxeco
-        plan: free
+
+services:
 
   # API Service
   - type: web
     name: openxeco-api
     runtime: python3
     plan: free
-    buildCommand: "pip install --upgrade pip && pip install -r oxe-api/requirements.txt && pip install 'marshmallow<4.0.0,>=3.0.0' python-magic gunicorn"
+    buildCommand: "pip install --upgrade pip && pip install -r oxe-api/requirements.txt && pip install 'marshmallow<4.0.0,>=3.0.0' python-magic gunicorn psycopg2-binary"
     startCommand: "cd oxe-api && gunicorn --bind 0.0.0.0:$PORT --workers 1 app:app"
-    dockerfilePath: .docker/Dockerfile.render
+    # dockerfilePath: .docker/Dockerfile.render  # Comment out since using runtime: python3
     env: production
     envVars:
       - key: ENVIRONMENT
@@ -84,10 +83,7 @@ services:
       - key: PORT
         value: 10000
       - key: REACT_APP_API_URL
-        fromService:
-          name: openxeco-api
-          type: web
-          property: host
+        value: https://openxeco-api.onrender.com
 
   # Community Web App  
   - type: web
@@ -101,7 +97,4 @@ services:
       - key: PORT
         value: 10000
       - key: REACT_APP_API_URL
-        fromService:
-          name: openxeco-api
-          type: web
-          property: host
+        value: https://openxeco-api.onrender.com
