@@ -11,8 +11,9 @@ services:
     name: openxeco-api
     runtime: python
     plan: free
-    buildCommand: "pip install --upgrade pip && pip install -r oxe-api/requirements.txt && pip install 'marshmallow<4.0.0,>=3.0.0' python-magic gunicorn psycopg2-binary"
-    startCommand: "cd oxe-api && gunicorn --bind 0.0.0.0:$PORT --workers 1 app:app"
+    buildCommand: "pip install --upgrade pip setuptools wheel && pip install psycopg2-binary gunicorn python-magic && pip install Flask==2.0.3 Flask-SQLAlchemy==2.5.1 SQLAlchemy==1.4.46 Werkzeug==2.0.3 Jinja2==3.0.3 itsdangerous==2.0.1 flask-bcrypt flask-cors flask-jwt-extended flask-mail flask-migrate flask-restful dateparser openpyxl pandas pillow requests python-dotenv numpy && pip install 'marshmallow<4.0.0,>=3.0.0'"
+    startCommand: "gunicorn --bind 0.0.0.0:$PORT --workers 1 --chdir ./oxe-api app:app"
+    pythonVersion: "3.11"
     # dockerfilePath: .docker/Dockerfile.render  # Comment out since using runtime: python3
     env: production
     envVars:
