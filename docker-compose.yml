@@ -17,9 +17,11 @@ services:
     volumes:
       - ./.docker/mariadb/data:/var/lib/mariadb/data
     healthcheck:
-      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      test: [ "CMD", "mariadb-admin" ,"ping", "-h", "localhost", "-u", "root", "-proot" ]
       timeout: 5s
       retries: 10
+      interval: 5s
+      start_period: 10s
 
   smtp:
     # MacBook Pro chip M1: smtp The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
@@ -79,10 +81,11 @@ services:
       - ./.docker/documents:/usr/app/documents
       - ./oxe-api:/usr/app
     ports:
-      - "5000:5000"
+      - "5001:5000"
     expose:
       - '5000'
     environment:
+      - ENVIRONMENT=dev
       - DEBUG=true
       - DB_HOSTNAME=mariadb
       - DB_NAME=openxeco
@@ -90,20 +93,23 @@ services:
       - DB_PASSWORD=openxeco-pwd
       - DB_PORT=3306
       - DB_DRIVER=mysql+pymysql
-      - JWT_SECRET_KEY=some_random_secret
-      - MAIL_SERVER=foo_mail_server
-      - MAIL_PORT=foo_mail_port
-      - MAIL_USERNAME=foo_mail_username
-      - MAIL_PASSWORD=foo_mail_password
-      - MAIL_USE_TLS=True
-      - MAIL_USE_SSL=True
+      - JWT_SECRET_KEY=my_secret_developer_key_for_local_development
+      - SECRET_KEY=my_secret_key_for_local_development
+      - SECURITY_SALT=my_security_salt_for_local_development
+      - MAIL_SERVER=smtp
+      - MAIL_PORT=1025
+      - MAIL_USE_TLS=False
+      - MAIL_USE_SSL=False
       - IMAGE_FOLDER=/usr/app/media
       - DOCUMENT_FOLDER=/usr/app/documents
       - MAIL_DEFAULT_SENDER=openxeco@localhost.localdomain
-      - INITIAL_ADMIN_EMAIL=your.email@localhost.localdomain
+      - INITIAL_ADMIN_EMAIL=admin@localhost.localdomain
+      - INITIAL_ADMIN_PASSWORD=Admin123!
     depends_on:
       mariadb:
         condition: service_healthy
+      smtp:
+        condition: service_started
 
 networks:
   default:

@@ -1,6 +1,6 @@
 export function getApiURL() {
 	if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" || window.location.hostname === "") {
-		return "http://localhost:5000/";
+	return "http://localhost:5001/";
 	}
 	return "https://api." + window.location.hostname.replace("www.", "").split(".").slice(1).join(".") + "/";
 }

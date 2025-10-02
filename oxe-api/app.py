@@ -78,7 +78,7 @@ api = Api(app)
 
 
 @app.route('/<generic>')
-def undefined_route(_):
+def undefined_route(generic):
     return '', 404
 
 
@@ -197,4 +197,4 @@ if __name__ in ('app', '__main__'):
 
     app.debug = config.ENVIRONMENT == "dev"
     if __name__ == "__main__":
-        app.run(port=int(config.PORT))
+        app.run(host='0.0.0.0', port=int(config.PORT))

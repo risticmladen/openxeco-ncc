@@ -1,0 +1,107 @@
+services:
+  # Database - PostgreSQL (Render's managed database)
+  - type: pserv
+    name: openxeco-db
+    plan: free
+    databases:
+      - name: openxeco
+        plan: free
+
+  # API Service
+  - type: web
+    name: openxeco-api
+    runtime: python3
+    plan: free
+    buildCommand: "pip install --upgrade pip && pip install -r oxe-api/requirements.txt && pip install 'marshmallow<4.0.0,>=3.0.0' python-magic gunicorn"
+    startCommand: "cd oxe-api && gunicorn --bind 0.0.0.0:$PORT --workers 1 app:app"
+    dockerfilePath: .docker/Dockerfile.render
+    env: production
+    envVars:
+      - key: ENVIRONMENT
+        value: prod
+      - key: DEBUG
+        value: false
+      - key: DB_DRIVER
+        value: postgresql+psycopg2
+      - key: DB_HOSTNAME
+        fromDatabase:
+          name: openxeco-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: openxeco-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: openxeco-db
+          property: database
+      - key: DB_USERNAME
+        fromDatabase:
+          name: openxeco-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: openxeco-db
+          property: password
+      - key: JWT_SECRET_KEY
+        generateValue: true
+      - key: SECRET_KEY
+        generateValue: true
+      - key: SECURITY_SALT
+        generateValue: true
+      - key: MAIL_SERVER
+        value: smtp.gmail.com
+      - key: MAIL_PORT
+        value: 587
+      - key: MAIL_USE_TLS
+        value: true
+      - key: MAIL_USE_SSL
+        value: false
+      - key: MAIL_USERNAME
+        sync: false  # Set manually in Render dashboard
+      - key: MAIL_PASSWORD
+        sync: false  # Set manually in Render dashboard
+      - key: MAIL_DEFAULT_SENDER
+        sync: false  # Set manually in Render dashboard
+      - key: IMAGE_FOLDER
+        value: /opt/render/project/src/media
+      - key: DOCUMENT_FOLDER
+        value: /opt/render/project/src/documents
+      - key: INITIAL_ADMIN_EMAIL
+        sync: false  # Set manually in Render dashboard
+      - key: INITIAL_ADMIN_PASSWORD
+        sync: false  # Set manually in Render dashboard
+
+  # Admin Web App
+  - type: web
+    name: openxeco-admin
+    runtime: node
+    plan: free
+    buildCommand: "cd oxe-web-admin && npm install && npm run build"
+    startCommand: "cd oxe-web-admin && npm start"
+    env: production
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: REACT_APP_API_URL
+        fromService:
+          name: openxeco-api
+          type: web
+          property: host
+
+  # Community Web App  
+  - type: web
+    name: openxeco-community
+    runtime: node
+    plan: free
+    buildCommand: "cd oxe-web-community && npm install && npm run build"
+    startCommand: "cd oxe-web-community && npm start"
+    env: production
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: REACT_APP_API_URL
+        fromService:
+          name: openxeco-api
+          type: web
+          property: host
