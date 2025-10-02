@@ -50,11 +50,8 @@ COPY oxe-api/ /app/
 # Create directories for media and documents
 RUN mkdir -p /app/media /app/documents
 
-# Expose port
-EXPOSE 5000
-
 # Set environment variable for Flask
 ENV FLASK_APP=app.py
 
-# Start command
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "1", "app:app"]
+# Start command - Use Render's PORT environment variable
+CMD gunicorn --bind 0.0.0.0:$PORT --workers 1 app:app
