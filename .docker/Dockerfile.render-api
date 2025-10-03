@@ -56,6 +56,9 @@ RUN mkdir -p /app/media /app/documents
 
 # Set environment variable for Flask
 ENV FLASK_APP=app.py
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1
 
 # Start command - Use Render's PORT environment variable
-CMD gunicorn --bind 0.0.0.0:$PORT --workers 1 app:app
+# Temporarily run with Python directly for better error visibility
+CMD python app.py

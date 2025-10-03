@@ -1,4 +1,9 @@
+import sys
+import traceback
+
 print("[DEBUG] Starting imports...")
+
+try:
 from flask import Flask, redirect
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS
@@ -232,7 +237,6 @@ if __name__ in ('app', '__main__'):
         print("[DEBUG] Application initialization completed successfully")
     except Exception as e:
         print(f"[DEBUG] Application initialization failed: {e}")
-        import traceback
         traceback.print_exc()
         raise
 if __name__ == "__main__":
@@ -241,6 +245,11 @@ if __name__ == "__main__":
 		app.run(host="0.0.0.0", debug=False, port=int(os.environ.get("PORT", 5000)))
 	except Exception as e:
 		print(f"[DEBUG] Flask app failed to start: {e}")
-		import traceback
 		traceback.print_exc()
 		raise
+
+except Exception as e:
+    print(f"[CRITICAL ERROR] Failed during module import/initialization: {e}")
+    print(f"[CRITICAL ERROR] Error type: {type(e).__name__}")
+    traceback.print_exc()
+    sys.exit(1)
