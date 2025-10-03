@@ -1,0 +1,30 @@
+{
+  "version": 2,
+  "name": "openxeco-web",
+  "builds": [
+    {
+      "src": "oxe-web-community/package.json",
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": ["oxe-web-community/**"]
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/static/(.*)",
+      "dest": "/oxe-web-community/build/static/$1"
+    },
+    {
+      "src": "/(.*\\.(js|css|ico))",
+      "dest": "/oxe-web-community/build/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/oxe-web-community/server.js"
+    }
+  ],
+  "installCommand": "cd oxe-web-community && npm install",
+  "buildCommand": "cd oxe-web-community && npm run build",
+  "outputDirectory": "oxe-web-community/build"
+}
