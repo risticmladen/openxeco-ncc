@@ -1,0 +1,24 @@
+{
+  "files": {
+    "main.css": "/static/css/main.bff10de4.css",
+    "main.js": "/static/js/main.1902a665.js",
+    "static/js/236.91e0c723.chunk.js": "/static/js/236.91e0c723.chunk.js",
+    "static/js/198.9d98a6a2.chunk.js": "/static/js/198.9d98a6a2.chunk.js",
+    "static/media/COMUNITY PORTAL BACKGROUND.png": "/static/media/COMUNITY PORTAL BACKGROUND.ca2b7f27f740460fc58e.png",
+    "static/media/FjallaOne-Regular.ttf": "/static/media/FjallaOne-Regular.c674a10214432a959a97.ttf",
+    "static/media/notification.svg?s3g3t9": "/static/media/notification.5d0158671dd860c714c4.svg",
+    "static/media/notification.eot": "/static/media/notification.3657084dc0419605a91c.eot",
+    "static/media/notification.woff?s3g3t9": "/static/media/notification.c392cd33d9d9de730f9d.woff",
+    "static/media/notification.ttf?s3g3t9": "/static/media/notification.c5d9251ea82e42f75381.ttf",
+    "index.html": "/index.html",
+    "static/media/accountAvatar.svg": "/static/media/accountAvatar.85290ffa37bc75e1e512886249e77d45.svg",
+    "main.bff10de4.css.map": "/static/css/main.bff10de4.css.map",
+    "main.1902a665.js.map": "/static/js/main.1902a665.js.map",
+    "236.91e0c723.chunk.js.map": "/static/js/236.91e0c723.chunk.js.map",
+    "198.9d98a6a2.chunk.js.map": "/static/js/198.9d98a6a2.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.bff10de4.css",
+    "static/js/main.1902a665.js"
+  ]
+}
