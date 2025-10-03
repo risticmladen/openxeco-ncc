@@ -124,15 +124,23 @@ def verify_otp():
 def verify_login_otp():
     # Mock OTP verification for login - always succeeds for demo
     # This is what the frontend actually calls
-    return jsonify({
-        "access_token": "demo-token-login-verified-123",
-        "refresh_token": "demo-refresh-login-verified-456",
-        "user": {
-            "email": "admin@openxeco.local",
-            "status": "ACCEPTED", 
-            "is_admin": True
-        }
-    })
+    try:
+        data = request.get_json() if request.is_json else {}
+        print(f"[DEBUG] OTP verification request: {data}")
+        print(f"[DEBUG] Origin header: {request.headers.get('Origin')}")
+        
+        return jsonify({
+            "access_token": "demo-token-login-verified-123",
+            "refresh_token": "demo-refresh-login-verified-456",
+            "user": {
+                "email": "admin@openxeco.local",
+                "status": "ACCEPTED", 
+                "is_admin": True
+            }
+        })
+    except Exception as e:
+        print(f"[ERROR] OTP verification failed: {e}")
+        return jsonify({"error": str(e)}), 500
 
 @app.route('/account/request_otp', methods=['POST'])
 def request_otp():
