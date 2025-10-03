@@ -73,10 +73,9 @@ DOCUMENT_FOLDER     = _getenv('DOCUMENT_FOLDER', default="/openxeco_document")
 CORS_DOMAINS        = _getenv('CORS_DOMAINS',    mandatory=ENVIRONMENT != "dev",
                               default="localhost:\\d*" if ENVIRONMENT == "dev" else None)
 
-# remove extra spaces, remove empty items - simplified approach
-print(f"[DEBUG] Original CORS_DOMAINS: {CORS_DOMAINS}")
-domains_list = [d.strip() for d in CORS_DOMAINS.split(",") if d.strip()]
-print(f"[DEBUG] Processed domains: {domains_list}")
-# pylint: disable=unnecessary-lambda
-CORS_ORIGINS = [r'((http|https)://)?(.*\.)?{}'.format(d) for d in domains_list]
-print(f"[DEBUG] Final CORS_ORIGINS: {CORS_ORIGINS}")
+# Process CORS domains safely
+if CORS_DOMAINS:
+    domains_list = [d.strip() for d in CORS_DOMAINS.split(",") if d.strip()]
+    CORS_ORIGINS = [r'((http|https)://)?(.*\.)?{}'.format(d) for d in domains_list]
+else:
+    CORS_ORIGINS = []

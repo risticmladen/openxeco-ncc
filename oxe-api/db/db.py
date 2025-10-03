@@ -40,13 +40,26 @@ class DB:
             else:
                 print("[DEBUG] Skipping migrations in production environment")
 
-            # Init the table objects
-            self.base = declarative_base()
-            self.base.metadata = MetaData(bind=self.instance)
-
-            for table in self.engine.table_names():
-                attr = {'__tablename__': table, '__table_args__': {'autoload': True, 'autoload_with': self.engine}}
-                self.tables[table] = type(table, (self.base,), attr)
+            # Init the table objects (only if tables exist)
+            try:
+                self.base = declarative_base()
+                self.base.metadata = MetaData(bind=self.instance)
+                
+                # Get table names - will be empty if no tables exist yet
+                table_names = self.engine.table_names()
+                print(f"[DEBUG] Found {len(table_names)} tables in database")
+                
+                for table in table_names:
+                    try:
+                        attr = {'__tablename__': table, '__table_args__': {'autoload': True, 'autoload_with': self.engine}}
+                        self.tables[table] = type(table, (self.base,), attr)
+                    except Exception as e:
+                        print(f"[DEBUG] Warning: Could not load table {table}: {e}")
+                        
+                print(f"[DEBUG] Successfully loaded {len(self.tables)} tables")
+            except Exception as e:
+                print(f"[DEBUG] Warning: Could not initialize table objects: {e}")
+                self.tables = {}
 
     ###############
     # GLOBAL      #
