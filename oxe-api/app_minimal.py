@@ -82,6 +82,38 @@ def create_test_account():
         "note": "Use admin@openxeco.local / Admin123! for immediate access"
     })
 
+@app.route('/account/login', methods=['POST'])
+def login():
+    # Mock login - always succeeds for demo
+    data = request.get_json() if request.is_json else {}
+    email = data.get('email', '')
+    
+    if email:
+        return jsonify({
+            "access_token": "demo-token-123",
+            "refresh_token": "demo-refresh-456",
+            "user": {
+                "email": email,
+                "status": "ACCEPTED",
+                "is_admin": True
+            }
+        })
+    else:
+        return jsonify({"error": "Email required"}), 400
+
+@app.route('/account/logout', methods=['POST'])
+def logout():
+    return jsonify({"message": "Logged out successfully"})
+
+@app.route('/account/verify_login', methods=['GET'])
+def verify_login():
+    # Mock verify - always returns valid user for demo
+    return jsonify({
+        "email": "admin@openxeco.local",
+        "status": "ACCEPTED",
+        "is_admin": True
+    })
+
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
