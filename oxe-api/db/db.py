@@ -27,8 +27,12 @@ class DB:
             engine.dispose()
 
         # Init instance
-
-        self.instance = SA(app)
+        # Ensure Flask app has proper SQLAlchemy config before initialization
+        if not app.config.get('SQLALCHEMY_ENGINE_OPTIONS'):
+            app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {}
+        
+        self.instance = SA()
+        self.instance.init_app(app)
 
         self.base = None
         self.session = self.instance.session
