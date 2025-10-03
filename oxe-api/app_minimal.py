@@ -118,6 +118,27 @@ def verify_login():
         "is_admin": True
     })
 
+@app.route('/account/verify_otp', methods=['POST'])
+def verify_otp():
+    # Mock OTP verification - always succeeds for demo
+    return jsonify({
+        "access_token": "demo-token-verified-123",
+        "refresh_token": "demo-refresh-verified-456",
+        "user": {
+            "email": "admin@openxeco.local",
+            "status": "ACCEPTED", 
+            "is_admin": True
+        }
+    })
+
+@app.route('/account/request_otp', methods=['POST'])
+def request_otp():
+    # Mock OTP request - always succeeds
+    return jsonify({
+        "message": "OTP sent successfully",
+        "otp_code": "123456"  # For demo purposes, show the OTP
+    })
+
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
