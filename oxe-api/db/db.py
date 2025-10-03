@@ -8,13 +8,6 @@ from flask_migrate import Migrate, upgrade
 import datetime
 
 
-class SA(SQLAlchemy):
-    def apply_pool_defaults(self, app, options):
-        SQLAlchemy.apply_pool_defaults(self, app, options)
-        options["pool_pre_ping"] = True
-        options["pool_recycle"] = 60
-
-
 class DB:
     def __init__(self, app):
 
@@ -26,33 +19,25 @@ class DB:
             engine.execute("CREATE DATABASE IF NOT EXISTS " + app.config['SQLALCHEMY_DATABASE_URI'].database)
             engine.dispose()
 
-        # Init instance
-        # Ensure Flask app has proper SQLAlchemy config before initialization
-        if not app.config.get('SQLALCHEMY_ENGINE_OPTIONS'):
-            app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {}
+        # Simple Flask-SQLAlchemy initialization without custom SA class
+        self.instance = SQLAlchemy()
+        self.instance.init_app(app)
 
-        # Initialize SA with the app (so it can use this app's config)
-        self.instance = SA(app)
-
-        # Defer all SQLAlchemy usage to inside the app context
+        # Initialize variables
         self.base = None
-        self.session = None
-        self.engine = None
-
-        # Upgrade the structure and reflect tables under app context
-        migration_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "migrations")
-        self.migrate = Migrate(app, self.instance, directory=migration_path)
-
+        self.tables = {}
+        
         with app.app_context():
-            # Attach engine/session now that context exists
+            # Get engine and session within app context
             self.session = self.instance.session
             self.engine = self.instance.engine
 
             # Run migrations
+            migration_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "migrations")
+            self.migrate = Migrate(app, self.instance, directory=migration_path)
             upgrade(directory=migration_path)
 
             # Init the table objects
-            self.tables = {}
             self.base = declarative_base()
             self.base.metadata = MetaData(bind=self.instance)
 
