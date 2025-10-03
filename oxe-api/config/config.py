@@ -76,6 +76,16 @@ CORS_DOMAINS        = _getenv('CORS_DOMAINS',    mandatory=ENVIRONMENT != "dev",
 # Process CORS domains safely
 if CORS_DOMAINS:
     domains_list = [d.strip() for d in CORS_DOMAINS.split(",") if d.strip()]
-    CORS_ORIGINS = [r'((http|https)://)?(.*\.)?{}'.format(d) for d in domains_list]
+    # Create patterns that Flask-CORS can understand
+    CORS_ORIGINS = []
+    for domain in domains_list:
+        # Add exact domain and wildcard subdomain patterns
+        CORS_ORIGINS.extend([
+            f"https://*.{domain}",
+            f"http://*.{domain}", 
+            f"https://{domain}",
+            f"http://{domain}"
+        ])
+    print(f"[DEBUG] Processed CORS Origins: {CORS_ORIGINS}")
 else:
     CORS_ORIGINS = []
