@@ -32,10 +32,13 @@ class DB:
             self.session = self.instance.session
             self.engine = self.instance.engine
 
-            # Run migrations
-            migration_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "migrations")
-            self.migrate = Migrate(app, self.instance, directory=migration_path)
-            upgrade(directory=migration_path)
+            # Run migrations (skip in production since Render database is pre-configured)
+            if os.getenv('ENVIRONMENT', 'dev') != 'prod':
+                migration_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "migrations")
+                self.migrate = Migrate(app, self.instance, directory=migration_path)
+                upgrade(directory=migration_path)
+            else:
+                print("[DEBUG] Skipping migrations in production environment")
 
             # Init the table objects
             self.base = declarative_base()
