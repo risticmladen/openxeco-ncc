@@ -98,13 +98,10 @@ except Exception as e:
     raise
 
 # Add additional plugins
-# Configure CORS with explicit origins handling
-if config.CORS_ORIGINS:
-    print(f"[DEBUG] CORS Origins: {config.CORS_ORIGINS}")
-    cors = CORS(app, origins=config.CORS_ORIGINS, supports_credentials=True)
-else:
-    print("[DEBUG] No CORS origins configured, allowing all")
-    cors = CORS(app, supports_credentials=True)
+# TEMPORARY: Allow all origins for debugging
+print(f"[DEBUG] CORS Origins from config: {config.CORS_ORIGINS}")
+cors = CORS(app, origins="*", supports_credentials=True)
+print("[DEBUG] CORS configured to allow all origins for testing")
 bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
 mail = Mail(app)
