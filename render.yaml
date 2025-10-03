@@ -71,7 +71,7 @@ services:
     runtime: node
     plan: free
     buildCommand: cd oxe-web-community && npm install && npm run build
-    staticPublishPath: ./oxe-web-community/build
+    startCommand: cd oxe-web-community && node server.js
     envVars:
       - key: NODE_ENV
         value: production
