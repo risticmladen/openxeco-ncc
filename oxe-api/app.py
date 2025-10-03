@@ -77,6 +77,8 @@ docs = FlaskApiSpec(app)
 # Init and set the resources for Flask
 api = Api(app)
 
+app.logger.info("Booting OpenXeco API on Render")
+
 
 @app.route('/<generic>')
 def undefined_route(generic):
