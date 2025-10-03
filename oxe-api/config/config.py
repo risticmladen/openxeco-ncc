@@ -66,6 +66,7 @@ CORS_DOMAINS        = _getenv('CORS_DOMAINS',    mandatory=ENVIRONMENT != "dev",
 
 # remove extra spaces, remove empty items
 domains = filter(len, map(str.strip, CORS_DOMAINS.split(",")))
-print(domains)
+print(f"[DEBUG] Filtered domains: {list(domains)}")
 # pylint: disable=unnecessary-lambda
+domains = filter(len, map(str.strip, CORS_DOMAINS.split(",")))  # Re-create since filter is consumed
 CORS_ORIGINS = list(map(lambda d: r'((http|https)://)?(.*\.)?{}'.format(d), domains))

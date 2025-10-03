@@ -1,3 +1,5 @@
+print("=== PYTHON SCRIPT STARTING ===")
+print("This is app.py executing")
 print("[DEBUG] Starting imports...")
 
 try:

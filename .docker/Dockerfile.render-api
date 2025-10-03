@@ -59,6 +59,10 @@ ENV FLASK_APP=app.py
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONDONTWRITEBYTECODE=1
 
+# Force cache bust for debugging
+RUN echo "Cache bust: $(date)" > /tmp/cachebust
+
 # Start command - Use Render's PORT environment variable
 # Temporarily run with Python directly for better error visibility
-CMD python app.py
+# Explicitly avoiding gunicorn for debugging
+CMD ["python", "-u", "app.py"]
