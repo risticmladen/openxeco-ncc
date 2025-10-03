@@ -54,3 +54,13 @@ services:
         value: "true"
       - key: MAIL_USE_SSL
         value: "false"
+      - key: MAIL_USERNAME
+        value: "noreply@openxeco.local"
+      - key: MAIL_PASSWORD
+        value: "password123"
+      - key: MAIL_DEFAULT_SENDER
+        value: "noreply@openxeco.local"
+      - key: INITIAL_ADMIN_EMAIL
+        value: "admin@openxeco.local"
+      - key: INITIAL_ADMIN_PASSWORD
+        value: "Admin123!"
