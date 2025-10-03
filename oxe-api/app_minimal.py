@@ -4,7 +4,7 @@ import os
 
 app = Flask(__name__)
 # Configure CORS to allow requests from the web UI
-CORS(app, origins=["https://openxeco-web.onrender.com", "http://localhost:3001", "http://localhost:3000"], 
+CORS(app, origins=["https://openxeco-web.onrender.com", "https://openxeco-web.vercel.app", "http://localhost:3001", "http://localhost:3000"], 
      supports_credentials=True, 
      allow_headers=["Content-Type", "Authorization"],
      methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"])
