@@ -30,30 +30,35 @@ class DB:
         # Ensure Flask app has proper SQLAlchemy config before initialization
         if not app.config.get('SQLALCHEMY_ENGINE_OPTIONS'):
             app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {}
-        
-        self.instance = SA()
-        self.instance.init_app(app)
 
+        # Initialize SA with the app (so it can use this app's config)
+        self.instance = SA(app)
+
+        # Defer all SQLAlchemy usage to inside the app context
         self.base = None
-        self.session = self.instance.session
-        self.engine = self.instance.engine
+        self.session = None
+        self.engine = None
 
-        # Upgrade the structure to always have the latest version
+        # Upgrade the structure and reflect tables under app context
         migration_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "migrations")
         self.migrate = Migrate(app, self.instance, directory=migration_path)
 
         with app.app_context():
+            # Attach engine/session now that context exists
+            self.session = self.instance.session
+            self.engine = self.instance.engine
+
+            # Run migrations
             upgrade(directory=migration_path)
 
-        # Init the table objects
+            # Init the table objects
+            self.tables = {}
+            self.base = declarative_base()
+            self.base.metadata = MetaData(bind=self.instance)
 
-        self.tables = {}
-        self.base = declarative_base()
-        self.base.metadata = MetaData(bind=self.instance)
-
-        for table in self.engine.table_names():
-            attr = {'__tablename__': table, '__table_args__': {'autoload': True, 'autoload_with': self.engine}}
-            self.tables[table] = type(table, (self.base,), attr)
+            for table in self.engine.table_names():
+                attr = {'__tablename__': table, '__table_args__': {'autoload': True, 'autoload_with': self.engine}}
+                self.tables[table] = type(table, (self.base,), attr)
 
     ###############
     # GLOBAL      #
