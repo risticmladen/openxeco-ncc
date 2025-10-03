@@ -35,6 +35,9 @@ RUN pip install \
     flask-mail \
     flask-migrate \
     flask-restful \
+    flask-apispec \
+    apispec \
+    'apispec[ext.marshmallow]' \
     dateparser \
     openpyxl \
     pandas \
@@ -42,7 +45,8 @@ RUN pip install \
     requests \
     python-dotenv \
     'numpy>=1.21.0,<2.0.0' \
-    'marshmallow<4.0.0,>=3.0.0'
+    'marshmallow<4.0.0,>=3.0.0' \
+    xlrd
 
 # Copy application code
 COPY oxe-api/ /app/
