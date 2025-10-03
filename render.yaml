@@ -21,11 +21,6 @@ services:
         sync: false  # Set manually in Render dashboard
       - key: INITIAL_ADMIN_PASSWORD
         sync: false  # Set manually in Render dashboard
-    envVars:
-      - key: PORT
-        value: 10000
-      - key: REACT_APP_API_URL
-        value: https://openxeco-api-docker.onrender.com
 
   # Community Web App  
   - type: web
