@@ -1,0 +1,19 @@
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install only express (production dependency)
+RUN npm install express --production
+
+# Copy server and build files
+COPY server.js ./
+COPY build/ ./build/
+
+# Expose port
+EXPOSE 3000
+
+# Start server
+CMD ["node", "server.js"]

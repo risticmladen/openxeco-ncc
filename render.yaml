@@ -68,10 +68,9 @@ services:
         value: "onrender.com,localhost"
   - type: web
     name: openxeco-web
-    runtime: node
+    runtime: docker
     plan: free
-    buildCommand: cd oxe-web-community && npm install && npm run build
-    startCommand: cd oxe-web-community && node server.js
+    dockerfilePath: oxe-web-community/Dockerfile.web
     envVars:
       - key: NODE_ENV
         value: production
