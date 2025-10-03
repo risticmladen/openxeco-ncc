@@ -62,7 +62,5 @@ ENV PYTHONDONTWRITEBYTECODE=1
 # Force cache bust for debugging
 RUN echo "Cache bust: $(date)" > /tmp/cachebust
 
-# Start command - Use Render's PORT environment variable
-# Temporarily run with Python directly for better error visibility
-# Explicitly avoiding gunicorn for debugging
-CMD ["python", "-u", "app.py"]
+# Start command - Use minimal app for quick deployment
+CMD ["python", "-u", "app_minimal.py"]
