@@ -41,5 +41,5 @@ ENV PYTHONDONTWRITEBYTECODE=1
 # Force cache bust for debugging
 RUN echo "Cache bust: $(date)" > /tmp/cachebust
 
-# Start command - Use full app with all fixes applied
-CMD ["python", "-u", "app.py"]
+# Start command - Use minimal app (working version)
+CMD ["python", "-u", "app_minimal.py"]
