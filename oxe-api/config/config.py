@@ -33,15 +33,24 @@ JWT_SECRET_KEY      = _getenv('JWT_SECRET_KEY', mandatory=True)
 SECRET_KEY      = _getenv('SECRET_KEY', mandatory=True)
 SECURITY_SALT      = _getenv('SECURITY_SALT', mandatory=True)
 
+# Database configuration
+DB_DRIVER = _getenv('DB_DRIVER', default='mysql+pymysql')
 DB_CONFIG = {
-    'drivername':   _getenv('DB_DRIVER',    default='mysql+pymysql'),
+    'drivername':   DB_DRIVER,
     'host':         _getenv('DB_HOSTNAME',  default='localhost'),
     'port':         _getenv('DB_PORT',      default='3306'),
     'database':     _getenv('DB_NAME',      default='OPENXECO'),
     'username':     _getenv('DB_USERNAME',  default='openxeco'),
     'password':     _getenv('DB_PASSWORD',  mandatory=True),
-    'query':        {'charset': _getenv('DB_CHARSET', default='utf8mb4')},
 }
+
+# Add charset/encoding only for MySQL, not for PostgreSQL
+if 'mysql' in DB_DRIVER.lower():
+    DB_CONFIG['query'] = {'charset': _getenv('DB_CHARSET', default='utf8mb4')}
+else:
+    # For PostgreSQL, we don't need to specify charset in the connection string
+    # PostgreSQL handles encoding differently
+    pass
 
 MAIL_SERVER         = _getenv('MAIL_SERVER',     mandatory=False)
 MAIL_PORT           = _getenv('MAIL_PORT',       mandatory=False)
