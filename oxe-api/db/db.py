@@ -29,7 +29,6 @@ class DB:
         # Init instance
 
         self.instance = SA(app)
-        self.instance.init_app(app)
 
         self.base = None
         self.session = self.instance.session
