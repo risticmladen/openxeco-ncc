@@ -64,3 +64,5 @@ services:
         value: "admin@openxeco.local"
       - key: INITIAL_ADMIN_PASSWORD
         value: "Admin123!"
+      - key: CORS_DOMAINS
+        value: "onrender.com,localhost"
