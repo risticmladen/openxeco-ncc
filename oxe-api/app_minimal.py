@@ -41,6 +41,21 @@ def get_public_companies():
 def get_public_articles():
     return jsonify(articles)
 
+@app.route('/public/get_public_settings')
+def get_public_settings():
+    # Return basic settings that the UI expects
+    settings = [
+        {"property": "WEBSITE_NAME", "value": "OpenXeco NCC"},
+        {"property": "DOMAIN_NAME", "value": "OpenXeco Community"},
+        {"property": "PROJECT_DESCRIPTION", "value": "National Cybersecurity Community Platform"},
+    ]
+    return jsonify(settings)
+
+@app.route('/public/get_public_image/<filename>')
+def get_public_image(filename):
+    # Return a placeholder for images like favicon
+    return '', 404  # For now, return 404 for images
+
 @app.route('/doc')
 def documentation():
     return jsonify({

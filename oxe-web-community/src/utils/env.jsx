@@ -1,8 +1,9 @@
 export function getApiURL() {
 	if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" || window.location.hostname === "") {
-	return "http://localhost:5001/";
+		return "http://localhost:5001/";
 	}
-	return "https://api." + window.location.hostname.replace("www.", "").split(".").slice(1).join(".") + "/";
+	// Use our working API endpoint
+	return "https://openxeco-api.onrender.com/";
 }
 
 export function getGlobalAppURL() {

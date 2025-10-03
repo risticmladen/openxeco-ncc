@@ -66,3 +66,12 @@ services:
         value: "Admin123!"
       - key: CORS_DOMAINS
         value: "onrender.com,localhost"
+  - type: web
+    name: openxeco-web
+    runtime: node
+    plan: free
+    buildCommand: cd oxe-web-community && npm install && npm run build
+    staticPublishPath: ./oxe-web-community/build
+    envVars:
+      - key: NODE_ENV
+        value: production
