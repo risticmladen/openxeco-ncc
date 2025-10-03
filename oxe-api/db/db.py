@@ -18,12 +18,13 @@ class SA(SQLAlchemy):
 class DB:
     def __init__(self, app):
 
-        # Create database in case it is not existing
-
-        uri_without_database = "/".join(str(app.config['SQLALCHEMY_DATABASE_URI']).split("/")[:-1])
-        engine = create_engine(uri_without_database)
-        engine.execute("CREATE DATABASE IF NOT EXISTS " + app.config['SQLALCHEMY_DATABASE_URI'].database)
-        engine.dispose()
+        # Create database in case it is not existing (skip in production)
+        # In managed database services like Render, the database already exists
+        if os.getenv('ENVIRONMENT', 'dev') == 'dev':
+            uri_without_database = "/".join(str(app.config['SQLALCHEMY_DATABASE_URI']).split("/")[:-1])
+            engine = create_engine(uri_without_database)
+            engine.execute("CREATE DATABASE IF NOT EXISTS " + app.config['SQLALCHEMY_DATABASE_URI'].database)
+            engine.dispose()
 
         # Init instance
 
