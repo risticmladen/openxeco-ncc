@@ -3,11 +3,14 @@ from flask_cors import CORS
 import os
 
 app = Flask(__name__)
-# Configure CORS to allow requests from the web UI
-CORS(app, origins=["https://openxeco-web.onrender.com", "https://openxeco-web.vercel.app", "http://localhost:3001", "http://localhost:3000"], 
+# Configure CORS to allow requests from the web UI with credentials
+CORS(app, 
+     origins=["https://openxeco-web.onrender.com", "https://openxeco-web.vercel.app", "http://localhost:3001", "http://localhost:3000"], 
      supports_credentials=True, 
-     allow_headers=["Content-Type", "Authorization"],
-     methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"])
+     allow_headers=["Content-Type", "Authorization", "X-Requested-With", "Accept", "Origin", "Cache-Control", "pragma", "cache-control"],
+     methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+     max_age=600,  # Cache preflight for 10 minutes
+     expose_headers=["Content-Type", "Authorization"])
 
 # Mock data for demonstration
 companies = [
