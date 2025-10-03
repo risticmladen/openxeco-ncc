@@ -1,38 +1,41 @@
-import sys
-import traceback
-
 print("[DEBUG] Starting imports...")
 
 try:
-from flask import Flask, redirect
-from flask_bcrypt import Bcrypt
-from flask_cors import CORS
-from flask_jwt_extended import JWTManager
-from flask_mail import Mail
-from flask_restful import Api
-from sqlalchemy.engine.url import URL
-from apispec import APISpec
-from apispec.ext.marshmallow import MarshmallowPlugin
-from flask_apispec.extension import FlaskApiSpec
-from datetime import timedelta
+    from flask import Flask, redirect
+    from flask_bcrypt import Bcrypt
+    from flask_cors import CORS
+    from flask_jwt_extended import JWTManager
+    from flask_mail import Mail
+    from flask_restful import Api
+    from sqlalchemy.engine.url import URL
+    from apispec import APISpec
+    from apispec.ext.marshmallow import MarshmallowPlugin
+    from flask_apispec.extension import FlaskApiSpec
+    from datetime import timedelta
 
-from seeder.seeder import DatabaseSeeder
-from utils.re import has_mail_format
-from utils.resource import get_admin_post_resources
+    from seeder.seeder import DatabaseSeeder
+    from utils.re import has_mail_format
+    from utils.resource import get_admin_post_resources
 
-from db.db import DB
+    from db.db import DB
 
-import socket
-import sys
+    import socket
+    import sys
+    import traceback
 
-from config import config  # pylint: disable=wrong-import-position
-print("[DEBUG] Imports completed successfully")
-
+    from config import config  # pylint: disable=wrong-import-position
+    print("[DEBUG] Imports completed successfully")
+except Exception as e:
+    import traceback
+    print(f"[CRITICAL ERROR] Failed during imports: {e}")
+    print(f"[CRITICAL ERROR] Error type: {type(e).__name__}")
+    traceback.print_exc()
+    sys.exit(1)
 # Debug environment variables
 print(f"[DEBUG] Environment: {config.ENVIRONMENT}")
 print(f"[DEBUG] Database host: {config.DB_CONFIG.get('host', 'Not set')}")
 print(f"[DEBUG] Database name: {config.DB_CONFIG.get('database', 'Not set')}")
-print(f"[DEBUG] Initial admin email: {config.INITIAL_ADMIN_EMAIL if hasattr(config, 'INITIAL_ADMIN_EMAIL') else 'Not set'}")
+print(f"[DEBUG] Initial admin email: {config.INITIAL_ADMIN_EMAIL if hasattr(config, 'INITIAL_ADMIN_EMAIL') else 'Not set'}") 
 
 # Manage DB connection
 print("[DEBUG] Creating database URI...")
@@ -247,9 +250,3 @@ if __name__ == "__main__":
 		print(f"[DEBUG] Flask app failed to start: {e}")
 		traceback.print_exc()
 		raise
-
-except Exception as e:
-    print(f"[CRITICAL ERROR] Failed during module import/initialization: {e}")
-    print(f"[CRITICAL ERROR] Error type: {type(e).__name__}")
-    traceback.print_exc()
-    sys.exit(1)
