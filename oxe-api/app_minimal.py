@@ -88,19 +88,16 @@ def create_test_account():
 
 @app.route('/account/login', methods=['POST'])
 def login():
-    # Mock login - always succeeds for demo
+    # Mock login - for demo, we simulate requesting OTP
     data = request.get_json() if request.is_json else {}
     email = data.get('email', '')
     
     if email:
+        # Return success to trigger OTP flow in frontend
         return jsonify({
-            "access_token": "demo-token-123",
-            "refresh_token": "demo-refresh-456",
-            "user": {
-                "email": email,
-                "status": "ACCEPTED",
-                "is_admin": True
-            }
+            "message": "OTP sent to email",
+            "email": email,
+            "require_otp": True
         })
     else:
         return jsonify({"error": "Email required"}), 400
@@ -109,14 +106,6 @@ def login():
 def logout():
     return jsonify({"message": "Logged out successfully"})
 
-@app.route('/account/verify_login', methods=['GET'])
-def verify_login():
-    # Mock verify - always returns valid user for demo
-    return jsonify({
-        "email": "admin@openxeco.local",
-        "status": "ACCEPTED",
-        "is_admin": True
-    })
 
 @app.route('/account/verify_otp', methods=['POST'])
 def verify_otp():
@@ -131,12 +120,37 @@ def verify_otp():
         }
     })
 
+@app.route('/account/verify_login', methods=['POST'])
+def verify_login_otp():
+    # Mock OTP verification for login - always succeeds for demo
+    # This is what the frontend actually calls
+    return jsonify({
+        "access_token": "demo-token-login-verified-123",
+        "refresh_token": "demo-refresh-login-verified-456",
+        "user": {
+            "email": "admin@openxeco.local",
+            "status": "ACCEPTED", 
+            "is_admin": True
+        }
+    })
+
 @app.route('/account/request_otp', methods=['POST'])
 def request_otp():
     # Mock OTP request - always succeeds
     return jsonify({
         "message": "OTP sent successfully",
         "otp_code": "123456"  # For demo purposes, show the OTP
+    })
+
+@app.route('/private/get_my_user', methods=['GET'])
+def get_my_user():
+    # Mock user info - for demo purposes
+    return jsonify({
+        "email": "admin@openxeco.local",
+        "status": "ACCEPTED",
+        "is_admin": True,
+        "first_name": "Admin",
+        "last_name": "User"
     })
 
 if __name__ == '__main__':
