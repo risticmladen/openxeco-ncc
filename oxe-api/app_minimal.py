@@ -67,8 +67,19 @@ def documentation():
             "GET /health": "Health check",
             "GET /public/get_public_companies": "Get all companies",
             "GET /public/get_public_articles": "Get all articles",
+            "POST /account/create_account": "Create test account",
             "GET /doc": "This documentation"
         }
+    })
+
+@app.route('/account/create_account', methods=['POST'])
+def create_test_account():
+    # For demo purposes, create a mock successful response
+    return jsonify({
+        "success": True,
+        "message": "Account created successfully",
+        "email": "test@example.com",
+        "note": "Use admin@openxeco.local / Admin123! for immediate access"
     })
 
 if __name__ == '__main__':
