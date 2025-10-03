@@ -1,3 +1,4 @@
+print("[DEBUG] Starting imports...")
 from flask import Flask, redirect
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS
@@ -20,12 +21,23 @@ import socket
 import sys
 
 from config import config  # pylint: disable=wrong-import-position
+print("[DEBUG] Imports completed successfully")
+
+# Debug environment variables
+print(f"[DEBUG] Environment: {config.ENVIRONMENT}")
+print(f"[DEBUG] Database host: {config.DB_CONFIG.get('host', 'Not set')}")
+print(f"[DEBUG] Database name: {config.DB_CONFIG.get('database', 'Not set')}")
+print(f"[DEBUG] Initial admin email: {config.INITIAL_ADMIN_EMAIL if hasattr(config, 'INITIAL_ADMIN_EMAIL') else 'Not set'}")
 
 # Manage DB connection
+print("[DEBUG] Creating database URI...")
 db_uri = URL(**config.DB_CONFIG)
+print(f"[DEBUG] Database URI created: {str(db_uri).split('@')[0]}@***")
 
 # Init Flask and set config
+print("[DEBUG] Creating Flask app...")
 app = Flask(__name__, template_folder="template")
+print("[DEBUG] Flask app created successfully")
 app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {}
@@ -65,7 +77,15 @@ app.config['APISPEC_SPEC'] = APISpec(
 )
 
 # Create DB instance
-db = DB(app)
+print("[DEBUG] About to initialize DB...")
+try:
+    db = DB(app)
+    print("[DEBUG] DB initialization successful!")
+except Exception as e:
+    print(f"[DEBUG] DB initialization failed: {e}")
+    import traceback
+    traceback.print_exc()
+    raise
 
 # Add additional plugins
 cors = CORS(app)
@@ -187,17 +207,40 @@ def seed_initial_data():
 
 if __name__ in ('app', '__main__'):
     # check_port()
+    print("[DEBUG] Starting application initialization...")
 
-    from routes import set_routes
-    set_routes({"api": api, "db": db, "mail": mail, "docs": docs})
+    try:
+        print("[DEBUG] Setting up routes...")
+        from routes import set_routes
+        set_routes({"api": api, "db": db, "mail": mail, "docs": docs})
+        print("[DEBUG] Routes set up successfully")
 
-    if config.INITIAL_ADMIN_EMAIL:
-        create_initial_admin(config.INITIAL_ADMIN_EMAIL, config.INITIAL_ADMIN_PASSWORD)
+        if config.INITIAL_ADMIN_EMAIL:
+            print("[DEBUG] Creating initial admin...")
+            create_initial_admin(config.INITIAL_ADMIN_EMAIL, config.INITIAL_ADMIN_PASSWORD)
+            print("[DEBUG] Initial admin created successfully")
 
-    create_admin_rights()
+        print("[DEBUG] Creating admin rights...")
+        create_admin_rights()
+        print("[DEBUG] Admin rights created successfully")
 
-    seed_initial_data()
+        print("[DEBUG] Seeding initial data...")
+        seed_initial_data()
+        print("[DEBUG] Initial data seeded successfully")
 
-    app.debug = config.ENVIRONMENT == "dev"
-    if __name__ == "__main__":
-        app.run(host='0.0.0.0', port=int(config.PORT))
+        app.debug = config.ENVIRONMENT == "dev"
+        print("[DEBUG] Application initialization completed successfully")
+    except Exception as e:
+        print(f"[DEBUG] Application initialization failed: {e}")
+        import traceback
+        traceback.print_exc()
+        raise
+if __name__ == "__main__":
+	print("[DEBUG] Starting Flask app...")
+	try:
+		app.run(host="0.0.0.0", debug=False, port=int(os.environ.get("PORT", 5000)))
+	except Exception as e:
+		print(f"[DEBUG] Flask app failed to start: {e}")
+		import traceback
+		traceback.print_exc()
+		raise
