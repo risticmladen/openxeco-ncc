@@ -2,6 +2,10 @@ export function getApiURL() {
 	if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" || window.location.hostname === "") {
 		return "http://localhost:5001/";
 	}
+	// Check if we're on Vercel
+	if (window.location.hostname.includes('vercel.app')) {
+		return "https://openxeco-api.onrender.com/";
+	}
 	// Check if we're on Railway
 	if (window.location.hostname.includes('railway.app')) {
 		return "https://openxeco-api-production.up.railway.app/"; // Update this URL after Railway deployment

@@ -65,7 +65,7 @@ services:
       - key: INITIAL_ADMIN_PASSWORD
         value: "Admin123!"
       - key: CORS_DOMAINS
-        value: "onrender.com,localhost"
+        value: "onrender.com,localhost,vercel.app"
   - type: web
     name: openxeco-web
     runtime: docker
