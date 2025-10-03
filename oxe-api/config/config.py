@@ -10,6 +10,13 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+# Debug: Print environment variables for troubleshooting
+print("=== ENVIRONMENT VARIABLES ===")
+print(f"CORS_DOMAINS: {os.getenv('CORS_DOMAINS', 'NOT SET')}")
+print(f"ENVIRONMENT: {os.getenv('ENVIRONMENT', 'NOT SET')}")
+print(f"MAIL_DEFAULT_SENDER: {os.getenv('MAIL_DEFAULT_SENDER', 'NOT SET')}")
+print("================================")
+
 
 def _getenv(key, default=None, mandatory=True):
     if mandatory:
