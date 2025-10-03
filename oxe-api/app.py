@@ -28,6 +28,7 @@ db_uri = URL(**config.DB_CONFIG)
 app = Flask(__name__, template_folder="template")
 app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {}
 app.config["ERROR_404_HELP"] = False
 
 app.config["JWT_SECRET_KEY"] = config.JWT_SECRET_KEY
