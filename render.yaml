@@ -1,32 +1,56 @@
-services:
+databases:
+  - name: openxeco-db
+    databaseName: openxeco
+    plan: free
 
-  # API Service
+services:
   - type: web
-    name: openxeco-api-docker
+    name: openxeco-api
     runtime: docker
     plan: free
     dockerfilePath: .docker/Dockerfile.render-api
-    env: production
     envVars:
       - key: ENVIRONMENT
         value: prod
-        sync: false  # Set manually in Render dashboard
-      - key: MAIL_DEFAULT_SENDER
-        sync: false  # Set manually in Render dashboard
+      - key: DEBUG
+        value: "false"
+      - key: DB_DRIVER
+        value: postgresql+psycopg2
+      - key: DB_HOSTNAME
+        fromDatabase:
+          name: openxeco-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: openxeco-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: openxeco-db
+          property: database
+      - key: DB_USERNAME
+        fromDatabase:
+          name: openxeco-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: openxeco-db
+          property: password
+      - key: JWT_SECRET_KEY
+        generateValue: true
+      - key: SECRET_KEY
+        generateValue: true
+      - key: SECURITY_SALT
+        generateValue: true
       - key: IMAGE_FOLDER
         value: /app/media
       - key: DOCUMENT_FOLDER
         value: /app/documents
-      - key: INITIAL_ADMIN_EMAIL
-        sync: false  # Set manually in Render dashboard
-      - key: INITIAL_ADMIN_PASSWORD
-        sync: false  # Set manually in Render dashboard
-
-  # Community Web App  
-  - type: web
-    name: openxeco-community
-    envVars:
-      - key: PORT
-        value: 10000
-      - key: REACT_APP_API_URL
-        value: https://openxeco-api-docker.onrender.com
+      - key: MAIL_SERVER
+        value: smtp.gmail.com
+      - key: MAIL_PORT
+        value: "587"
+      - key: MAIL_USE_TLS
+        value: "true"
+      - key: MAIL_USE_SSL
+        value: "false"
